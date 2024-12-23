@@ -12,9 +12,9 @@ const Navbar: FC = () => {
 
           {/* Navigation Links */}
           <div className="flex space-x-8">
-            <a href="/assessment" className="text-gray-600 hover:text-blue-600 transition-colors">
-              Enneagram Assessment
-            </a>
+          <a href="/assessment" className="text-gray-600 hover:text-blue-600 transition-colors">
+  Enneagram Assessment
+</a>
             <a href="/courses" className="text-gray-600 hover:text-blue-600 transition-colors">
               eCourses
             </a>

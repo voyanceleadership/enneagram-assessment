@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Standard Analysis Content Styling */
+.analysis-content h3 {
+  font-size: 1.5rem;  /* One size larger */
+  font-weight: bold;  /* Make headings bold */
+  margin-top: 1.5rem; /* Add spacing above */
+  margin-bottom: 1rem; /* Add spacing below */
+}
+
+.analysis-content p {
+  font-size: 1rem; /* Standard size for paragraphs */
+  line-height: 1.6;
+}
+
+/* Print-Specific Styles */
+@media print {
+  button {
+    display: none;  /* Hide buttons during print */
+  }
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  .analysis-content h3 {
+    font-size: 2rem;  /* Larger for print */
+    font-weight: bold;
+  }
+  .analysis-content p {
+    margin: 10px 0;
+    font-size: 1.1rem; /* Slightly larger for readability */
+  }
+  .page-break {
+    page-break-before: always;  /* Force page break if needed */
+  }
+}
