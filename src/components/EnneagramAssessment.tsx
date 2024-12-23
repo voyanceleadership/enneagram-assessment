@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { assessmentQuestions, rankingQuestions } from '@/app/data/AssessmentQuestions';
+import { assessmentQuestions, rankingQuestions } from '@/src/app/api/data/AssessmentQuestions.ts';
 import { typeNames } from '@/app/data/EnneagramData';
 import UserInfoForm from './UserInfoForm';
 import LikertQuestions from './LikertQuestions';
