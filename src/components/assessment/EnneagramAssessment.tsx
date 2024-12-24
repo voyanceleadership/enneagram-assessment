@@ -1,14 +1,13 @@
 'use client';
 
-// src/components/assessment/EnneagramAssessment.tsx
 import React, { useState, useEffect } from 'react';
-import { assessmentQuestions, rankingQuestions } from '../../app/data/assessment/AssessmentQuestions';
-import { typeNames } from '../../app/data/constants/EnneagramData';
-import UserInfoForm from '../forms/UserInfoForm';
+import { assessmentQuestions, rankingQuestions } from '@/app/data/assessment/AssessmentQuestions';
+import { TYPE_NAMES } from '@/app/data/constants/EnneagramData';
+import UserInfoForm from '@/components/forms/UserInfoForm';
 import LikertQuestions from './LikertQuestions';
 import RankChoiceQuestions from './RankChoiceQuestions';
 import ResultsPage from './ResultsPage';
-import PaymentPage from '../payment/PaymentPage';
+import PaymentPage from '@/components/payment/PaymentPage';
 
 export interface UserInfo {
   firstName: string;
@@ -113,7 +112,7 @@ export default function EnneagramAssessment() {
 // 'use client';
 
 // import React, { useState, useEffect } from 'react';
-// import { assessmentQuestions, rankingQuestions, typeNames, triadDescriptions } from '../app/api/data/AssessmentQuestions';
+// import { assessmentQuestions, rankingQuestions, TYPE_NAMES, triadDescriptions } from '../app/api/data/AssessmentQuestions';
 // import html2pdf from 'html2pdf.js';
 
 // interface UserInfo {
@@ -356,7 +355,7 @@ export default function EnneagramAssessment() {
 //         ${sortedResults.length > 0
 //           ? sortedResults.map(([type, score]) => {
 //               return `<p style="margin: 5px 0; font-size: 1.1rem;">
-//                 <strong>Type ${type}: ${typeNames[type]}</strong> - ${Math.round(score)} points
+//                 <strong>Type ${type}: ${TYPE_NAMES[type]}</strong> - ${Math.round(score)} points
 //               </p>`;
 //             }).join('')
 //           : '<p>No scores available.</p>'
@@ -499,7 +498,7 @@ export default function EnneagramAssessment() {
 //                   ${index === 0 ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50'}
 //                 `}
 //               >
-//                 <span className="font-semibold">Type {type}: {typeNames[type]}</span>
+//                 <span className="font-semibold">Type {type}: {TYPE_NAMES[type]}</span>
 //                 <span className="text-blue-600 font-bold">{Math.round(score)} points</span>
 //               </div>
 //             ))}

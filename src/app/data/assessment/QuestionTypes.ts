@@ -1,8 +1,6 @@
-// src/app/data/assessment/AssessmentQuestions.ts
-import { LikertQuestion, RankingQuestion, likertOptions } from './QuestionTypes';
-import { EnneagramType } from '../constants/EnneagramData';
+// src/app/data/assessment/QuestionTypes.ts
+import { EnneagramType } from '@/app/data/constants/EnneagramData';
 
-// All types and constants related to the assessment structure
 export const likertOptions = [
   { text: "Strongly Agree", value: 100 },
   { text: "Agree", value: 83.33 },
@@ -13,11 +11,17 @@ export const likertOptions = [
   { text: "Strongly Disagree", value: 0 }
 ] as const;
 
+export type TriadGroupType = 
+  | "Centers of Intelligence"
+  | "Harmonics"
+  | "Object Relations"
+  | "Hornevian";
+
 export type LikertQuestion = {
   id: string;
   text: string;
   type: "likert";
-  triadGroup: string;
+  triadGroup: TriadGroupType;
   options: typeof likertOptions;
 };
 
@@ -25,7 +29,7 @@ export type RankingQuestion = {
   likertId: string;
   setNumber: 1 | 2 | 3;
   text: string;
-  triadGroup: string;
+  triadGroup: TriadGroupType;
   options: {
     text: string;
     type: EnneagramType;

@@ -1,6 +1,6 @@
 import React from 'react';
-import { UserInfo } from './EnneagramAssessment';
-import { typeNames } from '@/app/data/constants/EnneagramData';
+import { UserInfo } from '@/components/assessment/EnneagramAssessment';
+import { TYPE_NAMES } from '@/app/data/constants/EnneagramData';
 
 interface ResultsPageProps {
   userInfo: UserInfo;
@@ -47,7 +47,7 @@ export default function ResultsPage({
         <h2 style="font-size: 1.5rem; margin-bottom: 10px;">Type Scores</h2>
         ${sortedResults.map(([type, score]) => 
           `<p style="margin: 5px 0; font-size: 1.1rem;">
-            <strong>Type ${type}: ${typeNames[type]}</strong> - ${Math.round(score)} points
+            \<strong\>Type \${type}: \${TYPE_NAMES[type]}\</strong\> - \${Math.round(score)} points
           </p>`
         ).join('')}
       </div>
@@ -114,7 +114,7 @@ export default function ResultsPage({
               ${index === 0 ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50'}
             `}
           >
-            <span className="font-semibold">Type {type}: {typeNames[type]}</span>
+            <span className="font-semibold">Type {type}: {TYPE_NAMES[type]}</span>
             <span className="text-blue-600 font-bold">{Math.round(score)} points</span>
           </div>
         ))}

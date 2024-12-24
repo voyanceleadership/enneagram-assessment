@@ -1,45 +1,6 @@
-// assessmentData.ts
-
-// Following lines moved to EnneagramData.ts
-
-// export type TriadType = 
-//   | "Centers of Intelligence" 
-//   | "Harmonics" 
-//   | "Object Relations" 
-//   | "Hornevian";
-
-// export type EnneagramType = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
-
-// Following lines moved to QuestionTypes.ts
-
-// export const likertOptions = [
-//   { text: "Strongly Agree", value: 100 },
-//   { text: "Agree", value: 83.33 },
-//   { text: "Slightly Agree", value: 66.67 },
-//   { text: "Neutral", value: 50 },
-//   { text: "Slightly Disagree", value: 33.33 },
-//   { text: "Disagree", value: 16.67 },
-//   { text: "Strongly Disagree", value: 0 }
-// ];
-
-// export type LikertQuestion = {
-//   id: string;
-//   text: string;
-//   type: "likert";
-//   triadGroup: string;
-//   options: typeof likertOptions;
-// };
-
-// export type RankingQuestion = {
-//   likertId: string;
-//   setNumber: 1 | 2 | 3;
-//   text: string;
-//   triadGroup: string;
-//   options: {
-//     text: string;
-//     type: EnneagramType;
-//   }[];
-// };
+// src/app/data/assessment/AssessmentQuestions.ts
+import { LikertQuestion, RankingQuestion, likertOptions } from './QuestionTypes';
+import { EnneagramType } from '@/app/data/constants/EnneagramData';
 
 export const assessmentQuestions = {
   likertQuestions: [
@@ -554,7 +515,7 @@ export const rankingQuestions: RankingQuestion[] = [
 
 // Following lines moved to EnneagramData.ts
 
-// export const typeNames: { [key: string]: string } = {
+// export const TYPE_NAMES: { [key: string]: string } = {
 //   "1": "The Reformer",
 //   "2": "The Helper",
 //   "3": "The Achiever",
