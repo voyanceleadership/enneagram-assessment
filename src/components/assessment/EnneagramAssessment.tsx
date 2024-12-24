@@ -1,13 +1,14 @@
 'use client';
 
+// src/components/assessment/EnneagramAssessment.tsx
 import React, { useState, useEffect } from 'react';
-import { assessmentQuestions, rankingQuestions } from '@/src/app/api/data/AssessmentQuestions.ts';
-import { typeNames } from '@/app/data/EnneagramData';
-import UserInfoForm from './UserInfoForm';
+import { assessmentQuestions, rankingQuestions } from '../../app/data/assessment/AssessmentQuestions';
+import { typeNames } from '../../app/data/constants/EnneagramData';
+import UserInfoForm from '../forms/UserInfoForm';
 import LikertQuestions from './LikertQuestions';
 import RankChoiceQuestions from './RankChoiceQuestions';
 import ResultsPage from './ResultsPage';
-import PaymentPage from './PaymentPage';
+import PaymentPage from '../payment/PaymentPage';
 
 export interface UserInfo {
   firstName: string;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserInfo } from './EnneagramAssessment';
+import { UserInfo } from '../assessment/EnneagramAssessment';
 
 interface UserInfoFormProps {
   userInfo: UserInfo;

@@ -1,5 +1,6 @@
+// src/components/assessment/LikertQuestions.tsx
 import React from 'react';
-import { assessmentQuestions } from '@/app/data/AssessmentQuestions';
+import { assessmentQuestions } from '../../app/data/assessment/AssessmentQuestions';
 import { WeightingResponses } from './EnneagramAssessment';
 
 interface LikertQuestionsProps {

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { validCoupons } from '@/app/data/coupons';
-import { validEmails } from '@/app/data/validEmails';
+import { validCoupons } from '@/app/data/validation/Coupons';
+import { validEmails } from '@/app/data/validation/ValidEmails';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2023-08-16',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { UserInfo } from './EnneagramAssessment';
-import { typeNames } from '@/app/data/EnneagramData';
+import { typeNames } from '@/app/data/constants/EnneagramData';
 
 interface ResultsPageProps {
   userInfo: UserInfo;

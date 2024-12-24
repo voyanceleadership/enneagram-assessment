@@ -1,4 +1,6 @@
-import { EnneagramType } from './EnneagramData';
+// src/app/data/assessment/AssessmentQuestions.ts
+import { LikertQuestion, RankingQuestion, likertOptions } from './QuestionTypes';
+import { EnneagramType } from '../constants/EnneagramData';
 
 // All types and constants related to the assessment structure
 export const likertOptions = [

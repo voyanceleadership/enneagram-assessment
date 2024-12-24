@@ -1,5 +1,6 @@
+// src/components/assessment/RankChoiceQuestions.tsx
 import React from 'react';
-import { rankingQuestions } from '@/app/data/AssessmentQuestions';
+import { rankingQuestions } from '../../app/data/assessment/AssessmentQuestions';
 import { Rankings } from './EnneagramAssessment';
 
 interface RankChoiceQuestionsProps {

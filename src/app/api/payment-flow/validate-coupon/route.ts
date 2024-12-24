@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validCoupons } from '@/app/data/coupons';
+import { validCoupons } from '@/app/data/validation/Coupons';
 
 export async function POST(req: NextRequest) {
   const { couponCode } = await req.json();

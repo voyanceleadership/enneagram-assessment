@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validEmails } from '@/app/data/validEmails';
+import { validEmails } from '@/app/data/validation/ValidEmails';
 
 export async function POST(req: NextRequest) {
   const { email } = await req.json();

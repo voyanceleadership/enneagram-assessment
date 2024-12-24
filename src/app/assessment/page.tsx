@@ -1,9 +1,8 @@
-import EnneagramAssessment from '@/components/EnneagramAssessment'
+// src/app/assessment/page.tsx
+import EnneagramAssessment from '../../components/assessment/EnneagramAssessment';
 
 export default function AssessmentPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <EnneagramAssessment />
-    </div>
-  )
+    <EnneagramAssessment />
+  );
 }
