@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Coupon {
+  id        String      @id @default(cuid())
+  code      String      @unique
+  uses      Int
+  discount  Int
+  expires   DateTime
+  active    Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  usages    CouponUsage[]
+}
+
+model CouponUsage {
+  id        String   @id @default(cuid())
+  coupon    Coupon   @relation(fields: [couponId], references: [id])
+  couponId  String
+  email     String
+  usedAt    DateTime @default(now())
+}
+
+model AssessmentResponse {
+  id          String      @id @default(cuid())
+  createdAt   DateTime    @default(now())
+  userInfo    UserInfo    @relation(fields: [userInfoId], references: [id])
+  userInfoId  String
+  weightingResponses Json
+  rankings    Json
+  results     Result[]
+  analysis    Analysis?
+  isPaid      Boolean     @default(false)
+  sessionId   String?     // For Stripe session ID
+}
+
+model UserInfo {
+  id          String      @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String      @unique
+  assessments AssessmentResponse[]
+}
+
+model Result {
+  id            String    @id @default(cuid())
+  type          String
+  score         Float
+  assessmentId  String
+  assessment    AssessmentResponse @relation(fields: [assessmentId], references: [id])
+}
+
+model Analysis {
+  id            String    @id @default(cuid())
+  content       String    @db.Text
+  assessmentId  String    @unique
+  assessment    AssessmentResponse @relation(fields: [assessmentId], references: [id])
+}
