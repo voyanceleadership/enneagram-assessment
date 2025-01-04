@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
+interface Scores {
+  [type: string]: number;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { email, analysisHtml, scores } = await req.json();
+
+    // Ensure scores are typed correctly
+    const typedScores: Record<string, number> = scores as Record<string, number>;
 
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
@@ -14,11 +21,11 @@ export async function POST(req: NextRequest) {
     });
 
     // Sort and round scores
-    const sortedScores = Object.entries(scores)
-      .sort(([, a], [, b]) => b - a)  // Sort by descending score
+    const sortedScores = Object.entries(typedScores)
+      .sort(([, a], [, b]) => (b as number) - (a as number))  // Explicit type casting
       .map(([type, score]) => ({
         type,
-        score: Math.round(score),  // Round to nearest whole number
+        score: Math.round(score as number),  // Type assertion to avoid 'unknown' error
       }));
 
     // Generate HTML for scores

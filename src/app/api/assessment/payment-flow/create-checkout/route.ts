@@ -11,7 +11,7 @@ if (!process.env.NEXT_PUBLIC_BASE_URL) {
 }
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2023-10-16',
+  apiVersion: '2024-12-18.acacia',
 });
 
 const ASSESSMENT_PRICE = 2999; // $29.99 in cents
@@ -21,30 +21,16 @@ export async function POST(req: NextRequest) {
   console.log('Stripe API Key being used:', process.env.STRIPE_SECRET_KEY?.substring(0, 8) + '...');
   console.log('Environment check:');
   console.log('- STRIPE_SECRET_KEY prefix:', process.env.STRIPE_SECRET_KEY?.substring(0, 7));
-  console.log('- Stripe API Version:', stripe.apiVersion);
-  console.log('- Stripe Client:', stripe);
+  // Remove the apiVersion log since it's not accessible this way
+  console.log('- Stripe Client initialized:', !!stripe);
 
   try {
     const body = await req.json();
     console.log('Request body:', body);
-    const { email, couponCode, assessmentId } = body;
+    const { email, couponCode } = body;
 
     if (!email) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
-    }
-
-    // Get the assessment response
-    const assessment = assessmentId ? 
-      await prisma.assessmentResponse.findUnique({
-        where: { id: assessmentId }
-      }) :
-      await prisma.assessmentResponse.findFirst({
-        where: { email: email },
-        orderBy: { createdAt: 'desc' }
-      });
-
-    if (!assessment) {
-      return NextResponse.json({ error: 'Assessment not found' }, { status: 404 });
     }
 
     // Check valid emails
@@ -54,12 +40,6 @@ export async function POST(req: NextRequest) {
       });
 
       if (validEmail) {
-        // Update assessment to mark it as paid since it's a valid email
-        await prisma.assessmentResponse.update({
-          where: { id: assessment.id },
-          data: { isPaid: true }
-        });
-
         return NextResponse.json({ 
           url: '/assessment/results',
           message: 'Email validated successfully' 
@@ -107,10 +87,6 @@ export async function POST(req: NextRequest) {
                   couponId: coupon.id,
                   email
                 }
-              }),
-              prisma.assessmentResponse.update({
-                where: { id: assessment.id },
-                data: { isPaid: true }
               })
             ]);
 
@@ -148,14 +124,13 @@ export async function POST(req: NextRequest) {
             cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/assessment/cancelled`,
             customer_email: email,
             metadata: {
-              assessmentId: assessment.id,
               couponCode: couponCode,
               originalPrice: ASSESSMENT_PRICE,
               discount: coupon.discount
             }
           });
 
-          // Update assessment with session ID and handle coupon in transaction
+          // Decrement coupon uses and record usage in a transaction
           await prisma.$transaction([
             prisma.coupon.update({
               where: { id: coupon.id },
@@ -166,10 +141,6 @@ export async function POST(req: NextRequest) {
                 couponId: coupon.id,
                 email
               }
-            }),
-            prisma.assessmentResponse.update({
-              where: { id: assessment.id },
-              data: { sessionId: session.id }
             })
           ]);
 
@@ -209,15 +180,8 @@ export async function POST(req: NextRequest) {
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/assessment/cancelled`,
       customer_email: email,
       metadata: {
-        assessmentId: assessment.id,
         originalPrice: ASSESSMENT_PRICE
       }
-    });
-
-    // Update assessment with session ID
-    await prisma.assessmentResponse.update({
-      where: { id: assessment.id },
-      data: { sessionId: session.id }
     });
 
     return NextResponse.json({ 

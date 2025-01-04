@@ -7,6 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model ValidEmail {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
 model Coupon {
   id        String      @id @default(cuid())
   code      String      @unique
@@ -29,6 +35,7 @@ model CouponUsage {
 
 model AssessmentResponse {
   id          String      @id @default(cuid())
+  email       String
   createdAt   DateTime    @default(now())
   userInfo    UserInfo    @relation(fields: [userInfoId], references: [id])
   userInfoId  String
@@ -44,7 +51,7 @@ model UserInfo {
   id          String      @id @default(cuid())
   firstName   String
   lastName    String
-  email       String      @unique
+  email       String
   assessments AssessmentResponse[]
 }
 

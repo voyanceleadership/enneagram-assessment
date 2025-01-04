@@ -1,5 +1,3 @@
-// /src/app/api/assessment/save-response/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
@@ -53,11 +51,10 @@ export async function POST(req: NextRequest) {
 
     console.log('Saved user info:', savedUserInfo);
 
-    // Create assessment response
+    // Create assessment response - removed email field since it's connected through userInfo
     const assessmentResponse = await prisma.assessmentResponse.create({
       data: {
-        email: userInfo.email,
-        userInfoId: savedUserInfo.id,
+        userInfoId: savedUserInfo.id,  // This creates the connection to userInfo
         weightingResponses: responses.weightingResponses,
         rankings: responses.rankings,
         isPaid: false,

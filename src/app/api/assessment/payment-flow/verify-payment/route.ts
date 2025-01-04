@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 import { prisma } from '@/lib/prisma';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16'
+  apiVersion: '2024-12-18.acacia',
 });
 
 export async function POST(req: NextRequest) {
@@ -22,10 +22,28 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      // Fetch the assessment data with all related information
+      // Upsert user information into UserInfo table
+      const user = await prisma.userInfo.upsert({
+        where: { email: userEmail },
+        update: {
+          firstName: session.metadata?.firstName || 'Unknown',
+          lastName: session.metadata?.lastName || 'Unknown',
+        },
+        create: {
+          firstName: session.metadata?.firstName || 'Unknown',
+          lastName: session.metadata?.lastName || 'Unknown',
+          email: userEmail,
+        },
+      });
+
+      console.log('User upserted:', user);
+
+      // Fetch the most recent assessment for the user
       const assessmentData = await prisma.assessmentResponse.findFirst({
         where: {
-          email: userEmail
+          userInfo: {  // Changed this line to query through the relation
+            email: userEmail
+          }
         },
         orderBy: {
           createdAt: 'desc'
@@ -46,7 +64,6 @@ export async function POST(req: NextRequest) {
         }
       });
 
-      // In the POST function, after fetching assessment data:
       console.log('Retrieved assessment data:', assessmentData);
       console.log('Assessment results:', assessmentData?.results);
       console.log('User info:', assessmentData?.userInfo);
@@ -58,7 +75,7 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      // Update the payment status
+      // Update the payment status for the assessment
       await prisma.assessmentResponse.update({
         where: {
           id: assessmentData.id
@@ -69,7 +86,7 @@ export async function POST(req: NextRequest) {
         }
       });
 
-      // Format the data to match what ResultsPage expects
+      // Format data for frontend (ResultsPage)
       const formattedData = {
         userInfo: {
           firstName: assessmentData.userInfo.firstName,
@@ -83,7 +100,7 @@ export async function POST(req: NextRequest) {
         analysis: assessmentData.analysis?.content || ''
       };
 
-      console.log('Returning formatted data:', formattedData); // Debug log
+      console.log('Returning formatted data:', formattedData);
 
       return NextResponse.json({ 
         success: true,

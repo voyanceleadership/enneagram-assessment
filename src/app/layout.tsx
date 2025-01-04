@@ -20,7 +20,9 @@ export default function RootLayout({
       <head>
         <Script src="https://js.stripe.com/v3" strategy="beforeInteractive" />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+      </body>
     </html>
   )
 }

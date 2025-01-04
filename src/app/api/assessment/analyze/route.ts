@@ -20,19 +20,28 @@ try {
   typingInsights = 'No additional typing insights available.';
 }
 
+interface Scores {
+  [key: string]: number;
+}
+
+interface RequestBody {
+  scores: Scores;
+  responses: any;
+}
+
 export async function POST(req: Request) {
   console.log('API route hit');
   try {
     console.log('API Key present:', !!process.env.OPENAI_API_KEY);
     console.log('API Key first few chars:', process.env.OPENAI_API_KEY?.substring(0, 4));
 
-    const { scores, responses } = await req.json();
+    const { scores, responses }: RequestBody = await req.json();
     console.log('Received scores:', scores);
 
     // Sort scores to determine dominant and secondary types
     const sortedScores = Object.entries(scores)
       .sort(([, a], [, b]) => b - a)
-      .map(([type, score]) => ({ type, score }));
+      .map(([type, score]) => ({ type, score: score as number }));
 
     console.log('Sorted scores:', sortedScores);
 
@@ -71,12 +80,11 @@ export async function POST(req: Request) {
     <p>[Growth and integration paths]</p>
     
     Do not wrap the response in \`\`\`html or any markdown code block. Return raw HTML only.`;
-    
 
     console.log('About to call OpenAI');
     try {
       const completion = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: "gpt-4",
         messages: [
           { role: "system", content: "You are an expert Enneagram consultant providing structured, accurate analysis." },
           { role: "user", content: prompt }
@@ -86,25 +94,29 @@ export async function POST(req: Request) {
       });
 
       console.log('OpenAI call successful');
-      let analysis = completion.choices[0].message.content;
+      const content = completion.choices[0].message.content;
+
+      if (!content) {
+        throw new Error('No content received from OpenAI');
+      }
 
       // Format headings and sections using HTML
-      analysis = analysis
+      const formattedAnalysis = content
         .replace(/\*\*Core Type Analysis\*\*/g, '<h2>Core Type Analysis</h2><hr>')
         .replace(/\*\*Wing Analysis\*\*/g, '<h2>Wing Analysis</h2><hr>')
         .replace(/\*\*Look-Alike Types\*\*/g, '<h2>Look-Alike Types</h2><hr>')
         .replace(/\*\*Developmental Paths\*\*/g, '<h2>Developmental Paths</h2><hr>')
-        .replace(/\n/g, '<br>');  // Replace line breaks with <br> for better spacing
+        .replace(/\n/g, '<br>');
 
-      return NextResponse.json({ analysis });
-    } catch (openaiError) {
+      return NextResponse.json({ analysis: formattedAnalysis });
+    } catch (openaiError: any) {
       console.error('OpenAI API Error:', openaiError);
       return NextResponse.json({
         error: 'OpenAI API Error',
         details: openaiError.message
       }, { status: 500 });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('General API route error:', error);
     return NextResponse.json({
       error: 'Analysis failed',
