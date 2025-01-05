@@ -1,3 +1,4 @@
+// src/app/api/assessment/analyze/route.ts
 import fs from 'fs';
 import path from 'path';
 import { OpenAI } from 'openai';
@@ -9,12 +10,12 @@ const openai = new OpenAI({
 });
 
 // Read typing insights from markdown file
-const insightsPath = path.resolve(process.cwd(), 'src/insights/typingInsights.md');
+const insightsPath = path.resolve(process.cwd(), 'data/insights/typingInsights.md');
 let typingInsights = '';
 
 try {
   typingInsights = fs.readFileSync(insightsPath, 'utf8');
-  console.log('Typing insights loaded successfully.');
+  console.log('Typing insights loaded successfully from:', insightsPath);
 } catch (error) {
   console.error('Failed to load typing insights:', error);
   typingInsights = 'No additional typing insights available.';
@@ -30,26 +31,37 @@ interface RequestBody {
 }
 
 export async function POST(req: Request) {
-  console.log('API route hit');
+  console.log('Analysis API route hit');
   try {
-    console.log('API Key present:', !!process.env.OPENAI_API_KEY);
-    console.log('API Key first few chars:', process.env.OPENAI_API_KEY?.substring(0, 4));
+    // Verify OpenAI configuration
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('OpenAI API key missing');
+      return NextResponse.json({
+        error: 'OpenAI configuration error'
+      }, { status: 500 });
+    }
 
     const { scores, responses }: RequestBody = await req.json();
-    console.log('Received scores:', scores);
+    console.log('Received request with scores:', scores);
+
+    if (!scores || Object.keys(scores).length === 0) {
+      console.error('No scores provided in request');
+      return NextResponse.json({
+        error: 'No scores provided'
+      }, { status: 400 });
+    }
 
     // Sort scores to determine dominant and secondary types
     const sortedScores = Object.entries(scores)
       .sort(([, a], [, b]) => b - a)
       .map(([type, score]) => ({ type, score: score as number }));
 
-    console.log('Sorted scores:', sortedScores);
+    console.log('Sorted scores for analysis:', sortedScores);
 
     const prompt = `You are an Enneagram expert with over 2,000 hours of coaching experience. 
     Provide a detailed and structured analysis of Enneagram test results.
     
     **Assessment Scores (highest to lowest):** 
-    Scores (sorted by highest):
     ${sortedScores.map(({ type, score }) => `Type ${type}: ${Math.round(score)}`).join('\n')}
     
     **Reference Typing Insights:**  
@@ -81,7 +93,8 @@ export async function POST(req: Request) {
     
     Do not wrap the response in \`\`\`html or any markdown code block. Return raw HTML only.`;
 
-    console.log('About to call OpenAI');
+    console.log('Making OpenAI API call...');
+    
     try {
       const completion = await openai.chat.completions.create({
         model: "gpt-4",
@@ -93,12 +106,15 @@ export async function POST(req: Request) {
         max_tokens: 1500,
       });
 
-      console.log('OpenAI call successful');
+      console.log('OpenAI API call successful');
       const content = completion.choices[0].message.content;
 
       if (!content) {
+        console.error('No content received from OpenAI');
         throw new Error('No content received from OpenAI');
       }
+
+      console.log('Received content length:', content.length);
 
       // Format headings and sections using HTML
       const formattedAnalysis = content
@@ -108,7 +124,13 @@ export async function POST(req: Request) {
         .replace(/\*\*Developmental Paths\*\*/g, '<h2>Developmental Paths</h2><hr>')
         .replace(/\n/g, '<br>');
 
-      return NextResponse.json({ analysis: formattedAnalysis });
+      console.log('Formatted analysis length:', formattedAnalysis.length);
+
+      return NextResponse.json({ 
+        success: true,
+        analysis: formattedAnalysis 
+      });
+
     } catch (openaiError: any) {
       console.error('OpenAI API Error:', openaiError);
       return NextResponse.json({

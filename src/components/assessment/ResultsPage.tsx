@@ -1,3 +1,4 @@
+// src/components/assessment/ResultsPage.tsx
 import React from 'react';
 import { UserInfo } from '@/components/assessment/EnneagramAssessment';
 import { TYPE_NAMES } from '@/app/data/constants/EnneagramData';
@@ -28,6 +29,13 @@ export default function ResultsPage({
   const downloadPDF = async () => {
     const html2pdf = (await import('html2pdf.js')).default;
     
+    // Process the sorted results to ensure numbers are properly formatted
+    const processedResults = sortedResults.map(([type, score]) => ({
+      type,
+      typeName: TYPE_NAMES[type],
+      score: Math.round(score)
+    }));
+    
     const combinedContent = document.createElement('div');
     combinedContent.innerHTML = `
       <div style="text-align: center; margin-bottom: 30px;">
@@ -45,9 +53,9 @@ export default function ResultsPage({
       
       <div style="margin-bottom: 30px;">
         <h2 style="font-size: 1.5rem; margin-bottom: 10px;">Type Scores</h2>
-        ${sortedResults.map(([type, score]) => 
+        ${processedResults.map(({ type, typeName, score }) => 
           `<p style="margin: 5px 0; font-size: 1.1rem;">
-            \<strong\>Type \${type}: \${TYPE_NAMES[type]}\</strong\> - \${Math.round(score)} points
+            <strong>Type ${type}: ${typeName}</strong> - ${score} points
           </p>`
         ).join('')}
       </div>
@@ -60,16 +68,28 @@ export default function ResultsPage({
       </div>
     `;
 
+    // Ensure all calculations are completed before generating PDF
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     const options = {
       margin: [10, 10, 20, 10],
       filename: 'enneagram-assessment-results.pdf',
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
+      html2canvas: { 
+        scale: 2,
+        logging: true,
+        allowTaint: true,
+        useCORS: true
+      },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
       pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
-    html2pdf().from(combinedContent).set(options).save();
+    try {
+      await html2pdf().from(combinedContent).set(options).save();
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
   };
 
   return (
