@@ -35,7 +35,6 @@ model CouponUsage {
 
 model AssessmentResponse {
   id          String      @id @default(cuid())
-  email       String
   createdAt   DateTime    @default(now())
   userInfo    UserInfo    @relation(fields: [userInfoId], references: [id])
   userInfoId  String
@@ -51,7 +50,7 @@ model UserInfo {
   id          String      @id @default(cuid())
   firstName   String
   lastName    String
-  email       String
+  email       String      @unique
   assessments AssessmentResponse[]
 }
 
@@ -60,12 +59,12 @@ model Result {
   type          String
   score         Float
   assessmentId  String
-  assessment    AssessmentResponse @relation(fields: [assessmentId], references: [id])
+  assessment    AssessmentResponse @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
 }
 
 model Analysis {
   id            String    @id @default(cuid())
   content       String    @db.Text
   assessmentId  String    @unique
-  assessment    AssessmentResponse @relation(fields: [assessmentId], references: [id])
+  assessment    AssessmentResponse @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
 }

@@ -34,20 +34,32 @@ export async function POST(req: NextRequest) {
     console.log('Creating/updating user info for:', userInfo.email);
     
     // Create or update user info
-    const savedUserInfo = await prisma.userInfo.upsert({
-      where: {
-        email: userInfo.email,
-      },
-      update: {
-        firstName: userInfo.firstName,
-        lastName: userInfo.lastName,
-      },
-      create: {
-        firstName: userInfo.firstName,
-        lastName: userInfo.lastName,
-        email: userInfo.email,
-      },
+    const existingUser = await prisma.userInfo.findFirst({
+      where: { email: userInfo.email }
     });
+    
+    let savedUserInfo;
+    if (existingUser) {
+      // Update existing user
+      savedUserInfo = await prisma.userInfo.update({
+        where: { id: existingUser.id },
+        data: {
+          firstName: userInfo.firstName,
+          lastName: userInfo.lastName,
+        }
+      });
+    } else {
+      // Create new user
+      savedUserInfo = await prisma.userInfo.create({
+        data: {
+          firstName: userInfo.firstName,
+          lastName: userInfo.lastName,
+          email: userInfo.email,
+        }
+      });
+    }
+    
+    console.log('Saved user info:', savedUserInfo);
 
     console.log('Saved user info:', savedUserInfo);
 

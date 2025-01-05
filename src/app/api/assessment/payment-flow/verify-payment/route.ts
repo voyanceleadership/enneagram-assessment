@@ -1,4 +1,3 @@
-// src/app/api/assessment/payment-flow/verify-payment/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { prisma } from '@/lib/prisma';
@@ -13,7 +12,9 @@ export async function POST(req: NextRequest) {
     const { sessionId } = await req.json();
     console.log('Verifying payment for session:', sessionId);
 
+    console.log('Verifying payment for session:', sessionId);
     const session = await stripe.checkout.sessions.retrieve(sessionId);
+    console.log('Retrieved session from Stripe:', session);
 
     if (session.payment_status === 'paid') {
       const userEmail = session.customer_email;
@@ -26,18 +27,33 @@ export async function POST(req: NextRequest) {
       }
 
       // Upsert user information into UserInfo table
-      const user = await prisma.userInfo.upsert({
-        where: { email: userEmail },
-        update: {
-          firstName: session.metadata?.firstName || 'Unknown',
-          lastName: session.metadata?.lastName || 'Unknown',
-        },
-        create: {
-          firstName: session.metadata?.firstName || 'Unknown',
-          lastName: session.metadata?.lastName || 'Unknown',
-          email: userEmail,
-        },
+      // First find the user
+      const existingUser = await prisma.userInfo.findFirst({
+        where: { email: userEmail }
       });
+
+      let user;
+      if (existingUser) {
+        // Update existing user
+        user = await prisma.userInfo.update({
+          where: { id: existingUser.id },
+          data: {
+            firstName: session.metadata?.firstName || 'Unknown',
+            lastName: session.metadata?.lastName || 'Unknown',
+          }
+        });
+      } else {
+        // Create new user
+        user = await prisma.userInfo.create({
+          data: {
+            firstName: session.metadata?.firstName || 'Unknown',
+            lastName: session.metadata?.lastName || 'Unknown',
+            email: userEmail,
+          }
+        });
+      }
+
+      console.log('User info updated/created:', user);
 
       console.log('User upserted:', user);
 
@@ -76,6 +92,7 @@ export async function POST(req: NextRequest) {
 
       // Calculate and save results if they don't exist or are incomplete
       let results = assessmentData.results;
+
       if (!results || results.length < 9) {
         console.log('Calculating results...');
         const scores = calculateAssessmentResults(
@@ -83,12 +100,11 @@ export async function POST(req: NextRequest) {
           assessmentData.rankings
         );
 
-        // Delete existing results if any
+        // Upsert results by deleting incomplete ones and recalculating
         await prisma.result.deleteMany({
           where: { assessmentId: assessmentData.id }
         });
 
-        // Create results for ALL types (1-9)
         const resultsToCreate = Object.entries(scores).map(([type, score]) => ({
           type,
           score,
@@ -104,64 +120,63 @@ export async function POST(req: NextRequest) {
           where: { assessmentId: assessmentData.id },
           select: { type: true, score: true }
         });
+
+        console.log('Results calculated and saved.');
       }
 
-      // Generate analysis if it doesn't exist
+      // Generate or fetch analysis if it doesn't exist
       let analysisContent = assessmentData.analysis?.content;
+
       if (!analysisContent) {
         console.log('Analysis missing, attempting to generate...');
-        try {
-          const analysisResponse = await fetch(new URL('/api/assessment/analyze', req.url), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              scores: Object.fromEntries(results.map(r => [r.type, r.score])),
-              responses: assessmentData.rankings
-            })
-          });
-  
-          console.log('Analysis API response status:', analysisResponse.status);
-  
-          if (analysisResponse.ok) {
-            const analysisData = await analysisResponse.json();
-            console.log('Analysis API success:', !!analysisData.success);
-  
-            if (analysisData.success && analysisData.analysis) {
-              analysisContent = analysisData.analysis;
-              console.log('Analysis content length:', analysisContent.length);
-  
-              // Check if analysis exists first
-              const existingAnalysis = await prisma.analysis.findUnique({
-                where: {
-                  assessmentId: assessmentData.id
-                }
-              });
-  
-              if (existingAnalysis) {
-                // Update existing analysis
-                await prisma.analysis.update({
-                  where: {
-                    assessmentId: assessmentData.id
-                  },
-                  data: {
-                    content: analysisContent
-                  }
-                });
-                console.log('Updated existing analysis');
-              } else {
-                // Create new analysis
+
+        // Check if analysis exists after recalculating results
+        const existingAnalysis = await prisma.analysis.findUnique({
+          where: { assessmentId: assessmentData.id }
+        });
+
+        if (existingAnalysis) {
+          analysisContent = existingAnalysis.content;
+          console.log('Existing analysis found and reused.');
+        } else {
+          console.log('No analysis found. Sending request to generate.');
+
+          try {
+            const analysisResponse = await fetch(new URL('/api/assessment/analyze', req.url), {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                assessmentId: assessmentData.id,
+                scores: Object.fromEntries(results.map(r => [r.type, r.score])),
+                responses: assessmentData.rankings
+              })
+            });
+    
+            console.log('Analysis API response status:', analysisResponse.status);
+    
+            if (analysisResponse.ok) {
+              const analysisData = await analysisResponse.json();
+              console.log('Analysis API success:', !!analysisData.success);
+    
+              if (analysisData.success && analysisData.analysis) {
+                analysisContent = analysisData.analysis;
+                console.log('Analysis content length:', analysisContent.length);
+    
+                // Save new analysis to Prisma
                 await prisma.analysis.create({
                   data: {
                     content: analysisContent,
                     assessmentId: assessmentData.id
                   }
                 });
-                console.log('Created new analysis');
+                console.log('Analysis saved to database.');
               }
+            } else {
+              console.error('Failed to generate analysis:', await analysisResponse.text());
             }
+          } catch (analysisError) {
+            console.error('Error during analysis generation:', analysisError);
           }
-        } catch (analysisError) {
-          console.error('Error generating analysis:', analysisError);
         }
       }
 

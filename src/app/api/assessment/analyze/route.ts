@@ -1,8 +1,8 @@
-// src/app/api/assessment/analyze/route.ts
 import fs from 'fs';
 import path from 'path';
 import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -26,6 +26,7 @@ interface Scores {
 }
 
 interface RequestBody {
+  assessmentId: string;
   scores: Scores;
   responses: any;
 }
@@ -33,22 +34,27 @@ interface RequestBody {
 export async function POST(req: Request) {
   console.log('Analysis API route hit');
   try {
-    // Verify OpenAI configuration
-    if (!process.env.OPENAI_API_KEY) {
-      console.error('OpenAI API key missing');
-      return NextResponse.json({
-        error: 'OpenAI configuration error'
-      }, { status: 500 });
-    }
-
-    const { scores, responses }: RequestBody = await req.json();
-    console.log('Received request with scores:', scores);
+    const { assessmentId, scores, responses }: RequestBody = await req.json();
+    console.log('Received request with assessmentId and scores:', assessmentId, scores);
 
     if (!scores || Object.keys(scores).length === 0) {
       console.error('No scores provided in request');
       return NextResponse.json({
         error: 'No scores provided'
       }, { status: 400 });
+    }
+
+    // Check if analysis already exists in Prisma
+    const existingAnalysis = await prisma.analysis.findUnique({
+      where: { assessmentId }
+    });
+
+    if (existingAnalysis) {
+      console.log('Analysis already exists. Returning stored analysis.');
+      return NextResponse.json({
+        success: true,
+        analysis: existingAnalysis.content
+      });
     }
 
     // Sort scores to determine dominant and secondary types
@@ -94,7 +100,7 @@ export async function POST(req: Request) {
     Do not wrap the response in \`\`\`html or any markdown code block. Return raw HTML only.`;
 
     console.log('Making OpenAI API call...');
-    
+
     try {
       const completion = await openai.chat.completions.create({
         model: "gpt-4",
@@ -126,9 +132,19 @@ export async function POST(req: Request) {
 
       console.log('Formatted analysis length:', formattedAnalysis.length);
 
+      // Store analysis in Prisma
+      const newAnalysis = await prisma.analysis.create({
+        data: {
+          content: formattedAnalysis,
+          assessmentId
+        }
+      });
+
+      console.log('Analysis saved to database:', newAnalysis);
+
       return NextResponse.json({ 
         success: true,
-        analysis: formattedAnalysis 
+        analysis: formattedAnalysis  
       });
 
     } catch (openaiError: any) {
