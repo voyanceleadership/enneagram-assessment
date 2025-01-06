@@ -18,6 +18,10 @@ const ASSESSMENT_PRICE = 2999; // $29.99 in cents
 
 export async function POST(req: NextRequest) {
   console.log('Received request in create-checkout route');
+
+  const host = req.headers.get('host') || process.env.NEXT_PUBLIC_BASE_URL;
+  const baseUrl = `http://${host}`;
+
   try {
     const body = await req.json();
     const { email, couponCode } = body;
@@ -87,8 +91,8 @@ export async function POST(req: NextRequest) {
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/assessment/results?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/assessment/cancelled`,
+      success_url: `${baseUrl}/assessment/results?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/assessment/cancelled`,
       customer_email: email,
       metadata: {
         couponCode: couponCode || 'NONE',

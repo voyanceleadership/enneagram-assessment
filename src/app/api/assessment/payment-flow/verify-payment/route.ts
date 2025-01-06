@@ -1,223 +1,109 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { prisma } from '@/lib/prisma';
-import { calculateAssessmentResults } from '@/components/assessment/EnneagramAssessment';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2023-10-16',
 });
 
 export async function POST(req: NextRequest) {
   try {
     const { sessionId } = await req.json();
-    console.log('Verifying payment for session:', sessionId);
+    console.log('Starting payment verification for session:', sessionId);
 
-    console.log('Verifying payment for session:', sessionId);
+    // Verify Stripe session
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-    console.log('Retrieved session from Stripe:', session);
-
-    if (session.payment_status === 'paid') {
-      const userEmail = session.customer_email;
-      
-      if (!userEmail) {
-        return NextResponse.json({ 
-          success: false, 
-          error: 'No email found in payment session' 
-        });
-      }
-
-      // Upsert user information into UserInfo table
-      // First find the user
-      const existingUser = await prisma.userInfo.findFirst({
-        where: { email: userEmail }
-      });
-
-      let user;
-      if (existingUser) {
-        // Update existing user
-        user = await prisma.userInfo.update({
-          where: { id: existingUser.id },
-          data: {
-            firstName: session.metadata?.firstName || 'Unknown',
-            lastName: session.metadata?.lastName || 'Unknown',
-          }
-        });
-      } else {
-        // Create new user
-        user = await prisma.userInfo.create({
-          data: {
-            firstName: session.metadata?.firstName || 'Unknown',
-            lastName: session.metadata?.lastName || 'Unknown',
-            email: userEmail,
-          }
-        });
-      }
-
-      console.log('User info updated/created:', user);
-
-      console.log('User upserted:', user);
-
-      // Fetch the most recent assessment for the user
-      const assessmentData = await prisma.assessmentResponse.findFirst({
-        where: {
-          userInfo: {
-            email: userEmail
-          }
-        },
-        orderBy: {
-          createdAt: 'desc'
-        },
-        include: {
-          userInfo: true,
-          results: {
-            select: {
-              type: true,
-              score: true
-            }
-          },
-          analysis: {
-            select: {
-              content: true
-            }
-          }
-        }
-      });
-
-      if (!assessmentData) {
-        return NextResponse.json({ 
-          success: false, 
-          error: 'Assessment data not found' 
-        });
-      }
-
-      // Calculate and save results if they don't exist or are incomplete
-      let results = assessmentData.results;
-
-      if (!results || results.length < 9) {
-        console.log('Calculating results...');
-        const scores = calculateAssessmentResults(
-          assessmentData.weightingResponses,
-          assessmentData.rankings
-        );
-
-        // Upsert results by deleting incomplete ones and recalculating
-        await prisma.result.deleteMany({
-          where: { assessmentId: assessmentData.id }
-        });
-
-        const resultsToCreate = Object.entries(scores).map(([type, score]) => ({
-          type,
-          score,
-          assessmentId: assessmentData.id
-        }));
-
-        await prisma.result.createMany({
-          data: resultsToCreate
-        });
-
-        // Fetch updated results
-        results = await prisma.result.findMany({
-          where: { assessmentId: assessmentData.id },
-          select: { type: true, score: true }
-        });
-
-        console.log('Results calculated and saved.');
-      }
-
-      // Generate or fetch analysis if it doesn't exist
-      let analysisContent = assessmentData.analysis?.content;
-
-      if (!analysisContent) {
-        console.log('Analysis missing, attempting to generate...');
-
-        // Check if analysis exists after recalculating results
-        const existingAnalysis = await prisma.analysis.findUnique({
-          where: { assessmentId: assessmentData.id }
-        });
-
-        if (existingAnalysis) {
-          analysisContent = existingAnalysis.content;
-          console.log('Existing analysis found and reused.');
-        } else {
-          console.log('No analysis found. Sending request to generate.');
-
-          try {
-            const analysisResponse = await fetch(new URL('/api/assessment/analyze', req.url), {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                assessmentId: assessmentData.id,
-                scores: Object.fromEntries(results.map(r => [r.type, r.score])),
-                responses: assessmentData.rankings
-              })
-            });
-    
-            console.log('Analysis API response status:', analysisResponse.status);
-    
-            if (analysisResponse.ok) {
-              const analysisData = await analysisResponse.json();
-              console.log('Analysis API success:', !!analysisData.success);
-    
-              if (analysisData.success && analysisData.analysis) {
-                analysisContent = analysisData.analysis;
-                console.log('Analysis content length:', analysisContent.length);
-    
-                // Save new analysis to Prisma
-                await prisma.analysis.create({
-                  data: {
-                    content: analysisContent,
-                    assessmentId: assessmentData.id
-                  }
-                });
-                console.log('Analysis saved to database.');
-              }
-            } else {
-              console.error('Failed to generate analysis:', await analysisResponse.text());
-            }
-          } catch (analysisError) {
-            console.error('Error during analysis generation:', analysisError);
-          }
-        }
-      }
-
-      // Update the payment status for the assessment
-      await prisma.assessmentResponse.update({
-        where: { id: assessmentData.id },
-        data: {
-          isPaid: true,
-          sessionId: sessionId
-        }
-      });
-
-      // Format data for frontend (ResultsPage)
-      const formattedData = {
-        userInfo: {
-          firstName: assessmentData.userInfo.firstName,
-          lastName: assessmentData.userInfo.lastName,
-          email: assessmentData.userInfo.email
-        },
-        results: results.map(result => ({
-          type: result.type,
-          score: result.score
-        })),
-        analysis: analysisContent || ''
-      };
-
-      console.log('Returning formatted data:', {
-        resultsCount: formattedData.results.length,
-        types: formattedData.results.map(r => r.type),
-        hasAnalysis: !!formattedData.analysis
-      });
-
+    if (session.payment_status !== 'paid') {
+      console.log('Payment not completed for session:', sessionId);
       return NextResponse.json({ 
-        success: true,
-        data: formattedData
+        success: false, 
+        error: 'Payment has not been completed' 
       });
     }
 
-    return NextResponse.json({ success: false, error: 'Payment not completed' });
+    const userEmail = session.customer_email;
+    if (!userEmail) {
+      console.log('No email found in session:', sessionId);
+      return NextResponse.json({ 
+        success: false, 
+        error: 'No email address found in payment session' 
+      });
+    }
+
+    // Fetch user and assessment
+    const user = await prisma.userInfo.findUnique({
+      where: { email: userEmail }
+    });
+
+    if (!user) {
+      console.log('User not found for email:', userEmail);
+      return NextResponse.json({ 
+        success: false, 
+        error: 'User information not found' 
+      });
+    }
+
+    const assessment = await prisma.assessmentResponse.findFirst({
+      where: { userInfoId: user.id },
+      orderBy: { createdAt: 'desc' },
+      include: { 
+        results: true
+      }
+    });
+
+    if (!assessment) {
+      console.log('Assessment not found for user:', user.id);
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Assessment data not found' 
+      });
+    }
+
+    // Update assessment payment status
+    await prisma.assessmentResponse.update({
+      where: { id: assessment.id },
+      data: { 
+        isPaid: true, 
+        sessionId
+      }
+    });
+
+    // Trigger initial analysis generation
+    console.log('Triggering initial analysis generation');
+    try {
+      await fetch('http://localhost:3000/api/assessment/fetch-analysis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: userEmail,
+          assessmentId: assessment.id
+        })
+      });
+      console.log('Analysis generation triggered');
+    } catch (error) {
+      console.error('Error triggering analysis generation:', error);
+      // Don't return error - we'll let polling handle retries
+    }
+
+    console.log('Payment verification completed successfully');
+
+    return NextResponse.json({ 
+      success: true, 
+      data: {
+        userInfo: user,
+        results: assessment.results.map(r => ({
+          type: r.type,
+          score: parseFloat(r.score.toString())
+        })),
+        assessmentId: assessment.id
+      }
+    });
+
   } catch (error) {
-    console.error('Error verifying payment:', error);
-    return NextResponse.json({ success: false, error: 'Failed to verify payment' });
+    console.error('Error during payment verification:', error);
+    return NextResponse.json({ 
+      success: false, 
+      error: 'An error occurred during payment verification' 
+    });
   }
 }
