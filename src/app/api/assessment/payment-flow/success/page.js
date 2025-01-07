@@ -1,4 +1,3 @@
-// src/app/api/payment-flow/success/page.js
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -22,35 +21,18 @@ export default function PaymentSuccess() {
       }
 
       try {
-        const response = await fetch('/api/payment-flow/success', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ sessionId }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to process payment success');
-        }
-
-        const result = await response.json();
-
-        if (result.success) {
-          // Redirect to results page with the assessment ID
-          router.push(`/api/assessment/results?id=${result.data.assessmentId}`);
-        } else {
-          throw new Error(result.error || 'Unknown error occurred');
-        }
+        // Try to redirect to results
+        router.push(`/assessment/results?session_id=${sessionId}`);
+        setIsProcessing(false);
       } catch (err) {
-        console.error('Error processing payment success:', err);
-        setError(err.message);
+        console.error('Error redirecting to results:', err);
+        setError('Failed to load results page. Please try refreshing.');
         setIsProcessing(false);
       }
     };
 
     handlePaymentSuccess();
-  }, []);
+  }, [router, searchParams]);
 
   if (error) {
     return (

@@ -8,63 +8,137 @@ datasource db {
 }
 
 model ValidEmail {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  createdAt DateTime @default(now())
+  id            String    @id @default(cuid())
+  email         String    @unique
+  source        String    // e.g., 'manual', 'salesforce'
+  sourceId      String?   // For Salesforce Contact ID or other external IDs
+  cohortId      String?   // For grouping emails by organization/program
+  cohortName    String?   // Human-readable cohort name
+  validFrom     DateTime  @default(now())
+  validUntil    DateTime? // Optional expiration date
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  active        Boolean   @default(true)
+
+  @@index([email])
+  @@index([source])
+  @@index([cohortId])
+}
+
+model Cohort {
+  id            String    @id @default(cuid())
+  name          String
+  organizationId String
+  organizationName String
+  startDate     DateTime
+  endDate       DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  active        Boolean   @default(true)
+
+  @@index([organizationId])
 }
 
 model Coupon {
-  id        String      @id @default(cuid())
-  code      String      @unique
-  uses      Int
-  discount  Int
+  id        String        @id @default(cuid())
+  code      String        @unique
+  uses      Int          // Maximum number of times the coupon can be used
+  usedCount Int          @default(0)  // Track current usage
+  discount  Int          // Discount amount (percentage or fixed amount)
   expires   DateTime
-  active    Boolean     @default(true)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  active    Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
   usages    CouponUsage[]
 }
 
 model CouponUsage {
   id        String   @id @default(cuid())
-  coupon    Coupon   @relation(fields: [couponId], references: [id])
+  coupon    Coupon   @relation(fields: [couponId], references: [id], onDelete: Cascade)
   couponId  String
   email     String
   usedAt    DateTime @default(now())
-}
 
-model AssessmentResponse {
-  id          String      @id @default(cuid())
-  createdAt   DateTime    @default(now())
-  userInfo    UserInfo    @relation(fields: [userInfoId], references: [id])
-  userInfoId  String
-  weightingResponses Json
-  rankings    Json
-  results     Result[]
-  analysis    Analysis?
-  isPaid      Boolean     @default(false)
-  sessionId   String?     // For Stripe session ID
+  @@index([couponId])
+  @@index([email])
 }
 
 model UserInfo {
-  id          String      @id @default(cuid())
+  id          String       @id @default(cuid())
   firstName   String
   lastName    String
-  email       String      @unique
-  assessments AssessmentResponse[]
+  email       String       @unique
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  assessments Assessment[]
+}
+
+model Assessment {
+  id             String               @id @default(cuid())
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  userInfo       UserInfo             @relation(fields: [userInfoId], references: [id])
+  userInfoId     String
+  assessmentType String               @default("VEA 2.0")
+  status         AssessmentStatus     @default(STARTED)
+  payment        Payment?
+  responses      AssessmentResponse[]
+  results        Result[]
+  analysis       Analysis?            // One-to-one relation for Analysis
+
+  @@index([userInfoId])
+}
+
+enum AssessmentStatus {
+  STARTED
+  COMPLETED
+  PAID
+  ANALYZED
+}
+
+model Payment {
+  id           String     @id @default(cuid())
+  sessionId    String     @unique
+  amount       Int
+  status       String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  assessmentId String     @unique
+
+  @@index([sessionId])
+}
+
+model AssessmentResponse {
+  id           String     @id @default(cuid())
+  createdAt    DateTime   @default(now())
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  assessmentId String
+  weighting    Json
+  rankings     Json
+
+  @@index([assessmentId])
 }
 
 model Result {
-  id            String    @id @default(cuid())
-  type          String
-  score         Float
-  assessmentId  String
-  assessment    AssessmentResponse @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  id           String     @id @default(cuid())
+  type         String
+  score        Float
+  createdAt    DateTime   @default(now())
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  assessmentId String
+
+  @@index([assessmentId])
+  @@index([type])
 }
 
 model Analysis {
-  id            String    @id @default(cuid())
-  content       String    @db.Text
-  assessmentId  String    @unique
-  assessment    AssessmentResponse @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  id           String     @id @default(cuid())
+  content      String     @db.Text
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  assessmentId String     @unique
+
+  @@index([assessmentId])
 }

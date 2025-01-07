@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import ResultsPage from '@/components/assessment/ResultsPage';
 import { UserInfo } from '@/components/assessment/EnneagramAssessment';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 
 interface AssessmentData {
   userInfo: UserInfo;
@@ -11,136 +13,153 @@ interface AssessmentData {
     type: string;
     score: number;
   }>;
-  analysis?: {
-    content: string;
-  };
+  assessmentId: string;
+  analysis?: string | null;
 }
 
 export default function Results() {
   const searchParams = useSearchParams();
-  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [assessmentData, setAssessmentData] = useState<AssessmentData | null>(null);
+  const [pollCount, setPollCount] = useState(0);
+  const [isPolling, setIsPolling] = useState(false);
 
+  // Debug effect
   useEffect(() => {
-    const verifyPayment = async () => {
-      const sessionId = searchParams.get('session_id');
-      console.log('Processing session ID:', sessionId); // Debug log
-      
-      if (!sessionId) {
-        setError('No session ID found');
-        setIsLoading(false);
-        return;
-      }
+    console.log('State changed:', {
+      isPolling,
+      hasAnalysis: !!assessmentData?.analysis,
+      pollCount,
+      assessmentId: assessmentData?.assessmentId
+    });
+  }, [isPolling, assessmentData, pollCount]);
 
+  // Combined verification and data fetch
+  useEffect(() => {
+    const sessionId = searchParams.get('session_id');
+    if (!sessionId) {
+      setError('No session ID found');
+      return;
+    }
+
+    const fetchData = async () => {
       try {
-        console.log('Sending verification request...'); // Debug log
         const response = await fetch('/api/assessment/payment-flow/verify-payment', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ sessionId }),
         });
 
-        console.log('Verification response status:', response.status); // Debug log
         const data = await response.json();
-        console.log('Verification response data:', data); // Debug log
-
-        if (data.success) {
-          if (!data.data?.userInfo || !data.data?.results) {
-            console.error('Missing required data in response:', data); // Debug log
-            setError('Incomplete assessment data received');
-            return;
-          }
-          setAssessmentData(data.data);
-          console.log('Assessment data set successfully:', data.data); // Debug log
-        } else {
-          setError(data.error || 'Payment verification failed');
-          console.error('Verification failed:', data.error); // Debug log
+        console.log('Payment verification response:', data);
+        
+        if (!response.ok || !data.success) {
+          throw new Error(data.error || 'Failed to verify payment');
         }
+
+        if (!data.data?.userInfo || !data.data?.results || !data.data?.assessmentId) {
+          throw new Error('Incomplete data received from server');
+        }
+
+        setAssessmentData(data.data);
+        setIsPolling(true);  // Start polling for analysis
       } catch (err) {
-        console.error('Payment verification error:', err);
-        setError('Error verifying payment. Please try refreshing the page.');
-      } finally {
-        setIsLoading(false);
+        console.error('Error:', err);
+        setError('Error loading results. Please try refreshing.');
       }
     };
 
-    verifyPayment();
+    fetchData();
   }, [searchParams]);
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <h2 className="text-xl font-semibold mb-2">Verifying your payment...</h2>
-            <p className="text-gray-600">Please wait while we confirm your payment.</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Analysis polling effect
+  useEffect(() => {
+    if (!isPolling || !assessmentData?.assessmentId || assessmentData.analysis || pollCount >= 15) {
+      setIsPolling(false);
+      return;
+    }
+
+    console.log('Starting polling for analysis...');
+    
+    const pollInterval = setInterval(async () => {
+      try {
+        console.log(`Polling for analysis (attempt ${pollCount + 1})...`);
+        
+        const response = await fetch('/api/assessment/fetch-analysis', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            assessmentId: assessmentData.assessmentId
+          }),
+        });
+
+        const data = await response.json();
+        console.log('Analysis poll response:', data);
+        
+        if (response.ok && data.success && data.analysis) {
+          console.log('Analysis received, stopping polling');
+          clearInterval(pollInterval);
+          setIsPolling(false);
+          setAssessmentData(prev => ({
+            ...prev!,
+            analysis: data.analysis
+          }));
+        } else {
+          setPollCount(count => {
+            const newCount = count + 1;
+            if (newCount >= 15) {
+              clearInterval(pollInterval);
+              setIsPolling(false);
+            }
+            return newCount;
+          });
+        }
+      } catch (error) {
+        console.error('Error polling for analysis:', error);
+        setPollCount(count => count + 1);
+      }
+    }, 2000);
+
+    return () => clearInterval(pollInterval);
+  }, [isPolling, assessmentData?.assessmentId, assessmentData?.analysis, pollCount]);
 
   if (error) {
     return (
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <h2 className="text-xl font-semibold mb-2 text-red-600">Error</h2>
-            <p className="text-gray-600">{error}</p>
-            <button 
-              onClick={() => window.location.reload()}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      <div className="container mx-auto px-4 py-8">
+        <Alert variant="destructive">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+          <div className="mt-4">
+            <Button 
+              onClick={() => router.push('/assessment')}
+              variant="outline"
             >
               Try Again
-            </button>
+            </Button>
           </div>
-        </div>
+        </Alert>
       </div>
     );
   }
 
   if (!assessmentData) {
-    return (
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <h2 className="text-xl font-semibold mb-2">Payment Not Verified</h2>
-            <p className="text-gray-600">Unable to verify your payment. Please contact support.</p>
-            <button 
-              onClick={() => window.location.reload()}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Try Again
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+    return null;  // Or minimal loading spinner if preferred
   }
 
-  // Transform results into the expected format
-  const sortedResults: [string, number][] = assessmentData.results
-    .map(result => [result.type, result.score])
+  const sortedResults = assessmentData.results
+    .map(result => [result.type, Math.round(result.score)] as [string, number])
     .sort(([, a], [, b]) => b - a);
-
-  console.log('Rendering results with data:', { 
-    userInfo: assessmentData.userInfo,
-    resultsCount: sortedResults.length,
-    hasAnalysis: !!assessmentData.analysis
-  }); // Debug log
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
         <ResultsPage
           userInfo={assessmentData.userInfo}
-          analysis={assessmentData.analysis?.content || ''}
-          isAnalyzing={false}
+          analysis={assessmentData.analysis || ''}
+          isAnalyzing={isPolling}
           sortedResults={sortedResults}
-          onBack={() => window.history.back()}
+          onBack={() => router.push('/assessment')}
         />
       </div>
     </div>

@@ -12,7 +12,20 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      animation: {
+        'loading-bar': 'loading 2s infinite linear',
+        'spin-slow': 'spin 1.5s linear infinite',
+      },
+      keyframes: {
+        loading: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' }
+        },
+        // spin is already included in Tailwind by default, so we don't need to define it
+      }
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'), // for the prose class in the analysis section
+  ],
 } satisfies Config;

@@ -1,91 +1,113 @@
-import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { OpenAI } from 'openai';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-interface RequestBody {
-  scores: {
-    [key: string]: number;
-  };
-}
-
 export async function POST(req: Request) {
-  console.log('analyze route hit');
-  try {
-    const { scores }: RequestBody = await req.json();
-    console.log('Received scores for analysis:', scores);
+  console.log('Analysis generation started');
 
-    if (!scores || Object.keys(scores).length === 0) {
-      console.error('No scores provided in request');
+  try {
+    const { assessmentId, scores } = await req.json();
+    console.log('Processing analysis for assessment:', assessmentId, 'with scores:', scores);
+
+    // Check if analysis already exists
+    const existingAnalysis = await prisma.analysis.findUnique({
+      where: { assessmentId }
+    });
+
+    if (existingAnalysis) {
+      console.log('Analysis already exists for assessment:', assessmentId);
       return NextResponse.json({
-        error: 'No scores provided'
-      }, { status: 400 });
+        success: true,
+        analysis: existingAnalysis.content
+      });
     }
 
-    const sortedScores = Object.entries(scores)
+    // Construct the prompt
+    const prompt = `You are an Enneagram expert providing structured analysis.
+    
+    Analyze the following Enneagram test results:
+    ${Object.entries(scores)
       .sort(([, a], [, b]) => b - a)
-      .map(([type, score]) => ({ type, score }));
+      .map(([type, score]) => `Type ${type}: ${score} points`)
+      .join('\n')}
+    
+    Provide the analysis in this format:
+    
+    <h2>Core Type Analysis</h2>
+    <p>[Core type explanation]</p>
+    
+    <h2>Wing Analysis</h2>
+    <p>[Wing influences explanation]</p>
+    
+    <h2>Look-Alike Types</h2>
+    <p>[Mistypes and similarities]</p>
+    
+    <h2>Developmental Paths</h2>
+    <p>[Growth and integration paths]</p>`;
 
-    console.log('Sorted scores for analysis:', sortedScores);
-
-    const prompt = `As an Enneagram expert, please analyze these assessment results:
-
-${sortedScores.map(({ type, score }) => `Type ${type}: ${Math.round(score)} points`).join('\n')}
-
-Please structure your analysis with HTML formatting:
-
-<h2>Core Type Analysis</h2>
-- Explain key characteristics of their highest scoring types
-- Discuss how these types manifest in behavior and thinking patterns
-
-<h2>Wing Analysis</h2>
-- Identify potential wing influences
-- Explain how these wings might modify their core type
-- Discuss the benefits and challenges of their wing combination
-
-<h2>Growth Path</h2>
-- Provide specific growth recommendations
-- Identify potential stress and security points
-- Suggest practical steps for personal development
-
-<h2>Common Misidentifications</h2>
-- Discuss any types with close scores
-- Explain key differences between similar types
-- Help clarify type patterns`;
+    console.log('Sending prompt to OpenAI');
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4',
+      model: "gpt-4",
       messages: [
         { 
-          role: 'system', 
-          content: 'You are an expert Enneagram consultant providing structured, accurate analysis.' 
+          role: "system", 
+          content: "You are an expert Enneagram consultant providing structured, accurate analysis." 
         },
-        { role: 'user', content: prompt }
+        { 
+          role: "user", 
+          content: prompt 
+        }
       ],
-      temperature: 0.7,
-      max_tokens: 2000
+      temperature: 0.6,
+      max_tokens: 2000,
     });
 
     const content = completion.choices[0].message.content;
-
+    
     if (!content) {
       throw new Error('No content received from OpenAI');
     }
 
-    console.log('Analysis generated successfully');
+    console.log('Analysis generated, length:', content.length);
+
+    // Format the content
+    const formattedAnalysis = content.replace(/\n/g, '<br>');
+
+    // Save to database
+    const savedAnalysis = await prisma.analysis.create({
+      data: {
+        content: formattedAnalysis,
+        assessment: {
+          connect: {
+            id: assessmentId
+          }
+        }
+      }
+    });
+
+    console.log('Analysis saved with ID:', savedAnalysis.id);
+
+    // Update assessment status
+    await prisma.assessment.update({
+      where: { id: assessmentId },
+      data: { status: 'ANALYZED' }
+    });
 
     return NextResponse.json({
       success: true,
-      analysis: content
+      analysis: formattedAnalysis
     });
 
   } catch (error) {
-    console.error('Error generating analysis:', error);
+    console.error('Analysis generation error:', error);
     return NextResponse.json({ 
-      success: false, 
-      error: 'Failed to generate analysis' 
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to generate analysis'
     }, { 
       status: 500 
     });

@@ -21,7 +21,6 @@ export default function LikertQuestions({
   onBack
 }: LikertQuestionsProps) {
   const currentQuestion = assessmentQuestions.likertQuestions[currentQuestionIndex];
-  const progress = (currentQuestionIndex / assessmentQuestions.likertQuestions.length) * 100;
 
   const handleSelection = (value: number) => {
     setWeightingResponses(prev => ({
@@ -36,22 +35,16 @@ export default function LikertQuestions({
     }
   };
 
+  const handlePrevious = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    } else {
+      onBack();
+    }
+  };
+
   return (
     <div>
-      {/* Progress Bar */}
-      <div className="mb-8">
-        <div className="h-2 w-full bg-gray-200 rounded-full">
-          <div 
-            className="h-2 bg-blue-500 rounded-full transition-all duration-300"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        <div className="flex justify-between items-center mt-2">
-          <p className="text-sm text-gray-600">Part 1: General Patterns</p>
-          <p className="text-sm text-gray-600">{currentQuestion.triadGroup}</p>
-        </div>
-      </div>
-
       {/* Question Card */}
       <div className="bg-white p-6 rounded-lg shadow-lg space-y-6">
         <div className="space-y-4">
@@ -75,7 +68,7 @@ export default function LikertQuestions({
         {/* Navigation Buttons */}
         <div className="flex justify-between mt-8">
           <button
-            onClick={onBack}
+            onClick={handlePrevious}
             className="px-4 py-2 text-blue-600"
           >
             Previous

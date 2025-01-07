@@ -9,6 +9,7 @@ import LikertQuestions from './LikertQuestions';
 import RankChoiceQuestions from './RankChoiceQuestions';
 import ResultsPage from './ResultsPage';
 import PaymentPage from '@/components/payment/PaymentPage';
+import { ProgressIndicator } from './ProgressIndicator';
 
 export interface UserInfo {
   firstName: string;
@@ -41,6 +42,23 @@ export default function EnneagramAssessment() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [sortedResults, setSortedResults] = useState<[string, number][]>([]);
   const [error, setError] = useState<string | null>(null);
+  const TOTAL_QUESTIONS = 48; // Total number of questions across all sections
+  const LIKERT_QUESTIONS = 12; // Number of Likert questions
+
+  const handlePrevious = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
+
+  const getCurrentQuestionNumber = () => {
+    if (step === 'likert') {
+      return currentQuestionIndex + 1;
+    } else if (step === 'ranking') {
+      return LIKERT_QUESTIONS + currentQuestionIndex + 1;
+    }
+    return 0;
+  };
 
   const saveAssessmentData = async () => {
     try {
@@ -54,14 +72,15 @@ export default function EnneagramAssessment() {
           responses: {
             weightingResponses,
             rankings
-          }
+          },
+          assessmentType: 'standard',  // Add this line to specify the assessment type
         }),
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to save assessment data');
       }
-
+  
       const data = await response.json();
       if (data.success) {
         setAssessmentId(data.assessmentId);
@@ -74,7 +93,7 @@ export default function EnneagramAssessment() {
       setError(err instanceof Error ? err.message : 'An error occurred');
       return false;
     }
-  };
+  };  
 
   const handleMoveToPayment = async () => {
     try {
@@ -85,11 +104,9 @@ export default function EnneagramAssessment() {
         userInfo
       });
   
-      // Calculate results using the imported function
       const calculatedResults = calculateAssessmentResults(weightingResponses, rankings);
       console.log('Calculated results:', calculatedResults);
   
-      // Save assessment data with calculated results
       const response = await fetch('/api/assessment/save-response', {
         method: 'POST',
         headers: {
@@ -101,7 +118,8 @@ export default function EnneagramAssessment() {
             weightingResponses,
             rankings,
             calculatedResults
-          }
+          },
+          assessmentType: 'standard',  // Add this line to send the assessment type
         }),
       });
   
@@ -127,7 +145,7 @@ export default function EnneagramAssessment() {
       console.error('Detailed error in handleMoveToPayment:', err);
       setError(err instanceof Error ? err.message : 'An error occurred saving your assessment');
     }
-  };
+  };  
 
   // Determine which component to render based on current step
   const renderCurrentStep = () => {
@@ -137,30 +155,48 @@ export default function EnneagramAssessment() {
           <UserInfoForm
             userInfo={userInfo}
             setUserInfo={setUserInfo}
-            onNext={() => setStep('likert')}
+            onNext={() => {
+              setStep('likert');
+              setCurrentQuestionIndex(0);
+            }}
           />
         );
       case 'likert':
         return (
-          <LikertQuestions
-            currentQuestionIndex={currentQuestionIndex}
-            setCurrentQuestionIndex={setCurrentQuestionIndex}
-            weightingResponses={weightingResponses}
-            setWeightingResponses={setWeightingResponses}
-            onComplete={() => setStep('ranking')}
-            onBack={() => setStep('userInfo')}
-          />
+          <>
+            <ProgressIndicator 
+              currentQuestion={getCurrentQuestionNumber()}
+              totalQuestions={TOTAL_QUESTIONS}
+            />
+            <LikertQuestions
+              currentQuestionIndex={currentQuestionIndex}
+              setCurrentQuestionIndex={setCurrentQuestionIndex}
+              weightingResponses={weightingResponses}
+              setWeightingResponses={setWeightingResponses}
+              onComplete={() => {
+                setStep('ranking');
+                setCurrentQuestionIndex(0);
+              }}
+              onBack={handlePrevious}
+            />
+          </>
         );
       case 'ranking':
         return (
-          <RankChoiceQuestions
-            currentQuestionIndex={currentQuestionIndex}
-            setCurrentQuestionIndex={setCurrentQuestionIndex}
-            rankings={rankings}
-            setRankings={setRankings}
-            onComplete={handleMoveToPayment}
-            onBack={() => setStep('likert')}
-          />
+          <>
+            <ProgressIndicator 
+              currentQuestion={getCurrentQuestionNumber()}
+              totalQuestions={TOTAL_QUESTIONS}
+            />
+            <RankChoiceQuestions
+              currentQuestionIndex={currentQuestionIndex}
+              setCurrentQuestionIndex={setCurrentQuestionIndex}
+              rankings={rankings}
+              setRankings={setRankings}
+              onComplete={handleMoveToPayment}
+              onBack={handlePrevious}
+            />
+          </>
         );
       case 'payment':
         return (

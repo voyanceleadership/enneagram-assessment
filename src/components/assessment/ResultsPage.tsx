@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UserInfo } from '@/components/assessment/EnneagramAssessment';
-import { TYPE_NAMES } from '@/app/data/constants/EnneagramData';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Download } from 'lucide-react';
+
+const TYPE_NAMES = {
+  '1': 'Type 1: The Reformer',
+  '2': 'Type 2: The Helper',
+  '3': 'Type 3: The Achiever',
+  '4': 'Type 4: The Individualist',
+  '5': 'Type 5: The Investigator',
+  '6': 'Type 6: The Loyalist',
+  '7': 'Type 7: The Enthusiast',
+  '8': 'Type 8: The Challenger',
+  '9': 'Type 9: The Peacemaker'
+};
 
 interface ResultsPageProps {
   userInfo: UserInfo;
@@ -63,7 +75,7 @@ export default function ResultsPage({
           <h2 style="font-size: 1.5rem; margin-bottom: 10px;">Type Scores</h2>
           ${processedResults.map(({ type, typeName, score }) => 
             `<p style="margin: 5px 0; font-size: 1.1rem;">
-              <strong>Type ${type}: ${typeName}</strong> - ${score} points
+              <strong>${typeName}</strong> - ${score} points
             </p>`
           ).join('')}
         </div>
@@ -103,12 +115,29 @@ export default function ResultsPage({
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
-        <Card className="bg-white shadow-lg">
+        <Card className="bg-white shadow-lg relative">
+          {isAnalyzing && (
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gray-100 overflow-hidden">
+              <div className="h-full bg-blue-600 animate-loading-bar"></div>
+            </div>
+          )}
+          
           <CardHeader className="pb-0">
             <div className="space-y-6">
-              <h1 className="text-3xl font-bold text-gray-900">
-                Your Enneagram Results
-              </h1>
+              {/* Header with name and download button */}
+              <div className="flex justify-between items-center flex-wrap gap-4">
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Your Enneagram Results
+                </h1>
+                <Button
+                  onClick={downloadPDF}
+                  disabled={isAnalyzing || isGeneratingPDF}
+                  className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  {isGeneratingPDF ? 'Generating PDF...' : 'Download PDF'}
+                </Button>
+              </div>
 
               {/* User Information */}
               <div className="border-b border-gray-200 pb-6">
@@ -121,37 +150,12 @@ export default function ResultsPage({
                       <span className="font-semibold">Email:</span> {userInfo.email}
                     </p>
                   </div>
-                  <div>
+                  <div className="md:text-right">
                     <p className="text-gray-700">
                       <span className="font-semibold">Date:</span> {currentDate}
                     </p>
                   </div>
                 </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4">
-                <Button
-                  onClick={() => window.print()}
-                  disabled={isAnalyzing}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  Print Results
-                </Button>
-                <Button
-                  onClick={downloadPDF}
-                  disabled={isAnalyzing || isGeneratingPDF}
-                  className="bg-green-600 hover:bg-green-700 text-white"
-                >
-                  {isGeneratingPDF ? 'Generating PDF...' : 'Download PDF'}
-                </Button>
-                <Button
-                  onClick={onBack}
-                  variant="outline"
-                  className="border-gray-300"
-                >
-                  Back
-                </Button>
               </div>
 
               {pdfError && (
@@ -163,74 +167,59 @@ export default function ResultsPage({
           </CardHeader>
 
           <CardContent>
-            {/* Results Section */}
             <div className="space-y-6">
-              <h2 className="text-2xl font-semibold text-gray-900">Type Scores</h2>
-              <div className="space-y-3">
-                {sortedResults.map(([type, score]) => (
-                  <div
-                    key={type}
-                    className="flex justify-between items-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
-                  >
-                    <div className="space-y-1">
-                      <h3 className="font-semibold text-lg">
-                        Type {type}: {TYPE_NAMES[type]}
-                      </h3>
+              {/* Results Section */}
+              <div>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-4">Type Scores</h2>
+                <div className="space-y-3">
+                  {sortedResults.map(([type, score]) => (
+                    <div 
+                      key={type} 
+                      className="flex justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                    >
+                      <span className="text-lg">{TYPE_NAMES[type]}</span>
+                      <span className="font-semibold text-lg">{Math.round(score)}</span>
                     </div>
-                    <span className="text-lg font-bold text-gray-700">
-                      {Math.round(score)} points
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
 
               {/* Analysis Section */}
               <div className="mt-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-                  Detailed Analysis
-                </h2>
-                <div className="bg-gray-50 rounded-lg p-6">
-                  {isAnalyzing ? (
-                    <div className="text-center py-8">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                      <p className="text-gray-600">Generating your personalized analysis...</p>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-4">Analysis</h2>
+                {isAnalyzing ? (
+                  <div className="text-center py-12">
+                    <div className="flex items-center justify-center mb-4">
+                      <div className="relative w-12 h-12">
+                        <div className="absolute inset-0 border-4 border-blue-200 rounded-full"></div>
+                        <div className="absolute inset-0 border-4 border-blue-600 rounded-full animate-spin-slow border-t-transparent"></div>
+                      </div>
                     </div>
-                  ) : analysis ? (
-                    <div
-                      className="prose max-w-none text-gray-700 leading-relaxed"
-                      dangerouslySetInnerHTML={{ __html: analysis }}
-                    />
-                  ) : (
-                    <p className="text-gray-600">Analysis generation in progress...</p>
-                  )}
-                </div>
+                    <p className="text-gray-600">Generating your personalized analysis...</p>
+                    <p className="text-sm text-gray-500 mt-2">This may take a few moments</p>
+                  </div>
+                ) : (
+                  <div 
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: analysis }} 
+                  />
+                )}
+              </div>
+
+              {/* Back Button */}
+              <div className="mt-8">
+                <Button
+                  onClick={onBack}
+                  variant="outline"
+                  className="border-gray-300"
+                >
+                  Back to Assessment
+                </Button>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
-
-      {/* Print Styles */}
-      <style jsx global>{`
-        @media print {
-          body * {
-            visibility: hidden;
-          }
-          .card,
-          .card * {
-            visibility: visible;
-          }
-          .card {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-          }
-          .no-print {
-            display: none;
-          }
-        }
-      `}</style>
     </div>
   );
 }

@@ -6,14 +6,14 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     console.log('Received request body:', body);
 
-    if (!body.userInfo || !body.responses) {
+    const { userInfo, responses, assessmentType } = body;
+
+    if (!userInfo || !responses || !assessmentType) {
       return NextResponse.json({ 
         success: false, 
-        error: 'Missing required data: userInfo or responses' 
+        error: 'Missing required data: userInfo, responses, or assessmentType' 
       }, { status: 400 });
     }
-
-    const { userInfo, responses } = body;
 
     // Validate userInfo
     if (!userInfo.email || !userInfo.firstName || !userInfo.lastName) {
@@ -37,10 +37,9 @@ export async function POST(req: NextRequest) {
     const existingUser = await prisma.userInfo.findFirst({
       where: { email: userInfo.email }
     });
-    
+
     let savedUserInfo;
     if (existingUser) {
-      // Update existing user
       savedUserInfo = await prisma.userInfo.update({
         where: { id: existingUser.id },
         data: {
@@ -49,7 +48,6 @@ export async function POST(req: NextRequest) {
         }
       });
     } else {
-      // Create new user
       savedUserInfo = await prisma.userInfo.create({
         data: {
           firstName: userInfo.firstName,
@@ -58,36 +56,40 @@ export async function POST(req: NextRequest) {
         }
       });
     }
-    
-    console.log('Saved user info:', savedUserInfo);
 
     console.log('Saved user info:', savedUserInfo);
 
-    // Create assessment response - removed email field since it's connected through userInfo
-    const assessmentResponse = await prisma.assessmentResponse.create({
+    // Create the assessment with assessmentType
+    const assessment = await prisma.assessment.create({
       data: {
-        userInfoId: savedUserInfo.id,  // This creates the connection to userInfo
-        weightingResponses: responses.weightingResponses,
-        rankings: responses.rankings,
-        isPaid: false,
-        results: {
-          create: Object.entries(responses.calculatedResults).map(([type, score]) => ({
-            type,
-            score: Number(score),
-          })),
-        },
-      },
-      include: {
-        results: true,
-        userInfo: true,
+        userInfoId: savedUserInfo.id,
+        assessmentType: assessmentType,
       },
     });
 
-    console.log('Created assessment response:', assessmentResponse);
+    // Create response data linked to the assessment
+    const assessmentResponse = await prisma.assessmentResponse.create({
+      data: {
+        assessmentId: assessment.id,
+        weighting: responses.weightingResponses,
+        rankings: responses.rankings,
+      },
+    });
+
+    // Create results linked to the assessment
+    await prisma.result.createMany({
+      data: Object.entries(responses.calculatedResults).map(([type, score]) => ({
+        type,
+        score: Number(score),
+        assessmentId: assessment.id,
+      })),
+    });
+
+    console.log('Created assessment response and results:', assessmentResponse);
 
     return NextResponse.json({ 
       success: true, 
-      assessmentId: assessmentResponse.id 
+      assessmentId: assessment.id,
     });
 
   } catch (error) {

@@ -1,109 +1,158 @@
-import { NextRequest, NextResponse } from 'next/server';
-import Stripe from 'stripe';
+import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16',
-});
+export async function POST(req: Request) {
+  console.log('Payment verification started');
 
-export async function POST(req: NextRequest) {
   try {
-    const { sessionId } = await req.json();
-    console.log('Starting payment verification for session:', sessionId);
+    const { sessionId, amount, status } = await req.json();
+    console.log('Verifying session:', sessionId);
 
-    // Verify Stripe session
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    if (session.payment_status !== 'paid') {
-      console.log('Payment not completed for session:', sessionId);
-      return NextResponse.json({ 
-        success: false, 
-        error: 'Payment has not been completed' 
-      });
-    }
-
-    const userEmail = session.customer_email;
-    if (!userEmail) {
-      console.log('No email found in session:', sessionId);
-      return NextResponse.json({ 
-        success: false, 
-        error: 'No email address found in payment session' 
-      });
-    }
-
-    // Fetch user and assessment
-    const user = await prisma.userInfo.findUnique({
-      where: { email: userEmail }
-    });
-
-    if (!user) {
-      console.log('User not found for email:', userEmail);
-      return NextResponse.json({ 
-        success: false, 
-        error: 'User information not found' 
-      });
-    }
-
-    const assessment = await prisma.assessmentResponse.findFirst({
-      where: { userInfoId: user.id },
-      orderBy: { createdAt: 'desc' },
-      include: { 
-        results: true
+    // Check for an existing payment with this session ID
+    let payment = await prisma.payment.findUnique({
+      where: { sessionId },
+      select: {
+        id: true,
+        assessment: {
+          select: {
+            id: true,
+            userInfo: {
+              select: {
+                firstName: true,
+                lastName: true,
+                email: true
+              }
+            },
+            results: {
+              select: {
+                type: true,
+                score: true
+              }
+            }
+          }
+        }
       }
     });
 
-    if (!assessment) {
-      console.log('Assessment not found for user:', user.id);
-      return NextResponse.json({ 
-        success: false, 
-        error: 'Assessment data not found' 
+    if (!payment) {
+      console.log('Payment not found. Creating new payment record.');
+      
+      // Find the assessment associated with this session
+      const assessment = await prisma.assessment.findFirst({
+        where: { 
+          payment: { 
+            sessionId 
+          } 
+        },
+        select: {
+          id: true,
+          userInfo: {
+            select: {
+              firstName: true,
+              lastName: true,
+              email: true
+            }
+          },
+          results: {
+            select: {
+              type: true,
+              score: true
+            }
+          }
+        }
       });
+
+      if (!assessment) {
+        throw new Error('No associated assessment found for session');
+      }
+
+      // Create a new payment record
+      payment = await prisma.payment.create({
+        data: {
+          sessionId,
+          amount,
+          status,
+          assessment: {
+            connect: {
+              id: assessment.id
+            }
+          }
+        },
+        select: {
+          id: true,
+          assessment: {
+            select: {
+              id: true,
+              userInfo: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                  email: true
+                }
+              },
+              results: {
+                select: {
+                  type: true,
+                  score: true
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // Update assessment status
+      await prisma.assessment.update({
+        where: { id: assessment.id },
+        data: { status: 'PAID' }
+      });
+
+      console.log('New payment created:', payment.id);
     }
 
-    // Update assessment payment status
-    await prisma.assessmentResponse.update({
-      where: { id: assessment.id },
-      data: { 
-        isPaid: true, 
-        sessionId
-      }
+    if (!payment.assessment) {
+      throw new Error('Assessment not found for this payment');
+    }
+
+    // Trigger analysis generation without awaiting the response
+    fetch('http://localhost:3000/api/assessment/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        assessmentId: payment.assessment.id,
+        scores: payment.assessment.results.reduce((acc, result) => {
+          acc[result.type] = Math.round(result.score * 10) / 10;
+          return acc;
+        }, {} as Record<string, number>)
+      }),
+    }).catch(error => {
+      console.error('Error triggering analysis:', error);
     });
 
-    // Trigger initial analysis generation
-    console.log('Triggering initial analysis generation');
-    try {
-      await fetch('http://localhost:3000/api/assessment/fetch-analysis', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: userEmail,
-          assessmentId: assessment.id
-        })
-      });
-      console.log('Analysis generation triggered');
-    } catch (error) {
-      console.error('Error triggering analysis generation:', error);
-      // Don't return error - we'll let polling handle retries
-    }
-
-    console.log('Payment verification completed successfully');
-
-    return NextResponse.json({ 
-      success: true, 
+    const responseData = {
+      success: true,
       data: {
-        userInfo: user,
-        results: assessment.results.map(r => ({
-          type: r.type,
-          score: parseFloat(r.score.toString())
+        userInfo: {
+          firstName: payment.assessment.userInfo.firstName,
+          lastName: payment.assessment.userInfo.lastName,
+          email: payment.assessment.userInfo.email,
+        },
+        results: payment.assessment.results.map(result => ({
+          type: result.type,
+          score: Math.round(result.score * 10) / 10,
         })),
-        assessmentId: assessment.id
-      }
-    });
+        assessmentId: payment.assessment.id,
+      },
+    };
+
+    console.log('Sending response data:', JSON.stringify(responseData, null, 2));
+    return NextResponse.json(responseData);
 
   } catch (error) {
     console.error('Error during payment verification:', error);
-    return NextResponse.json({ 
-      success: false, 
-      error: 'An error occurred during payment verification' 
-    });
+    return NextResponse.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to verify payment',
+    }, { status: 500 });
   }
 }

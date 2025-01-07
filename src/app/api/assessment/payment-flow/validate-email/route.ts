@@ -1,12 +1,18 @@
+// src/app/api/assessment/payment-flow/validate-email/route.ts
+
 import { NextRequest, NextResponse } from 'next/server';
-import { validEmails } from '@/app/data/validation/ValidEmails';
+import { EmailValidationService } from '@/services/emailValidation';
+
+const emailValidationService = new EmailValidationService();
 
 export async function POST(req: NextRequest) {
-  const { email } = await req.json();
-
-  if (validEmails.includes(email)) {
-    return NextResponse.json({ valid: true });
-  } else {
-    return NextResponse.json({ valid: false });
+  try {
+    const { email } = await req.json();
+    const isValid = await emailValidationService.isEmailValid(email);
+    
+    return NextResponse.json({ valid: isValid });
+  } catch (error) {
+    console.error('Error in email validation route:', error);
+    return NextResponse.json({ valid: false, error: 'Error validating email' }, { status: 500 });
   }
 }
