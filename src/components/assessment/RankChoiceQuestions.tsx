@@ -1,5 +1,5 @@
 // src/components/assessment/RankChoiceQuestions.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { rankingQuestions } from '../../app/data/assessment/AssessmentQuestions';
 import { Rankings } from './EnneagramAssessment';
 
@@ -10,6 +10,7 @@ interface RankChoiceQuestionsProps {
   setRankings: (rankings: Rankings) => void;
   onComplete: () => void;
   onBack: () => void;
+  assessmentId: string;
 }
 
 export default function RankChoiceQuestions({
@@ -18,9 +19,56 @@ export default function RankChoiceQuestions({
   rankings,
   setRankings,
   onComplete,
-  onBack
+  onBack,
+  assessmentId
 }: RankChoiceQuestionsProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false); 
   const currentQuestion = rankingQuestions[currentQuestionIndex];
+
+  const handleCompletion = async () => {
+    try {
+      // First check if this is a paid assessment
+      const paymentCheck = await fetch('/api/assessment/payment-flow/check-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assessmentId })
+      });
+
+      const { paid } = await paymentCheck.json();
+
+      if (paid) {
+        // Get the assessment with results
+        const assessmentResponse = await fetch('/api/assessment/get-results', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ assessmentId })
+        });
+
+        const assessmentData = await assessmentResponse.json();
+
+        if (assessmentData.results) {
+          // Trigger analysis generation
+          await fetch('/api/assessment/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              assessmentId,
+              scores: assessmentData.results.reduce((acc, result) => {
+                acc[result.type] = Math.round(result.score * 10) / 10;
+                return acc;
+              }, {} as Record<string, number>)
+            }),
+          });
+        }
+      }
+
+      // Continue with normal completion flow
+      onComplete();
+    } catch (error) {
+      console.error('Error handling assessment completion:', error);
+      onComplete(); // Still complete even if there's an error
+    }
+  };
 
   const getRankLabel = (optionIndex: number): string => {
     const currentRankings = rankings[currentQuestionIndex] || [];
@@ -47,7 +95,7 @@ export default function RankChoiceQuestions({
       if (currentQuestionIndex < rankingQuestions.length - 1) {
         setCurrentQuestionIndex(prev => prev + 1);
       } else {
-        onComplete();
+        handleCompletion();
       }
     }
   };
@@ -96,21 +144,25 @@ export default function RankChoiceQuestions({
             Previous
           </button>
           <button
-            onClick={() => {
+            onClick={async () => {
               if (currentQuestionIndex < rankingQuestions.length - 1) {
                 setCurrentQuestionIndex(prev => prev + 1);
               } else {
-                onComplete();
+                setIsSubmitting(true);
+                await onComplete();
+                setIsSubmitting(false);
               }
             }}
-            disabled={!rankings[currentQuestionIndex]?.length}
+            disabled={!rankings[currentQuestionIndex]?.length || isSubmitting}
             className={`px-4 py-2 rounded-lg ${
-              rankings[currentQuestionIndex]?.length === 3
+              rankings[currentQuestionIndex]?.length === 3 && !isSubmitting
                 ? 'bg-blue-600 text-white hover:bg-blue-700'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
-            {currentQuestionIndex === rankingQuestions.length - 1 ? 'Complete' : 'Next'}
+            {currentQuestionIndex === rankingQuestions.length - 1 
+              ? (isSubmitting ? 'Submitting...' : 'Complete') 
+              : 'Next'}
           </button>
         </div>
       </div>

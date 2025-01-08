@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+// src/components/assessment/ResultsPage.tsx
+import React, { useState } from 'react';
 import { UserInfo } from '@/components/assessment/EnneagramAssessment';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -113,113 +114,109 @@ export default function ResultsPage({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        <Card className="bg-white shadow-lg relative">
-          {isAnalyzing && (
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gray-100 overflow-hidden">
-              <div className="h-full bg-blue-600 animate-loading-bar"></div>
-            </div>
-          )}
-          
-          <CardHeader className="pb-0">
-            <div className="space-y-6">
-              {/* Header with name and download button */}
-              <div className="flex justify-between items-center flex-wrap gap-4">
-                <h1 className="text-3xl font-bold text-gray-900">
-                  Your Enneagram Results
-                </h1>
-                <Button
-                  onClick={downloadPDF}
-                  disabled={isAnalyzing || isGeneratingPDF}
-                  className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
-                >
-                  <Download className="h-4 w-4" />
-                  {isGeneratingPDF ? 'Generating PDF...' : 'Download PDF'}
-                </Button>
-              </div>
+    <Card className="bg-white shadow-lg relative">
+      {isAnalyzing && (
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gray-100 overflow-hidden">
+          <div className="h-full bg-blue-600 animate-loading-bar"></div>
+        </div>
+      )}
+      
+      <CardHeader className="pb-0">
+        <div className="space-y-6">
+          {/* Header with name and download button */}
+          <div className="flex justify-between items-center flex-wrap gap-4">
+            <h1 className="text-3xl font-bold text-gray-900">
+              Your Enneagram Results
+            </h1>
+            <Button
+              onClick={downloadPDF}
+              disabled={isAnalyzing || isGeneratingPDF}
+              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
+            >
+              <Download className="h-4 w-4" />
+              {isGeneratingPDF ? 'Generating PDF...' : 'Download PDF'}
+            </Button>
+          </div>
 
-              {/* User Information */}
-              <div className="border-b border-gray-200 pb-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-gray-700">
-                      <span className="font-semibold">Name:</span> {userInfo.firstName} {userInfo.lastName}
-                    </p>
-                    <p className="text-gray-700">
-                      <span className="font-semibold">Email:</span> {userInfo.email}
-                    </p>
-                  </div>
-                  <div className="md:text-right">
-                    <p className="text-gray-700">
-                      <span className="font-semibold">Date:</span> {currentDate}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {pdfError && (
-                <Alert variant="destructive">
-                  <AlertDescription>{pdfError}</AlertDescription>
-                </Alert>
-              )}
-            </div>
-          </CardHeader>
-
-          <CardContent>
-            <div className="space-y-6">
-              {/* Results Section */}
+          {/* User Information */}
+          <div className="border-b border-gray-200 pb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">Type Scores</h2>
-                <div className="space-y-3">
-                  {sortedResults.map(([type, score]) => (
-                    <div 
-                      key={type} 
-                      className="flex justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                    >
-                      <span className="text-lg">{TYPE_NAMES[type]}</span>
-                      <span className="font-semibold text-lg">{Math.round(score)}</span>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-gray-700">
+                  <span className="font-semibold">Name:</span> {userInfo.firstName} {userInfo.lastName}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-semibold">Email:</span> {userInfo.email}
+                </p>
               </div>
-
-              {/* Analysis Section */}
-              <div className="mt-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">Analysis</h2>
-                {isAnalyzing ? (
-                  <div className="text-center py-12">
-                    <div className="flex items-center justify-center mb-4">
-                      <div className="relative w-12 h-12">
-                        <div className="absolute inset-0 border-4 border-blue-200 rounded-full"></div>
-                        <div className="absolute inset-0 border-4 border-blue-600 rounded-full animate-spin-slow border-t-transparent"></div>
-                      </div>
-                    </div>
-                    <p className="text-gray-600">Generating your personalized analysis...</p>
-                    <p className="text-sm text-gray-500 mt-2">This may take a few moments</p>
-                  </div>
-                ) : (
-                  <div 
-                    className="prose max-w-none"
-                    dangerouslySetInnerHTML={{ __html: analysis }} 
-                  />
-                )}
-              </div>
-
-              {/* Back Button */}
-              <div className="mt-8">
-                <Button
-                  onClick={onBack}
-                  variant="outline"
-                  className="border-gray-300"
-                >
-                  Back to Assessment
-                </Button>
+              <div className="md:text-right">
+                <p className="text-gray-700">
+                  <span className="font-semibold">Date:</span> {currentDate}
+                </p>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+          </div>
+
+          {pdfError && (
+            <Alert variant="destructive">
+              <AlertDescription>{pdfError}</AlertDescription>
+            </Alert>
+          )}
+        </div>
+      </CardHeader>
+
+      <CardContent>
+        <div className="space-y-6">
+          {/* Results Section */}
+          <div>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Type Scores</h2>
+            <div className="space-y-3">
+              {sortedResults.map(([type, score]) => (
+                <div 
+                  key={type} 
+                  className="flex justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <span className="text-lg">{TYPE_NAMES[type]}</span>
+                  <span className="font-semibold text-lg">{Math.round(score)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Analysis Section */}
+          <div className="mt-8">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Analysis</h2>
+            {isAnalyzing ? (
+              <div className="text-center py-12">
+                <div className="flex items-center justify-center mb-4">
+                  <div className="relative w-12 h-12">
+                    <div className="absolute inset-0 border-4 border-blue-200 rounded-full"></div>
+                    <div className="absolute inset-0 border-4 border-blue-600 rounded-full animate-spin-slow border-t-transparent"></div>
+                  </div>
+                </div>
+                <p className="text-gray-600">Generating your personalized analysis...</p>
+                <p className="text-sm text-gray-500 mt-2">This may take a few moments</p>
+              </div>
+            ) : (
+              <div 
+                className="prose max-w-none"
+                dangerouslySetInnerHTML={{ __html: analysis }} 
+              />
+            )}
+          </div>
+
+          {/* Back Button */}
+          <div className="mt-8">
+            <Button
+              onClick={onBack}
+              variant="outline"
+              className="border-gray-300"
+            >
+              Back to Assessment
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

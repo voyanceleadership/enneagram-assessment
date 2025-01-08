@@ -23,14 +23,6 @@ export async function POST(req: NextRequest) {
       }, { status: 400 });
     }
 
-    // Validate responses
-    if (!responses.weightingResponses || !responses.rankings || !responses.calculatedResults) {
-      return NextResponse.json({ 
-        success: false, 
-        error: 'Missing required response data' 
-      }, { status: 400 });
-    }
-
     console.log('Creating/updating user info for:', userInfo.email);
     
     // Create or update user info
@@ -67,25 +59,30 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Create response data linked to the assessment
-    const assessmentResponse = await prisma.assessmentResponse.create({
-      data: {
-        assessmentId: assessment.id,
-        weighting: responses.weightingResponses,
-        rankings: responses.rankings,
-      },
-    });
+    // Only create response and results if calculatedResults exist
+    if (responses.calculatedResults) {
+      // Create response data linked to the assessment
+      const assessmentResponse = await prisma.assessmentResponse.create({
+        data: {
+          assessmentId: assessment.id,
+          weighting: responses.weightingResponses,
+          rankings: responses.rankings,
+        },
+      });
 
-    // Create results linked to the assessment
-    await prisma.result.createMany({
-      data: Object.entries(responses.calculatedResults).map(([type, score]) => ({
-        type,
-        score: Number(score),
-        assessmentId: assessment.id,
-      })),
-    });
+      // Create results linked to the assessment
+      await prisma.result.createMany({
+        data: Object.entries(responses.calculatedResults).map(([type, score]) => ({
+          type,
+          score: Number(score),
+          assessmentId: assessment.id,
+        })),
+      });
 
-    console.log('Created assessment response and results:', assessmentResponse);
+      console.log('Created assessment response and results');
+    } else {
+      console.log('Initial assessment created without responses');
+    }
 
     return NextResponse.json({ 
       success: true, 

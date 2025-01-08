@@ -11,11 +11,45 @@ import ResultsPage from './ResultsPage';
 import PaymentPage from '@/components/payment/PaymentPage';
 import { ProgressIndicator } from './ProgressIndicator';
 
+// Update the UserInfo interface
 export interface UserInfo {
   firstName: string;
   lastName: string;
   email: string;
+  companyName?: string;
 }
+
+// Add a handleUserInfoSubmit function
+const handleUserInfoSubmit = async () => {
+  try {
+    const response = await fetch('/api/assessment/save-response', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userInfo,
+        responses: {
+          weightingResponses: {},
+          rankings: {}
+        },
+        assessmentType: 'standard',
+      }),
+    });
+
+    const data = await response.json();
+    if (data.success) {
+      setAssessmentId(data.assessmentId);
+      setStep('likert');
+      setCurrentQuestionIndex(0);
+    } else {
+      throw new Error(data.error || 'Failed to save user info');
+    }
+  } catch (err) {
+    console.error('Error saving user info:', err);
+    setError(err instanceof Error ? err.message : 'An error occurred');
+  }
+};
 
 export type WeightingResponses = {
   [questionId: string]: number;
@@ -98,15 +132,10 @@ export default function EnneagramAssessment() {
   const handleMoveToPayment = async () => {
     try {
       console.log('Starting handleMoveToPayment');
-      console.log('Current state:', {
-        weightingResponses,
-        rankings,
-        userInfo
-      });
-  
+      
       const calculatedResults = calculateAssessmentResults(weightingResponses, rankings);
-      console.log('Calculated results:', calculatedResults);
-  
+      
+      // Save the final results
       const response = await fetch('/api/assessment/save-response', {
         method: 'POST',
         headers: {
@@ -119,30 +148,46 @@ export default function EnneagramAssessment() {
             rankings,
             calculatedResults
           },
-          assessmentType: 'standard',  // Add this line to send the assessment type
+          assessmentType: 'standard',
         }),
       });
   
-      console.log('Save response status:', response.status);
-      const data = await response.json();
-      console.log('Save response data:', data);
-  
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to save assessment data');
+        throw new Error('Failed to save assessment data');
       }
   
-      if (data.success) {
-        setAssessmentId(data.assessmentId);
-        setSortedResults(
-          Object.entries(calculatedResults)
-            .sort(([, a], [, b]) => b - a) as [string, number][]
-        );
-        setStep('payment');
+      const data = await response.json();
+      setAssessmentId(data.assessmentId);
+  
+      // Check payment status or bypass for validated users
+      const checkoutResponse = await fetch('/api/assessment/payment-flow/validate-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: userInfo.email,
+          assessmentId: data.assessmentId
+        })
+      });
+  
+      const checkoutResult = await checkoutResponse.json();
+  
+      // Sort results for display
+      setSortedResults(
+        Object.entries(calculatedResults)
+          .sort(([, a], [, b]) => b - a) as [string, number][]
+      );
+  
+      // Handle bypass flow - directly move to results
+      if (checkoutResult.success && checkoutResult.bypass) {
+        console.log('Bypassing payment, moving to results.');
+        setIsAnalyzing(true);
+        setStep('results');
       } else {
-        throw new Error(data.error || 'Failed to save assessment');
+        // Continue to Stripe payment if bypass is not triggered
+        setStep('payment');
       }
     } catch (err) {
-      console.error('Detailed error in handleMoveToPayment:', err);
+      console.error('Error in handleMoveToPayment:', err);
       setError(err instanceof Error ? err.message : 'An error occurred saving your assessment');
     }
   };  
@@ -155,9 +200,50 @@ export default function EnneagramAssessment() {
           <UserInfoForm
             userInfo={userInfo}
             setUserInfo={setUserInfo}
-            onNext={() => {
-              setStep('likert');
-              setCurrentQuestionIndex(0);
+            onNext={async () => {
+              try {
+                // First create initial assessment record
+                const saveResponse = await fetch('/api/assessment/save-response', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    userInfo,
+                    responses: {
+                      weightingResponses: {},
+                      rankings: {}
+                    },
+                    assessmentType: 'standard',
+                  }),
+                });
+
+                if (!saveResponse.ok) {
+                  throw new Error('Failed to save initial assessment');
+                }
+
+                const saveData = await saveResponse.json();
+                setAssessmentId(saveData.assessmentId);
+
+                // Check if email is validated and process payment if it is
+                const validateResponse = await fetch('/api/assessment/payment-flow/validate-email', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ 
+                    email: userInfo.email,
+                    assessmentId: saveData.assessmentId
+                  })
+                });
+
+                const validateResult = await validateResponse.json();
+                
+                // Always continue to questions - payment status will be checked at the end
+                setStep('likert');
+                setCurrentQuestionIndex(0);
+              } catch (err) {
+                console.error('Error processing user info:', err);
+                setError(err instanceof Error ? err.message : 'An error occurred');
+              }
             }}
           />
         );
@@ -195,6 +281,7 @@ export default function EnneagramAssessment() {
               setRankings={setRankings}
               onComplete={handleMoveToPayment}
               onBack={handlePrevious}
+              assessmentId={assessmentId}  // Add this prop
             />
           </>
         );

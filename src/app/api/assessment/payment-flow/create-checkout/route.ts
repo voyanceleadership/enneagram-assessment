@@ -40,9 +40,28 @@ export async function POST(req: NextRequest) {
       });
 
       if (validEmail) {
+        // Create a $0 payment record
+        await prisma.payment.create({
+          data: {
+            sessionId: `comp_${Date.now()}`, // Unique ID for complimentary assessment
+            assessmentId,
+            amount: 0,
+            status: 'completed',
+          }
+        });
+
+        // Update assessment status
+        await prisma.assessment.update({
+          where: { id: assessmentId },
+          data: {
+            status: 'PAID'
+          }
+        });
+
         return NextResponse.json({
-          url: '/assessment/results',
-          message: 'Email validated successfully'
+          success: true,
+          bypass: true,
+          assessmentId
         });
       }
     } catch (error) {

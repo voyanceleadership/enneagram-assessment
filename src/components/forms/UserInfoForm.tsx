@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
 
+interface UserInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  companyName?: string;
+  assessmentId: string;  // Added assessmentId
+}
+
 interface UserInfoFormProps {
   userInfo: UserInfo;
   setUserInfo: (info: UserInfo) => void;
@@ -15,7 +23,7 @@ export default function UserInfoForm({ userInfo, setUserInfo, onNext }: UserInfo
   const [companySelected, setCompanySelected] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (isWorkAssessment) {
@@ -33,6 +41,46 @@ export default function UserInfoForm({ userInfo, setUserInfo, onNext }: UserInfo
       }
     }
 
+    // Check if email is in ValidEmail database
+    try {
+      const validateResponse = await fetch('/api/assessment/payment-flow/validate-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: userInfo.email,
+          assessmentId: userInfo.assessmentId
+        })
+      });
+
+      const validateResult = await validateResponse.json();
+      console.log('Email validation result:', validateResult);
+
+      if (validateResult.valid) {
+        // If email is valid, create checkout session for $0
+        const checkoutResponse = await fetch('/api/assessment/payment-flow/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: userInfo.email,
+            assessmentId: userInfo.assessmentId
+          })
+        });
+
+        const checkoutResult = await checkoutResponse.json();
+        console.log('Checkout result:', checkoutResult);
+
+        if (checkoutResult.url === '/assessment/results') {
+          // Redirect to results page
+          window.location.href = checkoutResult.url;
+          return;
+        }
+      }
+    } catch (error) {
+      console.error('Error during validation:', error);
+    }
+
+    // If we get here, either the email wasn't valid or there was an error
+    // Proceed with normal flow
     onNext();
   };
 
