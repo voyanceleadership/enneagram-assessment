@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { assessmentQuestions, rankingQuestions } from '@/app/data/assessment/AssessmentQuestions';
 import { TYPE_NAMES } from '@/app/data/constants/EnneagramData';
 import { calculateAssessmentResults } from '@/utils/calculateAssessmentResults';
@@ -11,45 +12,12 @@ import ResultsPage from './ResultsPage';
 import PaymentPage from '@/components/payment/PaymentPage';
 import { ProgressIndicator } from './ProgressIndicator';
 
-// Update the UserInfo interface
 export interface UserInfo {
   firstName: string;
   lastName: string;
   email: string;
   companyName?: string;
 }
-
-// Add a handleUserInfoSubmit function
-const handleUserInfoSubmit = async () => {
-  try {
-    const response = await fetch('/api/assessment/save-response', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userInfo,
-        responses: {
-          weightingResponses: {},
-          rankings: {}
-        },
-        assessmentType: 'standard',
-      }),
-    });
-
-    const data = await response.json();
-    if (data.success) {
-      setAssessmentId(data.assessmentId);
-      setStep('likert');
-      setCurrentQuestionIndex(0);
-    } else {
-      throw new Error(data.error || 'Failed to save user info');
-    }
-  } catch (err) {
-    console.error('Error saving user info:', err);
-    setError(err instanceof Error ? err.message : 'An error occurred');
-  }
-};
 
 export type WeightingResponses = {
   [questionId: string]: number;
@@ -62,6 +30,8 @@ export type Rankings = {
 type AssessmentStep = 'userInfo' | 'likert' | 'ranking' | 'payment' | 'results';
 
 export default function EnneagramAssessment() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [step, setStep] = useState<AssessmentStep>('userInfo');
   const [assessmentId, setAssessmentId] = useState<string>('');
   const [userInfo, setUserInfo] = useState<UserInfo>({
@@ -76,8 +46,25 @@ export default function EnneagramAssessment() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [sortedResults, setSortedResults] = useState<[string, number][]>([]);
   const [error, setError] = useState<string | null>(null);
-  const TOTAL_QUESTIONS = 48; // Total number of questions across all sections
-  const LIKERT_QUESTIONS = 12; // Number of Likert questions
+  const TOTAL_QUESTIONS = 48;
+  const LIKERT_QUESTIONS = 12;
+
+  // Check for returning paid user
+  useEffect(() => {
+    const sessionId = searchParams.get('session_id');
+    const assessmentId = searchParams.get('assessmentId');
+    const verified = searchParams.get('verified');
+    
+    if (sessionId || (verified === 'true' && assessmentId)) {
+      if (verified === 'true' && assessmentId) {
+        setAssessmentId(assessmentId);
+        setIsAnalyzing(true);
+        setStep('results');
+      } else if (sessionId) {
+        router.push(`/assessment/results?session_id=${sessionId}`);
+      }
+    }
+  }, [searchParams, router]);
 
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
@@ -107,7 +94,7 @@ export default function EnneagramAssessment() {
             weightingResponses,
             rankings
           },
-          assessmentType: 'standard',  // Add this line to specify the assessment type
+          assessmentType: 'standard',
         }),
       });
   
@@ -127,7 +114,7 @@ export default function EnneagramAssessment() {
       setError(err instanceof Error ? err.message : 'An error occurred');
       return false;
     }
-  };  
+  };
 
   const handleMoveToPayment = async () => {
     try {
@@ -158,41 +145,38 @@ export default function EnneagramAssessment() {
   
       const data = await response.json();
       setAssessmentId(data.assessmentId);
-  
-      // Check payment status or bypass for validated users
-      const checkoutResponse = await fetch('/api/assessment/payment-flow/validate-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: userInfo.email,
-          assessmentId: data.assessmentId
-        })
-      });
-  
-      const checkoutResult = await checkoutResponse.json();
-  
-      // Sort results for display
+      
+      // Set sorted results
       setSortedResults(
         Object.entries(calculatedResults)
           .sort(([, a], [, b]) => b - a) as [string, number][]
       );
   
-      // Handle bypass flow - directly move to results
-      if (checkoutResult.success && checkoutResult.bypass) {
-        console.log('Bypassing payment, moving to results.');
-        setIsAnalyzing(true);
-        setStep('results');
+      // Check if email is validated
+      const validateResponse = await fetch('/api/assessment/payment-flow/validate-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: userInfo.email,
+          assessmentId: data.assessmentId
+        })
+      });
+  
+      const validateResult = await validateResponse.json();
+  
+      if (validateResult.success && validateResult.data?.status === 'PAID') {
+        // If email is validated, go straight to results
+        router.push(`/assessment/results?assessmentId=${data.assessmentId}`);
       } else {
-        // Continue to Stripe payment if bypass is not triggered
+        // If not validated, continue to payment
         setStep('payment');
       }
     } catch (err) {
       console.error('Error in handleMoveToPayment:', err);
       setError(err instanceof Error ? err.message : 'An error occurred saving your assessment');
     }
-  };  
+  };
 
-  // Determine which component to render based on current step
   const renderCurrentStep = () => {
     switch (step) {
       case 'userInfo':
@@ -202,7 +186,7 @@ export default function EnneagramAssessment() {
             setUserInfo={setUserInfo}
             onNext={async () => {
               try {
-                // First create initial assessment record
+                // Create initial assessment record
                 const saveResponse = await fetch('/api/assessment/save-response', {
                   method: 'POST',
                   headers: {
@@ -281,7 +265,7 @@ export default function EnneagramAssessment() {
               setRankings={setRankings}
               onComplete={handleMoveToPayment}
               onBack={handlePrevious}
-              assessmentId={assessmentId}  // Add this prop
+              assessmentId={assessmentId}
             />
           </>
         );
@@ -290,19 +274,26 @@ export default function EnneagramAssessment() {
           <PaymentPage
             userInfo={userInfo}
             assessmentId={assessmentId}
-            onContinue={() => setStep('results')}
+            onContinue={() => {
+              router.push(`/assessment/results?assessmentId=${assessmentId}`);
+            }}
             onBack={() => setStep('ranking')}
           />
         );
       case 'results':
         return (
-          <ResultsPage
-            userInfo={userInfo}
-            analysis={analysis}
-            isAnalyzing={isAnalyzing}
-            sortedResults={sortedResults}
-            onBack={() => setStep('payment')}
-          />
+          <div className="min-h-screen bg-gray-50 py-8">
+            <div className="container mx-auto px-4">
+              <ResultsPage
+                userInfo={userInfo}
+                analysis={analysis}
+                isAnalyzing={isAnalyzing}
+                sortedResults={sortedResults}
+                onBack={() => setStep('payment')}
+                assessmentId={assessmentId}
+              />
+            </div>
+          </div>
         );
       default:
         return null;

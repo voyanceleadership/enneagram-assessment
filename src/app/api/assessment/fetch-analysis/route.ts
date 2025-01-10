@@ -1,3 +1,5 @@
+// src/app/api/assessment/fetch-analysis/route.ts
+
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
@@ -9,32 +11,91 @@ export async function POST(req: Request) {
     console.log('Assessment ID received:', assessmentId);
 
     if (!assessmentId) {
-      throw new Error('Assessment ID is missing');
+      return NextResponse.json({
+        success: false,
+        error: 'Assessment ID is required'
+      }, { status: 400 });
+    }
+
+    // Get assessment with analysis and payment information
+    const assessment = await prisma.assessment.findUnique({
+      where: { id: assessmentId },
+      include: {
+        analysis: true,
+        payment: {
+          select: {
+            status: true
+          }
+        }
+      }
+    });
+
+    if (!assessment) {
+      return NextResponse.json({
+        success: false,
+        error: 'Assessment not found'
+      }, { status: 404 });
+    }
+
+    // Check if payment is required
+    if (assessment.status !== 'PAID' && assessment.status !== 'ANALYZED') {
+      return NextResponse.json({
+        success: false,
+        error: 'Assessment payment required',
+        status: assessment.status
+      }, { status: 403 });
+    }
+
+    // If payment exists, verify its status
+    if (assessment.payment && assessment.payment.status !== 'completed') {
+      return NextResponse.json({
+        success: false,
+        error: 'Payment not completed',
+        status: assessment.status
+      }, { status: 403 });
     }
 
     // Check if analysis exists
-    const existingAnalysis = await prisma.analysis.findUnique({
-      where: { assessmentId },
-    });
-
-    if (existingAnalysis) {
-      console.log('Returning existing analysis from Prisma');
+    if (assessment.analysis) {
+      console.log('Returning existing analysis');
       return NextResponse.json({
         success: true,
-        analysis: existingAnalysis.content,
+        analysis: assessment.analysis.content,
+        status: assessment.status
       });
     }
 
+    // Make sure analysis is actually being generated
+    if (assessment.status === 'PAID') {
+      // Trigger analysis generation if not already in progress
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/assessment/analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            assessmentId: assessment.id
+          })
+        });
+      } catch (err) {
+        console.error('Error triggering analysis:', err);
+        // Continue execution - we still want to return the "in progress" response
+      }
+    }
+
     // Analysis not ready yet
+    console.log('Analysis not ready for assessment:', assessmentId);
     return NextResponse.json({
       success: false,
-      message: 'Analysis not ready',
+      message: 'Analysis generation in progress',
+      status: assessment.status
     });
+
   } catch (error) {
     console.error('Error during analysis fetch:', error);
     return NextResponse.json({
       success: false,
-      error: 'An error occurred during analysis fetch.',
-    });
+      error: error instanceof Error ? error.message : 'Error fetching analysis',
+      status: 'ERROR'
+    }, { status: 500 });
   }
 }

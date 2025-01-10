@@ -1,6 +1,8 @@
+// src/app/api/assessment/payment-flow/create-checkout/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { prisma } from '@/lib/prisma';
+import type { AssessmentStatus } from '@prisma/client';
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing STRIPE_SECRET_KEY environment variable');
@@ -23,78 +25,176 @@ export async function POST(req: NextRequest) {
   const baseUrl = `http://${host}`;
 
   try {
-    const body = await req.json();
-    const { email, couponCode, assessmentId } = body;
+    const { email, couponCode, assessmentId } = await req.json();
 
     if (!email || !assessmentId) {
-      return NextResponse.json({ error: 'Email and assessmentId are required' }, { status: 400 });
+      return NextResponse.json({ 
+        success: false,
+        error: 'Email and assessmentId are required' 
+      }, { status: 400 });
+    }
+
+    // Check if assessment exists and get its current state
+    const assessment = await prisma.assessment.findUnique({
+      where: { id: assessmentId },
+      include: {
+        payment: true
+      }
+    });
+
+    if (!assessment) {
+      return NextResponse.json({ 
+        success: false,
+        error: 'Assessment not found' 
+      }, { status: 404 });
+    }
+
+    // If already paid, return success
+    if (assessment.status === 'PAID' || assessment.status === 'ANALYZED') {
+      return NextResponse.json({
+        success: true,
+        data: { 
+          assessmentId,
+          status: assessment.status
+        }
+      });
+    }
+
+    // If payment is pending, return the existing session
+    if (assessment.payment?.status === 'pending') {
+      const session = await stripe.checkout.sessions.retrieve(assessment.payment.sessionId);
+      if (session && !session.expired) {
+        return NextResponse.json({
+          success: true,
+          url: session.url,
+          message: 'Using existing checkout session'
+        });
+      }
     }
 
     let finalAmount = ASSESSMENT_PRICE;
     let appliedCoupon = null;
 
-    // Check if email is pre-validated (e.g., part of a special group)
-    try {
-      const validEmail = await prisma.validEmail.findUnique({
-        where: { email }
-      });
+    // Check if email is pre-validated
+    const validEmail = await prisma.validEmail.findFirst({
+      where: { 
+        email,
+        active: true,
+        OR: [
+          { validUntil: null },
+          { validUntil: { gt: new Date() } }
+        ]
+      }
+    });
 
-      if (validEmail) {
-        // Create a $0 payment record
-        await prisma.payment.create({
+    if (validEmail) {
+      // Create payment record and update status atomically
+      await prisma.$transaction([
+        prisma.payment.create({
           data: {
-            sessionId: `comp_${Date.now()}`, // Unique ID for complimentary assessment
-            assessmentId,
+            sessionId: `comp_${Date.now()}`,
             amount: 0,
             status: 'completed',
+            assessment: {
+              connect: {
+                id: assessmentId
+              }
+            }
           }
-        });
-
-        // Update assessment status
-        await prisma.assessment.update({
+        }),
+        prisma.assessment.update({
           where: { id: assessmentId },
-          data: {
-            status: 'PAID'
-          }
-        });
+          data: { status: 'PAID' as AssessmentStatus }
+        })
+      ]);
+
+      return NextResponse.json({
+        success: true,
+        data: {
+          assessmentId,
+          status: 'PAID'
+        }
+      });
+    }
+
+    // Handle coupon logic
+    if (couponCode) {
+      const coupon = await prisma.coupon.findFirst({
+        where: { 
+          code: couponCode.toUpperCase(),
+          active: true,
+          expires: { gt: new Date() },
+          uses: { gt: prisma.coupon.fields.usedCount }
+        }
+      });
+
+      if (!coupon) {
+        return NextResponse.json({ 
+          success: false,
+          error: 'Invalid or expired coupon code' 
+        }, { status: 400 });
+      }
+
+      const discountAmount = Math.round(ASSESSMENT_PRICE * (coupon.discount / 100));
+      finalAmount = ASSESSMENT_PRICE - discountAmount;
+      appliedCoupon = coupon;
+
+      // If 100% discount, handle like validated email
+      if (finalAmount === 0) {
+        await prisma.$transaction([
+          prisma.payment.create({
+            data: {
+              sessionId: `coup_${Date.now()}`,
+              amount: 0,
+              status: 'completed',
+              assessment: {
+                connect: {
+                  id: assessmentId
+                }
+              }
+            }
+          }),
+          prisma.assessment.update({
+            where: { id: assessmentId },
+            data: { status: 'PAID' as AssessmentStatus }
+          }),
+          prisma.coupon.update({
+            where: { id: coupon.id },
+            data: { usedCount: { increment: 1 } }
+          }),
+          prisma.couponUsage.create({
+            data: {
+              couponId: coupon.id,
+              email
+            }
+          })
+        ]);
 
         return NextResponse.json({
           success: true,
-          bypass: true,
-          assessmentId
+          data: {
+            assessmentId,
+            status: 'PAID'
+          }
         });
       }
-    } catch (error) {
-      console.error('Error checking valid email:', error);
+
+      // Track coupon usage for non-zero amount
+      await prisma.$transaction([
+        prisma.coupon.update({
+          where: { id: coupon.id },
+          data: { usedCount: { increment: 1 } }
+        }),
+        prisma.couponUsage.create({
+          data: {
+            couponId: coupon.id,
+            email
+          }
+        })
+      ]);
     }
 
-    // Handle coupon application logic
-    if (couponCode) {
-      try {
-        const coupon = await prisma.coupon.findUnique({
-          where: { code: couponCode.toUpperCase() }
-        });
-
-        if (!coupon) {
-          return NextResponse.json({ error: 'Invalid coupon code' }, { status: 400 });
-        }
-
-        if (!coupon.active || coupon.uses <= 0 || new Date(coupon.expires) <= new Date()) {
-          return NextResponse.json({ error: 'Coupon is no longer valid' }, { status: 400 });
-        }
-
-        const discountAmount = Math.round(ASSESSMENT_PRICE * (coupon.discount / 100));
-        finalAmount = ASSESSMENT_PRICE - discountAmount;
-        appliedCoupon = coupon;
-
-        console.log(`Coupon applied: ${couponCode} - Discount: ${coupon.discount}%`);
-      } catch (error) {
-        console.error('Error validating coupon:', error);
-        return NextResponse.json({ error: 'Error validating coupon' }, { status: 500 });
-      }
-    }
-
-    // Create Stripe checkout session
+    // Create Stripe checkout session for non-zero amounts
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [{
@@ -115,26 +215,31 @@ export async function POST(req: NextRequest) {
       cancel_url: `${baseUrl}/assessment/cancelled`,
       customer_email: email,
       metadata: {
+        assessmentId,
         couponCode: couponCode || 'NONE',
         originalPrice: ASSESSMENT_PRICE,
-        discountApplied: appliedCoupon?.discount || 0,
-        assessmentId  // Pass assessmentId to metadata for linking later
+        discountApplied: appliedCoupon?.discount || 0
       }
     });
 
-    // Save payment in Prisma linked to the assessment
+    // Create pending payment record
     await prisma.payment.create({
       data: {
         sessionId: session.id,
-        assessmentId,  // Link the payment to the assessment
         amount: finalAmount,
         status: 'pending',
+        assessment: {
+          connect: {
+            id: assessmentId
+          }
+        }
       }
     });
 
-    console.log('Stripe session created and linked to assessment:', session.id);
+    console.log('Checkout session created:', session.id);
 
     return NextResponse.json({
+      success: true,
       url: session.url,
       message: 'Checkout session created successfully'
     });
@@ -142,8 +247,8 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error('Error processing checkout:', err);
     return NextResponse.json({
-      error: 'Failed to process checkout',
-      details: err.message || 'Unknown error'
+      success: false,
+      error: err instanceof Error ? err.message : 'Failed to process checkout'
     }, { status: 500 });
   }
 }

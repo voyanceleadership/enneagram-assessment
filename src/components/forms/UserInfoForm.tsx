@@ -5,7 +5,6 @@ interface UserInfo {
   lastName: string;
   email: string;
   companyName?: string;
-  assessmentId: string;  // Added assessmentId
 }
 
 interface UserInfoFormProps {
@@ -22,66 +21,67 @@ export default function UserInfoForm({ userInfo, setUserInfo, onNext }: UserInfo
   const [filteredCompanies, setFilteredCompanies] = useState<string[]>([]);
   const [companySelected, setCompanySelected] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (isWorkAssessment) {
-      const emailDomain = userInfo.email.split('@')[1];
-      const isApproved = approvedDomains.some((domain) => emailDomain.includes(domain));
-      
-      if (!isApproved) {
-        alert('Please use your work email address to take the assessment.');
-        return;
-      }
+    setError(null);
+    setIsSubmitting(true);
 
-      if (!companySelected) {
-        alert('Please select a valid company from the list.');
-        return;
-      }
-    }
-
-    // Check if email is in ValidEmail database
     try {
-      const validateResponse = await fetch('/api/assessment/payment-flow/validate-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email: userInfo.email,
-          assessmentId: userInfo.assessmentId
-        })
-      });
+      // Work assessment validation
+      if (isWorkAssessment) {
+        const emailDomain = userInfo.email.split('@')[1];
+        const isApproved = approvedDomains.some((domain) => emailDomain.includes(domain));
+        
+        if (!isApproved) {
+          setError('Please use your work email address to take the assessment.');
+          setIsSubmitting(false);
+          return;
+        }
 
-      const validateResult = await validateResponse.json();
-      console.log('Email validation result:', validateResult);
-
-      if (validateResult.valid) {
-        // If email is valid, create checkout session for $0
-        const checkoutResponse = await fetch('/api/assessment/payment-flow/create-checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: userInfo.email,
-            assessmentId: userInfo.assessmentId
-          })
-        });
-
-        const checkoutResult = await checkoutResponse.json();
-        console.log('Checkout result:', checkoutResult);
-
-        if (checkoutResult.url === '/assessment/results') {
-          // Redirect to results page
-          window.location.href = checkoutResult.url;
+        if (!companySelected) {
+          setError('Please select a valid company from the list.');
+          setIsSubmitting(false);
           return;
         }
       }
-    } catch (error) {
-      console.error('Error during validation:', error);
-    }
 
-    // If we get here, either the email wasn't valid or there was an error
-    // Proceed with normal flow
-    onNext();
+      // Create initial assessment record
+      const saveResponse = await fetch('/api/assessment/save-response', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userInfo,
+          responses: {
+            weightingResponses: {},
+            rankings: {}
+          },
+          assessmentType: 'standard',
+        }),
+      });
+
+      if (!saveResponse.ok) {
+        throw new Error('Failed to save initial assessment');
+      }
+
+      const saveData = await saveResponse.json();
+      if (!saveData.success || !saveData.assessmentId) {
+        throw new Error(saveData.error || 'Failed to create assessment');
+      }
+
+      // Simply proceed to questions - payment validation will happen at the end
+      onNext();
+
+    } catch (err) {
+      console.error('Error during form submission:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleCompanySearch = (value: string) => {
@@ -108,6 +108,13 @@ export default function UserInfoForm({ userInfo, setUserInfo, onNext }: UserInfo
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg space-y-6">
       <h2 className="text-2xl font-bold mb-4">Start Your Enneagram Assessment</h2>
+      
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+          {error}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit}>
         <div className="space-y-4">
           <div>
@@ -119,11 +126,10 @@ export default function UserInfoForm({ userInfo, setUserInfo, onNext }: UserInfo
               required
               className="w-full p-2 border rounded-lg"
               value={userInfo.firstName}
-              onChange={(e) =>
-                setUserInfo({ ...userInfo, firstName: e.target.value })
-              }
+              onChange={(e) => setUserInfo({ ...userInfo, firstName: e.target.value })}
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Last Name
@@ -133,11 +139,10 @@ export default function UserInfoForm({ userInfo, setUserInfo, onNext }: UserInfo
               required
               className="w-full p-2 border rounded-lg"
               value={userInfo.lastName}
-              onChange={(e) =>
-                setUserInfo({ ...userInfo, lastName: e.target.value })
-              }
+              onChange={(e) => setUserInfo({ ...userInfo, lastName: e.target.value })}
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -147,9 +152,7 @@ export default function UserInfoForm({ userInfo, setUserInfo, onNext }: UserInfo
               required
               className="w-full p-2 border rounded-lg"
               value={userInfo.email}
-              onChange={(e) =>
-                setUserInfo({ ...userInfo, email: e.target.value })
-              }
+              onChange={(e) => setUserInfo({ ...userInfo, email: e.target.value })}
             />
           </div>
 
@@ -178,7 +181,7 @@ export default function UserInfoForm({ userInfo, setUserInfo, onNext }: UserInfo
                 className="w-full p-2 border rounded-lg"
                 value={userInfo.companyName || ''}
                 onChange={(e) => handleCompanySearch(e.target.value)}
-                readOnly={companySelected}  // Prevent typing after selection
+                readOnly={companySelected}
               />
               
               {showSuggestions && filteredCompanies.length > 0 && (
@@ -199,9 +202,12 @@ export default function UserInfoForm({ userInfo, setUserInfo, onNext }: UserInfo
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+            disabled={isSubmitting}
+            className={`w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 ${
+              isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
-            Begin Assessment
+            {isSubmitting ? 'Processing...' : 'Begin Assessment'}
           </button>
         </div>
       </form>

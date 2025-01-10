@@ -1,5 +1,7 @@
+// src/app/api/assessment/payment-flow/verify-payment/route.ts
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import type { AssessmentStatus } from '@prisma/client';
 
 export async function POST(req: Request) {
   console.log('Payment verification started');
@@ -13,9 +15,12 @@ export async function POST(req: Request) {
       where: { sessionId },
       select: {
         id: true,
+        status: true,
+        amount: true,
         assessment: {
           select: {
             id: true,
+            status: true,
             userInfo: {
               select: {
                 firstName: true,
@@ -28,6 +33,11 @@ export async function POST(req: Request) {
                 type: true,
                 score: true
               }
+            },
+            analysis: {
+              select: {
+                content: true
+              }
             }
           }
         }
@@ -35,17 +45,16 @@ export async function POST(req: Request) {
     });
 
     if (!payment) {
-      console.log('Payment not found. Creating new payment record.');
+      console.log('Payment not found. Checking for pending assessment...');
       
-      // Find the assessment associated with this session
+      // Find the assessment using the payment's sessionId relationship
       const assessment = await prisma.assessment.findFirst({
-        where: { 
-          payment: { 
-            sessionId 
-          } 
+        where: {
+          payment: {
+            sessionId
+          }
         },
-        select: {
-          id: true,
+        include: {
           userInfo: {
             select: {
               firstName: true,
@@ -58,76 +67,94 @@ export async function POST(req: Request) {
               type: true,
               score: true
             }
+          },
+          analysis: {
+            select: {
+              content: true
+            }
           }
         }
       });
 
       if (!assessment) {
-        throw new Error('No associated assessment found for session');
+        throw new Error('No assessment found associated with this payment session');
       }
 
-      // Create a new payment record
-      payment = await prisma.payment.create({
-        data: {
-          sessionId,
-          amount,
-          status,
-          assessment: {
-            connect: {
-              id: assessment.id
+      // Create payment record and update assessment in a transaction
+      const result = await prisma.$transaction(async (prisma) => {
+        const newPayment = await prisma.payment.create({
+          data: {
+            sessionId,
+            amount: amount || 0,
+            status: 'completed',
+            assessment: {
+              connect: {
+                id: assessment.id
+              }
             }
-          }
-        },
-        select: {
-          id: true,
-          assessment: {
-            select: {
-              id: true,
-              userInfo: {
-                select: {
-                  firstName: true,
-                  lastName: true,
-                  email: true
-                }
-              },
-              results: {
-                select: {
-                  type: true,
-                  score: true
-                }
+          },
+          include: {
+            assessment: {
+              include: {
+                userInfo: true,
+                results: true,
+                analysis: true
               }
             }
           }
-        }
+        });
+
+        // Update assessment status
+        await prisma.assessment.update({
+          where: { id: assessment.id },
+          data: { status: 'PAID' as AssessmentStatus }
+        });
+
+        return newPayment;
       });
 
-      // Update assessment status
-      await prisma.assessment.update({
-        where: { id: assessment.id },
-        data: { status: 'PAID' }
-      });
-
+      payment = result;
       console.log('New payment created:', payment.id);
+    } else if (payment.status !== 'completed') {
+      // Update existing payment and assessment status atomically
+      await prisma.$transaction([
+        prisma.payment.update({
+          where: { id: payment.id },
+          data: { status: 'completed' }
+        }),
+        prisma.assessment.update({
+          where: { id: payment.assessment?.id },
+          data: { status: 'PAID' as AssessmentStatus }
+        })
+      ]);
     }
 
     if (!payment.assessment) {
       throw new Error('Assessment not found for this payment');
     }
 
-    // Trigger analysis generation without awaiting the response
-    fetch('http://localhost:3000/api/assessment/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        assessmentId: payment.assessment.id,
-        scores: payment.assessment.results.reduce((acc, result) => {
-          acc[result.type] = Math.round(result.score * 10) / 10;
-          return acc;
-        }, {} as Record<string, number>)
-      }),
-    }).catch(error => {
-      console.error('Error triggering analysis:', error);
-    });
+    // Only trigger analysis if needed
+    if (payment.assessment.status === 'PAID' && !payment.assessment.analysis) {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/assessment/analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            assessmentId: payment.assessment.id,
+            scores: Object.fromEntries(
+              payment.assessment.results.map(r => [r.type, r.score])
+            )
+          })
+        });
+
+        if (!response.ok) {
+          console.warn('Analysis generation failed, client will poll');
+        }
+      } catch (err) {
+        console.error('Error triggering analysis:', err);
+        // We don't throw here as analysis generation failure shouldn't block payment verification
+      }
+    }
 
     const responseData = {
       success: true,
@@ -142,6 +169,8 @@ export async function POST(req: Request) {
           score: Math.round(result.score * 10) / 10,
         })),
         assessmentId: payment.assessment.id,
+        status: payment.assessment.status,
+        analysis: payment.assessment.analysis?.content || null
       },
     };
 
