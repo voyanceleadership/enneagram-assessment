@@ -90,23 +90,8 @@ export default function Results() {
         if (mounted) {
           setAssessmentData(data.data);
           
-          // Only trigger analysis if not already analyzed
-          if (data.data.status !== 'ANALYZED' && !data.data.analysis) {
-            const analysisResponse = await fetch('/api/assessment/analyze', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                assessmentId: data.data.assessmentId,
-                scores: Object.fromEntries(
-                  data.data.results.map((r: { type: string; score: number }) => [r.type, r.score])
-                )
-              }),
-            });
-
-            if (!analysisResponse.ok) {
-              console.warn('Initial analysis generation attempt failed, will poll');
-            }
-          } else {
+          // Only start analyzing if not already analyzed
+          if (data.data.status === 'ANALYZED' || data.data.analysis) {
             setIsAnalyzing(false);
           }
         }
@@ -126,6 +111,44 @@ export default function Results() {
     };
   }, [searchParams]);
 
+  // Trigger analysis if needed
+  useEffect(() => {
+    if (!assessmentData?.assessmentId || !isAnalyzing) return;
+
+    let mounted = true;
+    
+    const triggerAnalysis = async () => {
+      try {
+        console.log('Triggering analysis for:', assessmentData.assessmentId);
+        const response = await fetch('/api/assessment/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            assessmentId: assessmentData.assessmentId
+          }),
+        });
+
+        if (!response.ok) {
+          console.warn('Analysis trigger failed:', response.status);
+          if (mounted) {
+            setPollCount(c => c + 1);
+          }
+        }
+      } catch (error) {
+        console.error('Error triggering analysis:', error);
+        if (mounted) {
+          setPollCount(c => c + 1);
+        }
+      }
+    };
+
+    triggerAnalysis();
+
+    return () => {
+      mounted = false;
+    };
+  }, [assessmentData?.assessmentId, isAnalyzing]);
+
   // Analysis polling effect
   useEffect(() => {
     if (!assessmentData?.assessmentId || !isAnalyzing || pollCount >= 15) {
@@ -136,7 +159,6 @@ export default function Results() {
     const pollInterval = setInterval(async () => {
       try {
         console.log(`Polling for analysis (attempt ${pollCount + 1})`);
-        
         const response = await fetch('/api/assessment/fetch-analysis', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -146,7 +168,7 @@ export default function Results() {
         });
 
         const data = await response.json();
-        
+
         if (!mounted) return;
 
         if (response.ok && data.success && data.analysis) {
@@ -156,7 +178,7 @@ export default function Results() {
           setAssessmentData(prev => ({
             ...prev!,
             analysis: data.analysis,
-            status: 'ANALYZED' as AssessmentStatus
+            status: 'ANALYZED'
           }));
         } else {
           setPollCount(count => {
@@ -175,7 +197,7 @@ export default function Results() {
           setPollCount(count => count + 1);
         }
       }
-    }, 2000);
+    }, 2000); // Poll every 2 seconds
 
     return () => {
       mounted = false;
