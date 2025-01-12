@@ -5,7 +5,10 @@ import { generatePDF } from '../generate-pdf/route';
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, analysisHtml, scores, userInfo } = await req.json();
+    const { emails, message, analysisHtml, scores, userInfo } = await req.json();
+    
+    // Handle both single email string and array of emails
+    const recipientEmails = Array.isArray(emails) ? emails : [emails];
 
     // Generate PDF first
     const pdf = await generatePDF({
@@ -35,6 +38,7 @@ export async function POST(req: NextRequest) {
           h1 { color: #333; text-align: center; }
           .content { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
           .footer { text-align: center; font-size: 12px; color: #777; margin-top: 30px; }
+          .message { margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; }
         </style>
       </head>
       <body>
@@ -46,6 +50,12 @@ export async function POST(req: NextRequest) {
             <p>The Voyance Enneagram assessment is uniquely designed to provide clear, unambiguous results. For this reason, it's highly likely that your true personality type is one of your top two scores. We encourage you to read the profiles on these types and subjectively evaluate which one resonates the most.</p>
             <p>Your detailed results are attached to this email as a PDF. Please let us know if you have any questions.</p>
             <p>If you're interested in learning more, we offer a 3-hour Enneagram eCourse on our online learning platform. Please visit <a href="https://www.voyanceleadership.com/en-intro-course">our website</a> for more information.</p>
+            ${message ? `
+              <div class="message">
+                <p><strong>Additional Message:</strong></p>
+                <p>${message}</p>
+              </div>
+            ` : ''}
             <p style="text-align: center; margin-top: 40px;">
               If you have any questions, please reach out to 
               <a href="mailto:support@voyanceleadership.com">support@voyanceleadership.com</a>.
@@ -61,7 +71,8 @@ export async function POST(req: NextRequest) {
     // Send email with PDF attachment
     await transporter.sendMail({
       from: "Voyance Leadership <support@voyanceleadership.com>",
-      to: `${email}, support@voyanceleadership.com`,
+      to: recipientEmails.join(', '),
+      cc: "support@voyanceleadership.com",
       subject: 'Your Enneagram Assessment Results',
       html: emailBody,
       attachments: [{

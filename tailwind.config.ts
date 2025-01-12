@@ -5,6 +5,7 @@ export default {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@shadcn/ui/**/*.{js,ts,jsx,tsx}", // Add this line to include shadcn/ui components
   ],
   theme: {
     extend: {
@@ -19,13 +20,13 @@ export default {
       keyframes: {
         loading: {
           '0%': { transform: 'translateX(-100%)' },
-          '100%': { transform: 'translateX(100%)' }
+          '100%': { transform: 'translateX(100%)' },
         },
-        // spin is already included in Tailwind by default, so we don't need to define it
-      }
+      },
     },
   },
   plugins: [
-    require('@tailwindcss/typography'), // for the prose class in the analysis section
+    require('@tailwindcss/typography'), // For the prose class in the analysis section
+    require('@tailwindcss/forms'), // Useful for form elements (optional, but recommended)
   ],
 } satisfies Config;

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Download, Mail } from 'lucide-react';
 import { getTypeName } from '@/utils/calculateAssessmentResults'; // Adjust this path if needed
+import EmailDialog from './EmailDialog';
 
 const TYPE_NAMES = {
   '1': 'Type 1: The Reformer',
@@ -51,6 +52,7 @@ export default function ResultsPage({
 }: ResultsPageProps) {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
+  const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
 
   const downloadPDF = async () => {
     setIsGeneratingPDF(true);
@@ -105,12 +107,12 @@ export default function ResultsPage({
             <div className="flex gap-2">
               {!isAnalyzing && analysis && !analysisTimedOut && (
                 <Button
-                  onClick={onSendEmail}
+                  onClick={() => setIsEmailDialogOpen(true)}
                   disabled={isSendingEmail}
                   className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
                 >
                   <Mail className="h-4 w-4" />
-                  {isSendingEmail ? 'Sending...' : emailSent ? 'Email Sent' : 'Send Results'}
+                  {isSendingEmail ? 'Sending...' : 'Send Results'}
                 </Button>
               )}
               {(!isAnalyzing || analysisTimedOut) && (
@@ -209,6 +211,13 @@ export default function ResultsPage({
           </div>
         </div>
       </CardContent>
+      <EmailDialog
+        isOpen={isEmailDialogOpen}
+        onClose={() => setIsEmailDialogOpen(false)}
+        defaultEmail={userInfo.email}
+        onSendEmail={onSendEmail}
+        isSending={isSendingEmail}
+      />
     </Card>
   );
 }

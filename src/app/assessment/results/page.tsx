@@ -169,90 +169,123 @@ export default function Results() {
   }, [assessmentData?.assessmentId, assessmentData?.results, assessmentData?.analysis, isAnalyzing, pollCount]);
 
   // Analysis polling effect
-  useEffect(() => {
-    console.log('Polling effect triggered with:', {
-      assessmentId: assessmentData?.assessmentId,
-      isAnalyzing,
-      pollCount,
-    });
+useEffect(() => {
+  console.log('Polling effect triggered with:', {
+    assessmentId: assessmentData?.assessmentId,
+    isAnalyzing,
+    pollCount,
+  });
 
-    if (!assessmentData?.assessmentId || !isAnalyzing || pollCount >= 15) {
-      return;
+  if (!assessmentData?.assessmentId || !isAnalyzing || pollCount >= 15) {
+    return;
+  }
+
+  let mounted = true;
+  let timeoutId: NodeJS.Timeout;
+
+  const pollAnalysis = async () => {
+    try {
+      console.log(`Polling for analysis (attempt ${pollCount + 1})`);
+
+      const response = await fetch('/api/assessment/fetch-analysis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          assessmentId: assessmentData.assessmentId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!mounted) return;
+
+      if (response.ok && data.success && data.analysis) {
+        console.log('Analysis received, stopping polling');
+        setIsAnalyzing(false);
+        const updatedData = {
+          ...assessmentData,
+          analysis: data.analysis,
+          status: 'ANALYZED'
+        };
+        setAssessmentData(updatedData);
+
+        // Send initial email
+        const sortedResults = updatedData.results
+          .map(result => [result.type, Math.round(result.score)] as [string, number])
+          .sort(([, a], [, b]) => b - a);
+
+        try {
+          setIsSendingEmail(true);
+          const emailResponse = await fetch('/api/assessment/results/sendEmail', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: updatedData.userInfo.email,
+              analysisHtml: data.analysis,
+              scores: Object.fromEntries(sortedResults),
+              userInfo: updatedData.userInfo,
+              assessmentId: updatedData.assessmentId
+            })
+          });
+
+          if (emailResponse.ok) {
+            setEmailSent(true);
+            console.log('Initial email sent successfully');
+          } else {
+            throw new Error('Failed to send initial email');
+          }
+        } catch (error) {
+          console.error('Error sending initial email:', error);
+          setEmailError('Failed to send initial email. You can try sending it again.');
+        } finally {
+          setIsSendingEmail(false);
+        }
+
+        return; // Stop further polling
+      } else {
+        console.warn('Analysis not ready, retrying...');
+      }
+    } catch (error) {
+      console.error('Error polling for analysis:', error);
     }
 
-    let mounted = true;
-    let timeoutId: NodeJS.Timeout;
-
-    const pollAnalysis = async () => {
-      try {
-        console.log(`Polling for analysis (attempt ${pollCount + 1})`);
-
-        const response = await fetch('/api/assessment/fetch-analysis', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            assessmentId: assessmentData.assessmentId,
-          }),
-        });
-
-        const data = await response.json();
-
-        if (!mounted) return;
-
-        if (response.ok && data.success && data.analysis) {
-          console.log('Analysis received, stopping polling');
-          setIsAnalyzing(false);
-          setAssessmentData(prev => ({
-            ...prev!,
-            analysis: data.analysis,
-            status: 'ANALYZED',
-          }));
-          handleSendEmail();  // Add automatic email sending when analysis is ready
-          return; // Stop further polling
-        } else {
-          console.warn('Analysis not ready, retrying...');
-        }
-      } catch (error) {
-        console.error('Error polling for analysis:', error);
+    if (mounted) {
+      const newCount = pollCount + 1;
+      if (newCount >= 15) {
+        console.error('Max polling attempts reached');
+        setIsAnalyzing(false);
+        setAnalysisTimedOut(true);
+        
+        // TODO: Generate fallback analysis based on highest score
+        const fallbackAnalysis = "Placeholder: This will be replaced with type-specific analysis based on highest score.";
+        
+        setAssessmentData(prev => ({
+          ...prev!,
+          analysis: fallbackAnalysis,
+          status: 'ANALYZED',
+        }));
+        
+        setError('Analysis generation timed out. Showing general results based on your highest score.');
+        return;
       }
 
-      if (mounted) {
-        const newCount = pollCount + 1;
-        if (newCount >= 15) {
-          console.error('Max polling attempts reached');
-          setIsAnalyzing(false);
-          setAnalysisTimedOut(true);
-          
-          // TODO: Generate fallback analysis based on highest score
-          const fallbackAnalysis = "Placeholder: This will be replaced with type-specific analysis based on highest score.";
-          
-          setAssessmentData(prev => ({
-            ...prev!,
-            analysis: fallbackAnalysis,
-            status: 'ANALYZED',
-          }));
-          
-          setError('Analysis generation timed out. Showing general results based on your highest score.');
-          return;
-        }
+      const delay = Math.min(1000 * Math.pow(1.5, newCount), 10000); // Exponential backoff
+      timeoutId = setTimeout(() => {
+        setPollCount(newCount);
+      }, delay);
+    }
+  };
 
-        const delay = Math.min(1000 * Math.pow(1.5, newCount), 10000); // Exponential backoff
-        timeoutId = setTimeout(() => {
-          setPollCount(newCount);
-        }, delay);
-      }
-    };
+  // Start initial poll
+  pollAnalysis();
 
-    // Start initial poll
-    pollAnalysis();
-
-    return () => {
-      mounted = false;
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, [assessmentData?.assessmentId, isAnalyzing, pollCount]);
+  return () => {
+    mounted = false;
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+  };
+}, [assessmentData?.assessmentId, isAnalyzing, pollCount]);
 
   if (error) {
     return (
