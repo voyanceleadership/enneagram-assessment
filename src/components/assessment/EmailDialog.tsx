@@ -1,5 +1,5 @@
 // src/components/assessment/EmailDialog.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,6 +21,16 @@ export default function EmailDialog({ isOpen, onClose, defaultEmail, onSendEmail
   const [newEmail, setNewEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState<string | null>(null);
+
+  // Reset state when dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      setEmails([defaultEmail]);
+      setNewEmail('');
+      setMessage('');
+      setError(null);
+    }
+  }, [isOpen, defaultEmail]);
 
   const handleAddEmail = () => {
     if (newEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
@@ -44,6 +54,7 @@ export default function EmailDialog({ isOpen, onClose, defaultEmail, onSendEmail
       return;
     }
     try {
+      console.log('EmailDialog sending to:', emails, 'with message:', message);
       await onSendEmail(emails, message);
       onClose();
     } catch (error) {

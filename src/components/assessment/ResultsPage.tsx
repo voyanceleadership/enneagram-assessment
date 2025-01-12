@@ -112,7 +112,7 @@ export default function ResultsPage({
                   className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
                 >
                   <Mail className="h-4 w-4" />
-                  {isSendingEmail ? 'Sending...' : 'Send Results'}
+                  {isSendingEmail ? 'Sending...' : emailSent ? 'Send Again' : 'Send Results'}
                 </Button>
               )}
               {(!isAnalyzing || analysisTimedOut) && (
@@ -215,7 +215,11 @@ export default function ResultsPage({
         isOpen={isEmailDialogOpen}
         onClose={() => setIsEmailDialogOpen(false)}
         defaultEmail={userInfo.email}
-        onSendEmail={onSendEmail}
+        onSendEmail={async (emails, message) => {
+          console.log('ResultsPage sending emails:', emails, 'with message:', message);
+          await onSendEmail(emails, message);
+          setIsEmailDialogOpen(false);
+        }}
         isSending={isSendingEmail}
       />
     </Card>
