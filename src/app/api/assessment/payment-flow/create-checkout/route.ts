@@ -119,6 +119,7 @@ export async function POST(req: NextRequest) {
 
     // Handle coupon logic
     if (couponCode) {
+      console.log('Processing coupon:', couponCode);
       const coupon = await prisma.coupon.findFirst({
         where: { 
           code: couponCode.toUpperCase(),
@@ -127,6 +128,8 @@ export async function POST(req: NextRequest) {
           uses: { gt: prisma.coupon.fields.usedCount }
         }
       });
+
+      console.log('Found coupon:', coupon);
 
       if (!coupon) {
         return NextResponse.json({ 
@@ -139,25 +142,67 @@ export async function POST(req: NextRequest) {
       finalAmount = ASSESSMENT_PRICE - discountAmount;
       appliedCoupon = coupon;
 
+      console.log('Calculated discount:', { discountAmount, finalAmount });
+
       // If 100% discount, handle like validated email
       if (finalAmount === 0) {
-        await prisma.$transaction([
-          prisma.payment.create({
-            data: {
-              sessionId: `coup_${Date.now()}`,
-              amount: 0,
-              status: 'completed',
-              assessment: {
-                connect: {
-                  id: assessmentId
+        console.log('Processing 100% discount for assessment:', assessmentId);
+
+        try {
+          await prisma.$transaction([
+            prisma.assessment.update({
+              where: { id: assessmentId },
+              data: { status: 'PAID' as AssessmentStatus }
+            }),
+            prisma.payment.create({
+              data: {
+                sessionId: `coup_${Date.now()}`,
+                amount: 0,
+                status: 'completed',
+                assessment: {
+                  connect: {
+                    id: assessmentId
+                  }
                 }
               }
+            }),
+            prisma.coupon.update({
+              where: { id: coupon.id },
+              data: { usedCount: { increment: 1 } }
+            }),
+            prisma.couponUsage.create({
+              data: {
+                couponId: coupon.id,
+                email
+              }
+            })
+          ]);
+
+          // Verify the status update
+          const updatedAssessment = await prisma.assessment.findUnique({
+            where: { id: assessmentId }
+          });
+
+          console.log('Coupon applied, assessment status:', updatedAssessment?.status);
+
+          if (!updatedAssessment || updatedAssessment.status !== 'PAID') {
+            throw new Error('Failed to update assessment status');
+          }
+
+          return NextResponse.json({
+            success: true,
+            data: { 
+              assessmentId,
+              status: 'PAID'
             }
-          }),
-          prisma.assessment.update({
-            where: { id: assessmentId },
-            data: { status: 'PAID' as AssessmentStatus }
-          }),
+          });
+        } catch (error) {
+          console.error('Error processing 100% discount:', error);
+          throw error;
+        }
+      } else {
+        // Track coupon usage for non-zero amount
+        await prisma.$transaction([
           prisma.coupon.update({
             where: { id: coupon.id },
             data: { usedCount: { increment: 1 } }
@@ -169,81 +214,106 @@ export async function POST(req: NextRequest) {
             }
           })
         ]);
+        
+        // Create Stripe checkout session for non-zero amounts
+        const session = await stripe.checkout.sessions.create({
+          payment_method_types: ['card'],
+          line_items: [{
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: 'Enneagram Assessment Results',
+                description: appliedCoupon
+                  ? `${appliedCoupon.discount}% discount applied`
+                  : 'Standard assessment'
+              },
+              unit_amount: finalAmount,
+            },
+            quantity: 1,
+          }],
+          mode: 'payment',
+          success_url: `${baseUrl}/assessment/results?session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${baseUrl}/assessment/cancelled`,
+          customer_email: email,
+          metadata: {
+            assessmentId,
+            couponCode: couponCode || 'NONE',
+            originalPrice: ASSESSMENT_PRICE,
+            discountApplied: appliedCoupon?.discount || 0
+          }
+        });
+
+        // Create pending payment record
+        await prisma.payment.create({
+          data: {
+            sessionId: session.id,
+            amount: finalAmount,
+            status: 'pending',
+            assessment: {
+              connect: {
+                id: assessmentId
+              }
+            }
+          }
+        });
+
+        console.log('Checkout session created:', session.id);
 
         return NextResponse.json({
           success: true,
-          data: {
-            assessmentId,
-            status: 'PAID'
-          }
+          url: session.url,
+          message: 'Checkout session created successfully'
         });
       }
-
-      // Track coupon usage for non-zero amount
-      await prisma.$transaction([
-        prisma.coupon.update({
-          where: { id: coupon.id },
-          data: { usedCount: { increment: 1 } }
-        }),
-        prisma.couponUsage.create({
-          data: {
-            couponId: coupon.id,
-            email
-          }
-        })
-      ]);
-    }
-
-    // Create Stripe checkout session for non-zero amounts
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [{
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: 'Enneagram Assessment Results',
-            description: appliedCoupon
-              ? `${appliedCoupon.discount}% discount applied`
-              : 'Standard assessment'
+    } else {
+      // No coupon code - create regular Stripe checkout session
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [{
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Enneagram Assessment Results',
+              description: 'Standard assessment'
+            },
+            unit_amount: ASSESSMENT_PRICE,
           },
-          unit_amount: finalAmount,
-        },
-        quantity: 1,
-      }],
-      mode: 'payment',
-      success_url: `${baseUrl}/assessment/results?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseUrl}/assessment/cancelled`,
-      customer_email: email,
-      metadata: {
-        assessmentId,
-        couponCode: couponCode || 'NONE',
-        originalPrice: ASSESSMENT_PRICE,
-        discountApplied: appliedCoupon?.discount || 0
-      }
-    });
+          quantity: 1,
+        }],
+        mode: 'payment',
+        success_url: `${baseUrl}/assessment/results?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${baseUrl}/assessment/cancelled`,
+        customer_email: email,
+        metadata: {
+          assessmentId,
+          couponCode: 'NONE',
+          originalPrice: ASSESSMENT_PRICE,
+          discountApplied: 0
+        }
+      });
 
-    // Create pending payment record
-    await prisma.payment.create({
-      data: {
-        sessionId: session.id,
-        amount: finalAmount,
-        status: 'pending',
-        assessment: {
-          connect: {
-            id: assessmentId
+      // Create pending payment record
+      await prisma.payment.create({
+        data: {
+          sessionId: session.id,
+          amount: ASSESSMENT_PRICE,
+          status: 'pending',
+          assessment: {
+            connect: {
+              id: assessmentId
+            }
           }
         }
-      }
-    });
+      });
 
-    console.log('Checkout session created:', session.id);
+      console.log('Checkout session created:', session.id);
 
-    return NextResponse.json({
-      success: true,
-      url: session.url,
-      message: 'Checkout session created successfully'
-    });
-
+      return NextResponse.json({
+        success: true,
+        url: session.url,
+        message: 'Checkout session created successfully'
+      });
+    }
   } catch (err) {
     console.error('Error processing checkout:', err);
     return NextResponse.json({

@@ -37,7 +37,6 @@ const PaymentPage = ({ userInfo, assessmentId, onContinue, onBack }: PaymentPage
   useEffect(() => {
     const validateEmail = async () => {
       try {
-        setIsLoading(true);
         const response = await fetch('/api/assessment/payment-flow/validate-email', {
           method: 'POST',
           headers: {
@@ -45,31 +44,21 @@ const PaymentPage = ({ userInfo, assessmentId, onContinue, onBack }: PaymentPage
           },
           body: JSON.stringify({ email: userInfo.email }),
         });
-
+  
         if (!response.ok) {
-          throw new Error('Failed to validate email');
+          return;
         }
-
+  
         const data = await response.json();
-        setIsEmailValid(data.valid);
-
+  
         if (data.valid) {
-          setShowSuccessDialog(true);
-          setDialogMessage('Your email has been validated. You can proceed to results.');
-          setTimeout(() => {
-            onContinue();
-          }, 2000);
+          onContinue();
         }
       } catch (err) {
         console.error('Error validating email:', err);
-        setIsEmailValid(false);
-        setDialogMessage('Failed to validate email. Please try again.');
-        setShowErrorDialog(true);
-      } finally {
-        setIsLoading(false);
       }
     };
-
+  
     if (userInfo.email) {
       validateEmail();
     }
@@ -96,13 +85,37 @@ const PaymentPage = ({ userInfo, assessmentId, onContinue, onBack }: PaymentPage
       if (data.valid) {
         setIsCouponValid(true);
         setDiscountAmount(data.details.discount);
-        setDialogMessage(`Coupon applied successfully! ${data.details.discount}% discount`);
-        setShowSuccessDialog(true);
-
+        
         if (data.details.discount === 100) {
-          setTimeout(() => {
-            onContinue();
-          }, 2000);
+          try {
+            const checkoutResponse = await fetch('/api/assessment/payment-flow/create-checkout', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: userInfo.email,
+                assessmentId,
+                couponCode
+              })
+            });
+      
+            const checkoutData = await checkoutResponse.json();
+            if (checkoutData.success) {
+              setDialogMessage('Coupon applied successfully! Proceeding to results...');
+              setShowSuccessDialog(true);
+              setTimeout(() => {
+                onContinue();
+              }, 2000);
+            } else {
+              throw new Error(checkoutData.error || 'Failed to process coupon');
+            }
+          } catch (err) {
+            console.error('Error processing coupon:', err);
+            setDialogMessage('Error processing coupon. Please try again.');
+            setShowErrorDialog(true);
+          }
+        } else {
+          setDialogMessage(`Coupon applied successfully! ${data.details.discount}% discount`);
+          setShowSuccessDialog(true);
         }
       } else {
         setDialogMessage(data.error || 'Invalid coupon code');

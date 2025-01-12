@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Download } from 'lucide-react';
+import { Download, Mail } from 'lucide-react';
+import { getTypeName } from '@/utils/calculateAssessmentResults'; // Adjust this path if needed
 
 const TYPE_NAMES = {
   '1': 'Type 1: The Reformer',
@@ -25,18 +26,28 @@ interface ResultsPageProps {
   };
   analysis: string;
   isAnalyzing: boolean;
+  analysisTimedOut: boolean;
   sortedResults: [string, number][];
   onBack: () => void;
   assessmentId: string;
+  onSendEmail: () => void;
+  isSendingEmail: boolean;
+  emailSent: boolean;
+  emailError: string | null;
 }
 
 export default function ResultsPage({
   userInfo,
   analysis,
   isAnalyzing,
+  analysisTimedOut,
   sortedResults,
   onBack,
-  assessmentId
+  assessmentId,
+  onSendEmail,
+  isSendingEmail,
+  emailSent,
+  emailError
 }: ResultsPageProps) {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
@@ -44,76 +55,38 @@ export default function ResultsPage({
   const downloadPDF = async () => {
     setIsGeneratingPDF(true);
     setPdfError(null);
-
+  
     try {
-      const html2pdf = (await import('html2pdf.js')).default;
-
-      const processedResults = sortedResults.map(([type, score]) => ({
-        type,
-        typeName: TYPE_NAMES[type],
-        score: Math.round(score)
-      }));
-
-      const currentDate = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+      const response = await fetch('/api/assessment/results/generate-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userInfo,
+          scores: Object.fromEntries(sortedResults),
+          analysis
+        })
       });
-
-      const combinedContent = document.createElement('div');
-      combinedContent.innerHTML = `
-        <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="margin-bottom: 5px; font-size: 2.2rem;">Enneagram Assessment Results</h1>
-          <p style="margin: 0; font-size: 1rem; color: #555;">Comprehensive Assessment Breakdown</p>
-        </div>
-        
-        <div style="text-align: left; margin-bottom: 30px;">
-          <p><strong>Full Name:</strong> ${userInfo.firstName} ${userInfo.lastName}</p>
-          <p><strong>Email:</strong> ${userInfo.email}</p>
-          <p><strong>Date of Submission:</strong> ${currentDate}</p>
-        </div>
-        
-        <div style="border-bottom: 2px solid #ddd; margin-bottom: 30px;"></div>
-        
-        <div style="margin-bottom: 30px;">
-          <h2 style="font-size: 1.5rem; margin-bottom: 10px;">Type Scores</h2>
-          ${processedResults.map(({ typeName, score }) =>
-            `<p style="margin: 5px 0; font-size: 1.1rem;">
-              <strong>${typeName}</strong> - ${score} points
-            </p>`
-          ).join('')}
-        </div>
-        
-        <div style="border-bottom: 2px solid #ddd; margin-bottom: 30px;"></div>
-        
-        <div id="analysis-section">
-          <h2 style="font-size: 1.5rem; margin-bottom: 15px;">Analysis</h2>
-          ${analysis || '<p>No analysis available.</p>'}
-        </div>
-      `;
-
-      const options = {
-        margin: [10, 10, 20, 10],
-        filename: `enneagram-assessment-${userInfo.firstName}-${userInfo.lastName}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          logging: true,
-          allowTaint: true,
-          useCORS: true
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-      };
-
-      await html2pdf().from(combinedContent).set(options).save();
+  
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF');
+      }
+  
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `enneagram-assessment-${userInfo.firstName.toLowerCase()}-${userInfo.lastName.toLowerCase()}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      setPdfError('There was an error generating your PDF. Please try again.');
+      console.error('Error downloading PDF:', error);
+      setPdfError('Failed to generate PDF. Please try again.');
     } finally {
       setIsGeneratingPDF(false);
     }
-  };
+  }; 
 
   return (
     <Card className="bg-white shadow-lg relative">
@@ -129,14 +102,28 @@ export default function ResultsPage({
             <h1 className="text-3xl font-bold text-gray-900">
               Your Enneagram Results
             </h1>
-            <Button
-              onClick={downloadPDF}
-              disabled={isAnalyzing || isGeneratingPDF}
-              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
-            >
-              <Download className="h-4 w-4" />
-              {isGeneratingPDF ? 'Generating PDF...' : 'Download PDF'}
-            </Button>
+            <div className="flex gap-2">
+              {!isAnalyzing && analysis && !analysisTimedOut && (
+                <Button
+                  onClick={onSendEmail}
+                  disabled={isSendingEmail}
+                  className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+                >
+                  <Mail className="h-4 w-4" />
+                  {isSendingEmail ? 'Sending...' : emailSent ? 'Email Sent' : 'Send Results'}
+                </Button>
+              )}
+              {(!isAnalyzing || analysisTimedOut) && (
+                <Button
+                  onClick={downloadPDF}
+                  disabled={isGeneratingPDF}
+                  className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  {isGeneratingPDF ? 'Generating PDF...' : 'Download PDF'}
+                </Button>
+              )}
+            </div>
           </div>
 
           <div className="border-b border-gray-200 pb-6">
@@ -163,9 +150,11 @@ export default function ResultsPage({
             </div>
           </div>
 
-          {pdfError && (
+          {(pdfError || emailError) && (
             <Alert variant="destructive">
-              <AlertDescription>{pdfError}</AlertDescription>
+              <AlertDescription>
+                {pdfError || emailError}
+              </AlertDescription>
             </Alert>
           )}
         </div>

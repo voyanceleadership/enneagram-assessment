@@ -1,53 +1,30 @@
+// src/app/api/assessment/results/sendEmail/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-
-interface Scores {
-  [type: string]: number;
-}
+import { generatePDF } from '../generate-pdf/route';
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, analysisHtml, scores } = await req.json();
+    const { email, analysisHtml, scores, userInfo } = await req.json();
 
-    // Ensure scores are typed correctly
-    const typedScores: Record<string, number> = scores as Record<string, number>;
+    // Generate PDF first
+    const pdf = await generatePDF({
+      userInfo,
+      analysis: analysisHtml,
+      scores: scores
+    });
 
     const transporter = nodemailer.createTransport({
-      service: 'Gmail',
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.EMAIL_USERNAME,
         pass: process.env.EMAIL_PASSWORD,
       },
+      from: "support@voyanceleadership.com"
     });
 
-    // Sort and round scores
-    const sortedScores = Object.entries(typedScores)
-      .sort(([, a], [, b]) => (b as number) - (a as number))  // Explicit type casting
-      .map(([type, score]) => ({
-        type,
-        score: Math.round(score as number),  // Type assertion to avoid 'unknown' error
-      }));
-
-    // Generate HTML for scores
-    const scoresHtml = sortedScores
-      .map(({ type, score }) => `
-        <p style="margin: 5px 0; font-size: 16px;">
-          <strong>Type ${type}</strong>: ${score} points
-        </p>`)
-      .join('');
-
-    // PDF download button
-    const pdfButtonHtml = `
-      <div style="text-align: center; margin-top: 40px;">
-        <a href="https://www.voyanceleadership.com/download-pdf/${email}" 
-           style="background-color: #007BFF; color: white; padding: 12px 24px; font-size: 16px; 
-                  border-radius: 5px; text-decoration: none; display: inline-block;">
-          Download PDF
-        </a>
-      </div>
-    `;
-
-    // Full Email Body
     const emailBody = `
     <!DOCTYPE html>
     <html>
@@ -63,42 +40,35 @@ export async function POST(req: NextRequest) {
       <body>
         <div class="container">
           <div class="content">
-            <div style="text-align: center;">
-              <img src="https://voyance-image-storage.s3.us-east-2.amazonaws.com/VL+Enneagram+Basic+Color+Names+Numbers.png" width="200" />
-            </div>
             <h1>Your Enneagram Assessment Results</h1>
-            <p>Thank you for completing the Voyance Enneagram Assessment! Below are your results.</p>
-            
-            <div style="margin-top: 30px;">
-              <h2>Your Type Scores</h2>
-              ${scoresHtml}
-            </div>
-
-            <div style="margin-top: 30px;">
-              <h2>Analysis</h2>
-              ${analysisHtml}
-            </div>
-
-            ${pdfButtonHtml}
-
+            <p>Thank you for completing the Voyance Enneagram Assessment!</p>
+            <p>We hope you enjoyed (and will continue to enjoy) this process of self-reflection.</p>
+            <p>The Voyance Enneagram assessment is uniquely designed to provide clear, unambiguous results. For this reason, it's highly likely that your true personality type is one of your top two scores. We encourage you to read the profiles on these types and subjectively evaluate which one resonates the most.</p>
+            <p>Your detailed results are attached to this email as a PDF. Please let us know if you have any questions.</p>
+            <p>If you're interested in learning more, we offer a 3-hour Enneagram eCourse on our online learning platform. Please visit <a href="https://www.voyanceleadership.com/en-intro-course">our website</a> for more information.</p>
             <p style="text-align: center; margin-top: 40px;">
               If you have any questions, please reach out to 
               <a href="mailto:support@voyanceleadership.com">support@voyanceleadership.com</a>.
             </p>
           </div>
           <div class="footer">
-            © 2024 Voyance Leadership | <a href="http://www.voyanceleadership.com">voyanceleadership.com</a>
+            © ${new Date().getFullYear()} Voyance Leadership | <a href="http://www.voyanceleadership.com">voyanceleadership.com</a>
           </div>
         </div>
       </body>
     </html>`;
 
-    // Send email
+    // Send email with PDF attachment
     await transporter.sendMail({
-      from: process.env.EMAIL_USERNAME,
+      from: "Voyance Leadership <support@voyanceleadership.com>",
       to: `${email}, support@voyanceleadership.com`,
       subject: 'Your Enneagram Assessment Results',
       html: emailBody,
+      attachments: [{
+        filename: `enneagram-assessment-${userInfo.firstName.toLowerCase()}-${userInfo.lastName.toLowerCase()}.pdf`,
+        content: pdf,
+        contentType: 'application/pdf'
+      }]
     });
 
     return NextResponse.json({ message: 'Email sent successfully!' }, { status: 200 });

@@ -1,4 +1,3 @@
-// src/app/api/assessment/analyze/route.ts
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { OpenAI } from 'openai';
@@ -23,16 +22,7 @@ export async function POST(req: Request) {
       }, { status: 400 });
     }
 
-    // Check if there's an ongoing analysis for this assessment
-    if (ongoingAnalyses.has(assessmentId)) {
-      console.log('Analysis already in progress for:', assessmentId);
-      return NextResponse.json({
-        success: false,
-        message: 'Analysis generation in progress'
-      });
-    }
-
-    // Get the assessment and check if analysis already exists
+    // Get the assessment first to check its current status
     const assessment = await prisma.assessment.findUnique({
       where: { id: assessmentId },
       include: {
@@ -54,13 +44,37 @@ export async function POST(req: Request) {
       }, { status: 404 });
     }
 
-    // If analysis exists, return it
+    // If analysis exists, return it immediately
     if (assessment.analysis) {
       return NextResponse.json({
         success: true,
         analysis: assessment.analysis.content
       });
     }
+
+    // Check if there's an ongoing analysis using both Map and database status
+    if (ongoingAnalyses.has(assessmentId) || assessment.status === 'ANALYZING') {
+      console.log('Analysis already in progress for:', assessmentId);
+      return NextResponse.json({
+        success: false,
+        message: 'Analysis generation in progress'
+      });
+    }
+
+    // Start a transaction to update status to ANALYZING
+    await prisma.$transaction(async (tx) => {
+      await tx.assessment.update({
+        where: { 
+          id: assessmentId,
+          status: {
+            notIn: ['ANALYZING', 'ANALYZED']
+          }
+        },
+        data: { status: 'ANALYZING' }
+      });
+    }, {
+      isolationLevel: Prisma.TransactionIsolationLevel.Serializable
+    });
 
     // Convert results to scores object and ensure proper rounding
     const scores = Object.fromEntries(
@@ -145,42 +159,48 @@ export async function POST(req: Request) {
           .replace(/<\/h2><\/p>/g, '</h2>'); // Fix paragraph/header nesting
 
           try {
-            // Use transaction with pessimistic locking
+            // Use transaction with serializable isolation level
             const result = await prisma.$transaction(async (tx) => {
-              // Lock the assessment record first
+              // Fetch and lock the assessment record first
               const lockedAssessment = await tx.assessment.findUnique({
                 where: { id: assessmentId },
                 include: { analysis: true },
-                for: 'update'  // Add pessimistic lock
               });
           
-              // Check again if analysis exists after getting lock
-              if (lockedAssessment?.analysis) {
+              if (!lockedAssessment) {
+                throw new Error('Assessment not found');
+              }
+          
+              // Check if analysis already exists after obtaining the lock
+              if (lockedAssessment.analysis) {
+                console.log('Analysis already exists after locking');
                 return lockedAssessment.analysis;
               }
           
-              // Create analysis if it doesn't exist
+              // Create new analysis if it doesn't exist
               const analysis = await tx.analysis.create({
                 data: {
                   content: formattedAnalysis,
-                  assessmentId
-                }
+                  assessmentId,
+                },
               });
           
               // Update assessment status
               await tx.assessment.update({
                 where: { id: assessmentId },
-                data: { 
-                  status: 'ANALYZED'
-                }
+                data: {
+                  status: 'ANALYZED',
+                },
               });
           
               return analysis;
             }, {
-              isolationLevel: Prisma.TransactionIsolationLevel.Serializable // Ensure serializable isolation
+              isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // Ensure serializable isolation
             });
+
+            console.log('Analysis saved successfully:', result);
+            return NextResponse.json({ success: true, analysis: result.content });
           
-            return result.content;
           } catch (error) {
             // If we hit a unique constraint error, it means another process created the analysis
             if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
@@ -193,7 +213,7 @@ export async function POST(req: Request) {
             }
             // Log the specific error for debugging
             console.error('Error in analysis generation:', error);
-            throw error;
+            return NextResponse.json({ success: false, error: 'Failed to process analysis' }, { status: 500 });
           }
       } catch (error) {
         // Log the specific error for debugging
@@ -202,6 +222,33 @@ export async function POST(req: Request) {
       } finally {
         // Always clean up the ongoing analysis reference
         ongoingAnalyses.delete(assessmentId);
+        // Reset status if there was an error
+        try {
+          // Validate that the assessment exists and its status is 'ANALYZING'
+          const existingAssessment = await prisma.assessment.findUnique({
+            where: { id: assessmentId },
+            select: { status: true },
+          });
+        
+          if (!existingAssessment) {
+            console.error(`Assessment with ID ${assessmentId} not found.`);
+            return;
+          }
+        
+          if (existingAssessment.status !== 'ANALYZING') {
+            console.warn(`Assessment with ID ${assessmentId} is not in 'ANALYZING' status. Current status: ${existingAssessment.status}`);
+            return;
+          }
+        
+          // Reset status to 'PAID' if it was in 'ANALYZING'
+          await prisma.assessment.update({
+            where: { id: assessmentId },
+            data: { status: 'PAID' },
+          });
+          console.log(`Successfully reset status for assessment ID ${assessmentId} to 'PAID'.`);
+        } catch (statusError) {
+          console.error('Error resetting status:', statusError);
+        }        
       }
     })();
 

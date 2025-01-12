@@ -27,45 +27,9 @@ export default function RankChoiceQuestions({
 
   const handleCompletion = async () => {
     try {
-      // First check if this is a paid assessment
-      const paymentCheck = await fetch('/api/assessment/payment-flow/check-payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ assessmentId })
-      });
-
-      const { paid } = await paymentCheck.json();
-
-      if (paid) {
-        // Get the assessment with results
-        const assessmentResponse = await fetch('/api/assessment/get-results', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ assessmentId })
-        });
-
-        const assessmentData = await assessmentResponse.json();
-
-        if (assessmentData.results) {
-          // Trigger analysis generation
-          await fetch('/api/assessment/analyze', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              assessmentId,
-              scores: assessmentData.results.reduce((acc, result) => {
-                acc[result.type] = Math.round(result.score * 10) / 10;
-                return acc;
-              }, {} as Record<string, number>)
-            }),
-          });
-        }
-      }
-
-      // Continue with normal completion flow
       onComplete();
     } catch (error) {
-      console.error('Error handling assessment completion:', error);
+      console.error('Error handling completion:', error);
       onComplete(); // Still complete even if there's an error
     }
   };
@@ -79,24 +43,21 @@ export default function RankChoiceQuestions({
   const handleRankingClick = (optionIndex: number) => {
     const currentRankings = rankings[currentQuestionIndex] || [];
     let newRankings = [...currentRankings];
-
+  
     if (newRankings.includes(optionIndex)) {
       newRankings = newRankings.filter(index => index !== optionIndex);
     } else if (newRankings.length < 3) {
       newRankings.push(optionIndex);
     }
-
+  
     setRankings(prev => ({
       ...prev,
       [currentQuestionIndex]: newRankings
     }));
-
-    if (newRankings.length === 3) {
-      if (currentQuestionIndex < rankingQuestions.length - 1) {
-        setCurrentQuestionIndex(prev => prev + 1);
-      } else {
-        handleCompletion();
-      }
+  
+    // Only auto-advance if not on the last question
+    if (newRankings.length === 3 && currentQuestionIndex < rankingQuestions.length - 1) {
+      setCurrentQuestionIndex(prev => prev + 1);
     }
   };
 
@@ -161,7 +122,7 @@ export default function RankChoiceQuestions({
             }`}
           >
             {currentQuestionIndex === rankingQuestions.length - 1 
-              ? (isSubmitting ? 'Submitting...' : 'Complete') 
+              ? (isSubmitting ? 'Submitting...' : 'Complete Assessment') 
               : 'Next'}
           </button>
         </div>

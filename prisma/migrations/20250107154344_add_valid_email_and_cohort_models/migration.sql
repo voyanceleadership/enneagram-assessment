@@ -41,3 +41,4 @@ CREATE INDEX "ValidEmail_source_idx" ON "ValidEmail"("source");
 
 -- CreateIndex
 CREATE INDEX "ValidEmail_cohortId_idx" ON "ValidEmail"("cohortId");
+

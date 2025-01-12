@@ -133,28 +133,11 @@ export async function POST(req: Request) {
       throw new Error('Assessment not found for this payment');
     }
 
-    // Only trigger analysis if needed
-    if (payment.assessment.status === 'PAID' && !payment.assessment.analysis) {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/assessment/analyze`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            assessmentId: payment.assessment.id,
-            scores: Object.fromEntries(
-              payment.assessment.results.map(r => [r.type, r.score])
-            )
-          })
-        });
-
-        if (!response.ok) {
-          console.warn('Analysis generation failed, client will poll');
-        }
-      } catch (err) {
-        console.error('Error triggering analysis:', err);
-        // We don't throw here as analysis generation failure shouldn't block payment verification
-      }
-    }
+    // Ensure assessment status is updated before returning
+    await prisma.assessment.update({
+      where: { id: payment.assessment.id },
+      data: { status: 'PAID' as AssessmentStatus }
+    });
 
     const responseData = {
       success: true,
@@ -169,7 +152,7 @@ export async function POST(req: Request) {
           score: Math.round(result.score * 10) / 10,
         })),
         assessmentId: payment.assessment.id,
-        status: payment.assessment.status,
+        status: 'PAID',
         analysis: payment.assessment.analysis?.content || null
       },
     };

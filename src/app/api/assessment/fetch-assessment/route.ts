@@ -54,7 +54,9 @@ export async function POST(req: Request) {
     }
 
     // Verify payment status
-    if (assessment.status !== 'PAID' && assessment.status !== 'ANALYZED') {
+    const validStatuses = ['PAID', 'ANALYZED', 'ANALYZING'];
+    if (!validStatuses.includes(assessment.status)) {
+      console.log('Invalid status:', assessment.status);
       return NextResponse.json({
         success: false,
         error: 'Assessment payment required'
