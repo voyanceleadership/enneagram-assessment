@@ -1,9 +1,14 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Montserrat } from 'next/font/google'
 import './globals.css'
 import Script from 'next/script'
 
-const inter = Inter({ subsets: ['latin'] })
+const montserrat = Montserrat({ 
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
+  variable: '--font-montserrat',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'Enneacademy',
@@ -16,11 +21,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${montserrat.variable}`}>
       <head>
         <Script src="https://js.stripe.com/v3" strategy="beforeInteractive" />
       </head>
-      <body className={inter.className}>
+      <body className="min-h-screen bg-background font-sans antialiased">
         {children}
       </body>
     </html>

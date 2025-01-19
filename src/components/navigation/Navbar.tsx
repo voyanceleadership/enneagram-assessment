@@ -1,26 +1,55 @@
+// src/components/navigation/Navbar.tsx
 import { FC } from 'react'
+import Link from 'next/link'
+import { theme, styleUtils } from '@/styles/theme'
 
 const Navbar: FC = () => {
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+    <nav 
+      className="fixed top-0 left-0 right-0 bg-white shadow-sm z-50"
+      style={{ borderBottom: `1px solid ${theme.colors.accent3}15` }}
+    >
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
-          <a href="/" className="font-bold text-xl text-blue-600">
+          <Link 
+            href="/" 
+            className="transition-opacity hover:opacity-90"
+            style={{ 
+              ...styleUtils.headingStyles,
+              color: theme.colors.primary,
+              fontSize: '1.25rem'
+            }}
+          >
             Enneacademy
-          </a>
+          </Link>
 
           {/* Navigation Links */}
-          <div className="flex space-x-8">
-          <a href="/assessment" className="text-gray-600 hover:text-blue-600 transition-colors">
-  Enneagram Assessment
-</a>
-            <a href="/courses" className="text-gray-600 hover:text-blue-600 transition-colors">
+          <div 
+            className="flex space-x-8"
+            style={styleUtils.bodyStyles}
+          >
+            <Link 
+              href="/assessment" 
+              className="transition-colors hover:opacity-80"
+              style={{ color: theme.colors.text }}
+            >
+              Enneagram Assessment
+            </Link>
+            <Link 
+              href="/courses" 
+              className="transition-colors hover:opacity-80"
+              style={{ color: theme.colors.text }}
+            >
               eCourses
-            </a>
-            <a href="/store" className="text-gray-600 hover:text-blue-600 transition-colors">
+            </Link>
+            <Link 
+              href="/store" 
+              className="transition-colors hover:opacity-80"
+              style={{ color: theme.colors.text }}
+            >
               Store
-            </a>
+            </Link>
           </div>
         </div>
       </div>

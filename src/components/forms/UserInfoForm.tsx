@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { theme, styleUtils } from '@/styles/theme';
 
 interface UserInfo {
   firstName: string;
@@ -106,11 +107,30 @@ export default function UserInfoForm({ userInfo, setUserInfo, onNext }: UserInfo
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg space-y-6">
-      <h2 className="text-2xl font-bold mb-4">Start Your Enneagram Assessment</h2>
+    <div 
+      className="p-6 rounded-lg shadow-sm space-y-6" 
+      style={{ backgroundColor: 'white' }}
+    >
+      <h2 
+        className="mb-4"
+        style={{ 
+          ...styleUtils.headingStyles, 
+          color: theme.colors.text,
+          fontSize: '1.5rem'
+        }}
+      >
+        Start Your Enneagram Assessment
+      </h2>
       
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <div 
+          className="px-4 py-3 rounded relative" 
+          style={{ 
+            backgroundColor: `${theme.colors.accent2}15`,
+            borderLeft: `4px solid ${theme.colors.accent2}`,
+            color: theme.colors.text 
+          }}
+        >
           {error}
         </div>
       )}
@@ -118,50 +138,98 @@ export default function UserInfoForm({ userInfo, setUserInfo, onNext }: UserInfo
       <form onSubmit={handleSubmit}>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label 
+              className="block mb-1 text-sm"
+              style={{ 
+                ...styleUtils.bodyStyles,
+                color: theme.colors.text,
+                fontWeight: 500
+              }}
+            >
               First Name
             </label>
             <input
               type="text"
               required
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-2 rounded-lg border transition-colors focus:outline-none focus:border-primary"
+              style={{
+                borderColor: `${theme.colors.text}20`,
+                color: theme.colors.text,
+                ...styleUtils.bodyStyles,
+              }}
               value={userInfo.firstName}
               onChange={(e) => setUserInfo({ ...userInfo, firstName: e.target.value })}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label 
+              className="block mb-1 text-sm"
+              style={{ 
+                ...styleUtils.bodyStyles,
+                color: theme.colors.text,
+                fontWeight: 500
+              }}
+            >
               Last Name
             </label>
             <input
               type="text"
               required
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-2 rounded-lg border transition-colors focus:outline-none focus:border-primary"
+              style={{
+                borderColor: `${theme.colors.text}20`,
+                color: theme.colors.text,
+                ...styleUtils.bodyStyles,
+              }}
               value={userInfo.lastName}
               onChange={(e) => setUserInfo({ ...userInfo, lastName: e.target.value })}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label 
+              className="block mb-1 text-sm"
+              style={{ 
+                ...styleUtils.bodyStyles,
+                color: theme.colors.text,
+                fontWeight: 500
+              }}
+            >
               Email
             </label>
             <input
               type="email"
               required
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-2 rounded-lg border transition-colors focus:outline-none focus:border-primary"
+              style={{
+                borderColor: `${theme.colors.text}20`,
+                color: theme.colors.text,
+                ...styleUtils.bodyStyles,
+              }}
               value={userInfo.email}
               onChange={(e) => setUserInfo({ ...userInfo, email: e.target.value })}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label 
+              className="block mb-1 text-sm"
+              style={{ 
+                ...styleUtils.bodyStyles,
+                color: theme.colors.text,
+                fontWeight: 500
+              }}
+            >
               Is this for work or personal use?
             </label>
             <select
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-2 rounded-lg border transition-colors focus:outline-none focus:border-primary"
+              style={{
+                borderColor: `${theme.colors.text}20`,
+                color: theme.colors.text,
+                ...styleUtils.bodyStyles,
+              }}
               value={isWorkAssessment ? 'work' : 'personal'}
               onChange={(e) => setIsWorkAssessment(e.target.value === 'work')}
             >
@@ -172,24 +240,46 @@ export default function UserInfoForm({ userInfo, setUserInfo, onNext }: UserInfo
 
           {isWorkAssessment && (
             <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label 
+                className="block mb-1 text-sm"
+                style={{ 
+                  ...styleUtils.bodyStyles,
+                  color: theme.colors.text,
+                  fontWeight: 500
+                }}
+              >
                 Company Name
               </label>
               <input
                 type="text"
                 required
-                className="w-full p-2 border rounded-lg"
+                className="w-full p-2 rounded-lg border transition-colors focus:outline-none focus:border-primary"
+                style={{
+                  borderColor: `${theme.colors.text}20`,
+                  color: theme.colors.text,
+                  ...styleUtils.bodyStyles,
+                }}
                 value={userInfo.companyName || ''}
                 onChange={(e) => handleCompanySearch(e.target.value)}
                 readOnly={companySelected}
               />
               
               {showSuggestions && filteredCompanies.length > 0 && (
-                <ul className="absolute z-10 bg-white border rounded-lg w-full mt-1">
+                <ul 
+                  className="absolute z-10 border rounded-lg w-full mt-1"
+                  style={{ backgroundColor: 'white' }}
+                >
                   {filteredCompanies.map((company) => (
                     <li
                       key={company}
-                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                      className="p-2 cursor-pointer transition-colors"
+                      style={{ 
+                        ...styleUtils.bodyStyles,
+                        color: theme.colors.text,
+                        '&:hover': {
+                          backgroundColor: `${theme.colors.primary}10`
+                        }
+                      }}
                       onClick={() => handleCompanySelect(company)}
                     >
                       {company}
@@ -203,14 +293,20 @@ export default function UserInfoForm({ userInfo, setUserInfo, onNext }: UserInfo
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 ${
-              isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+            className={`w-full py-2 px-4 rounded-lg transition-opacity ${
+              isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'
             }`}
+            style={{ 
+              backgroundColor: theme.colors.primary,
+              color: 'white',
+              ...styleUtils.bodyStyles,
+              fontWeight: 500
+            }}
           >
             {isSubmitting ? 'Processing...' : 'Begin Assessment'}
           </button>
         </div>
       </form>
     </div>
-  );
+);
 }

@@ -1,38 +1,152 @@
+/* src/app/globals.css */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #337196;
+  --background: #F9FAFB;
+  --text: #45546A;
+  --accent1: #00BFA6;
+  --accent2: #FF7E67;
+  --accent3: #7986CB;
+  --accent4: #B4A7D6;
+}
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+}
+
 /* Standard Analysis Content Styling */
 .analysis-content h3 {
-  font-size: 1.5rem;  /* One size larger */
-  font-weight: bold;  /* Make headings bold */
-  margin-top: 1.5rem; /* Add spacing above */
-  margin-bottom: 1rem; /* Add spacing below */
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text);
 }
 
 .analysis-content p {
-  font-size: 1rem; /* Standard size for paragraphs */
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1rem;
   line-height: 1.6;
+  color: var(--text);
+}
+
+/* Common Components */
+.button-primary {
+  background-color: var(--primary);
+  color: white;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.button-primary:hover {
+  opacity: 0.9;
+}
+
+.button-secondary {
+  background-color: var(--accent1);
+  color: white;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.button-secondary:hover {
+  opacity: 0.9;
+}
+
+.input-field {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text);
+  background-color: white;
+  border: 1px solid rgb(var(--text) / 0.2);
+  border-radius: 0.375rem;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary);
+  ring: 2px solid var(--primary);
 }
 
 /* Print-Specific Styles */
 @media print {
-  button {
-    display: none;  /* Hide buttons during print */
-  }
+  /* Reset fonts for print */
   body {
     font-family: Arial, sans-serif;
     margin: 20px;
+    background-color: white;
+    color: black;
   }
+
+  /* Hide interactive elements */
+  button,
+  .button-primary,
+  .button-secondary {
+    display: none;
+  }
+
+  /* Content styling for print */
   .analysis-content h3 {
-    font-size: 2rem;  /* Larger for print */
+    font-family: Arial, sans-serif;
+    font-size: 2rem;
     font-weight: bold;
+    margin: 1.5rem 0 1rem;
+    color: black;
   }
+
   .analysis-content p {
+    font-family: Arial, sans-serif;
     margin: 10px 0;
-    font-size: 1.1rem; /* Slightly larger for readability */
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: black;
   }
+
+  /* Page break control */
   .page-break {
-    page-break-before: always;  /* Force page break if needed */
+    page-break-before: always;
+  }
+
+  /* Ensure good contrast for print */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Hide any non-essential UI elements */
+  nav,
+  footer,
+  .no-print {
+    display: none;
+  }
+
+  /* Ensure links are readable */
+  a {
+    text-decoration: none;
+    color: black;
+  }
+
+  /* Ensure images print well */
+  img {
+    max-width: 100%;
+    height: auto;
   }
 }

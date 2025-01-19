@@ -22,6 +22,11 @@ interface AssessmentData {
   analysis?: string | null;
   status: AssessmentStatus;
 }
+interface TypeData {
+  number: string;
+  name: string;
+  briefDescription: string;
+}
 
 export default function Results() {
   const searchParams = useSearchParams();
@@ -34,6 +39,25 @@ export default function Results() {
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [emailSent, setEmailSent] = useState(false);
+  const [typesData, setTypesData] = useState<Record<string, TypeData>>({});
+
+  useEffect(() => {
+    const loadTypesData = async () => {
+      try {
+        const response = await fetch('/api/types');
+        const data = await response.json();
+        if (data.success) {
+          setTypesData(data.data);
+        } else {
+          console.error('Failed to load types data:', data.error);
+        }
+      } catch (error) {
+        console.error('Error loading types data:', error);
+      }
+    };
+  
+    loadTypesData();
+  }, []);
 
   // Debug effect
   useEffect(() => {
@@ -385,6 +409,7 @@ export default function Results() {
           isSendingEmail={isSendingEmail}
           emailSent={emailSent}
           emailError={emailError}
+          typesData={typesData}
         />
       </div>
     </div>

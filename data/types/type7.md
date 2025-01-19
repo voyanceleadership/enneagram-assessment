@@ -1,0 +1,139 @@
+---
+typeDigit: "7"
+typeNumber: "Seven"
+typeName: "The Enthusiast"
+essenceQuality: "Joy"
+briefDescription: "Joyful and adventurous, Sevens are driven by a desire to experience life to its fullest."
+topPriority: "To pursue joy and avoid pain."
+secondaryDesires:
+  - "To feel free"
+  - "to have fun"
+  - "to avoid limits"
+biggestFear: "Of being deprived or trapped in emotional pain."
+secondaryFears:
+  - "Of missing out"
+  - "being stuck"
+  - "losing freedom"
+atTheirBest: "Optimistic, spontaneous, and imaginative, with the ability to focus deeply and inspire others."
+underStress: "Frustrated, impulsive, and overly scattered, constantly seeking distractions to avoid discomfort."
+wakeUpCall: "Believing they must avoid pain at all costs to maintain happiness."
+mentalHabit: "Anticipating and idealizing the future."
+fundamentalFlaw: "Gluttony"
+falseNarrative: "It's not okay to depend on anyone or anything to feel satisfied."
+keyToGrowth: "To embrace stillness, process difficult emotions, and find contentment in the present."
+---
+
+[Type Summary]
+Sevens are known for their enthusiasm, curiosity, and relentless pursuit of new and exciting experiences. They focus on possibilities and maintaining a positive outlook but may struggle with commitment or avoiding discomfort. Sevens' joy and energy are infectious, but their avoidance of difficult emotions can hinder their personal growth.
+
+[Long Description]
+Sevens are natural optimists and adventurers, constantly seeking out new opportunities and experiences. They excel at finding joy in life and inspiring others with their boundless energy and curiosity. However, Sevens often struggle with sitting still, confronting painful emotions, or committing to long-term goals. Their focus on possibilities can lead them to spread themselves too thin or avoid challenging situations. At their best, Sevens embrace stillness, balance their enthusiasm with focus, and cultivate a deeper sense of contentment.
+
+[You Might Be This Type If...]
+- You thrive on new experiences and exciting possibilities.  
+- You’re naturally optimistic and prefer to focus on the bright side.  
+- You dislike feeling confined, limited, or stuck in one place.  
+- You often start multiple projects or hobbies but find it hard to finish them.  
+- You enjoy planning adventures or brainstorming creative ideas.  
+- You tend to avoid unpleasant emotions or situations.  
+- You value freedom and independence.  
+- You’re energized by social interaction and sharing joyful experiences.  
+- You fear missing out and often try to fit as much as possible into your schedule.  
+- You’ve been told you’re always on the go or hard to pin down.  
+
+[You're Probably Not This Type If...]
+- You feel content with a slower, more structured lifestyle.  
+- You prioritize finishing projects over starting new ones.  
+- You easily sit with difficult emotions or uncomfortable situations.  
+- You don’t feel compelled to seek out novelty or excitement.  
+- You prefer to reflect deeply before taking action.  
+
+[Healthy Level of Development]
+- Radiantly optimistic and imaginative, Sevens inspire others to embrace life fully and explore its endless possibilities.
+
+[Average Level of Development]
+- Enthusiastic and fun-loving, Sevens seek stimulation and variety but may struggle with follow-through or overcommitting.
+
+[Unhealthy Level of Development]
+- Impulsive and avoidant, Sevens become scattered and restless, relying on distractions to escape discomfort or dissatisfaction.
+
+[Common Misconceptions About This Type]
+1. **Sevens can’t be serious.**  
+   While Sevens prefer to focus on the positive and avoid dwelling on negative emotions, they are fully capable of having deep conversations and processing difficult feelings. With personal growth, Sevens learn to balance their upbeat nature with the ability to handle serious situations and emotional challenges.
+
+2. **All Sevens have ADHD, or if you have ADHD, you’re a Seven.**  
+   Many Sevens relate to ADHD-like traits such as distraction, multitasking, and a fast-paced mindset. However, not all Sevens have ADHD, nor does having ADHD automatically make someone a Seven. Sevens’ tendency to seek stimulation stems from their drive to experience as much as possible, but they are capable of focus and discipline when it aligns with their goals.
+
+3. **Sevens are always happy-go-lucky.**  
+   While Sevens are often associated with joy and optimism, their high expectations can lead to frustration when reality doesn’t meet their ideals. They can become irritable or restless when things feel slow or disappointing, revealing the tension beneath their cheerful exterior.
+
+[Types That Commonly Misidentify as This Type]
+1. **Type 2: The Helper**  
+   Twos may misidentify as Sevens due to their shared warmth, optimism, and relational focus.  
+   - **Shared Traits:**  
+     - Friendly, engaging, and people-focused.  
+     - Enjoy making others feel good and appreciated.  
+     - Naturally upbeat and outgoing.  
+   - **Key Differences:**  
+     - **Core Motivation:** Twos seek connection and love through relationships, while Sevens are driven by the pursuit of joy and freedom.  
+     - **Behavioral Differences:** Twos prioritize relationships and emotional closeness, while Sevens focus on excitement and avoiding limitations.  
+     - **Stress Behavior:** Twos become clingy and people-pleasing, while Sevens withdraw and seek distractions.  
+
+2. **Type 3: The Achiever**  
+   Threes may misidentify as Sevens due to their shared assertiveness, ambition, and energy.  
+   - **Shared Traits:**  
+     - Productive and action-oriented.  
+     - Enjoy achieving goals and maintaining a busy lifestyle.  
+     - Appear confident and enthusiastic.  
+   - **Key Differences:**  
+     - **Core Motivation:** Threes seek validation and recognition through success, while Sevens prioritize experiences and personal freedom.  
+     - **Behavioral Differences:** Threes adapt their actions to align with others’ expectations, while Sevens focus on pursuing their own interests and happiness.  
+     - **Stress Behavior:** Threes become image-conscious and overworked, while Sevens become scattered and avoidant.  
+
+[This Type May Misidentify As...]
+Sevens may misidentify as 2s, 3s, 4s, or 9s due to shared traits and overlapping motivations.  
+1. **Type 2: The Helper**  
+   - **Shared Traits:** Upbeat, positive, and caring about others.  
+   - **Key Differences:**  
+     - **Core Motivation:** Twos seek to be loved and needed, while Sevens prioritize freedom and joy.  
+     - **Behavioral Differences:** Twos focus on emotional connection, while Sevens avoid emotional entanglements that limit their freedom.  
+     - **Stress Behavior:** Twos become clingy, while Sevens avoid commitments and distract themselves.  
+
+2. **Type 3: The Achiever**  
+   - **Shared Traits:** Energetic, ambitious, and goal-driven.  
+   - **Key Differences:**  
+     - **Core Motivation:** Threes seek admiration and external validation, while Sevens pursue freedom and new experiences.  
+     - **Behavioral Differences:** Threes adapt to fit others’ expectations, while Sevens pursue their personal passions.  
+     - **Stress Behavior:** Threes become overly competitive, while Sevens avoid challenges that seem limiting.  
+
+3. **Type 4: The Individualist**  
+   - **Shared Traits:** Creative and introspective.  
+   - **Key Differences:**  
+     - **Core Motivation:** Fours seek authenticity and depth, while Sevens focus on variety and new opportunities.  
+     - **Behavioral Differences:** Fours immerse themselves in emotional experiences, while Sevens avoid emotional heaviness.  
+     - **Stress Behavior:** Fours withdraw into melancholy, while Sevens escape into distractions.  
+
+4. **Type 9: The Peacemaker**  
+   - **Shared Traits:** Positive, adaptable, and easygoing.  
+   - **Key Differences:**  
+     - **Core Motivation:** Nines seek peace and harmony, while Sevens prioritize excitement and avoiding pain.  
+     - **Behavioral Differences:** Nines avoid conflict to maintain inner peace, while Sevens avoid discomfort to maintain happiness.  
+     - **Stress Behavior:** Nines disengage and become passive, while Sevens become scattered and impulsive.  
+
+[Wing Types]  
+- **Type 6: The Loyalist Wing (7w6, aka "The Entertainer"):** More loyal, collaborative, and cautious, balancing spontaneity with careful planning.  
+- **Type 8: The Challenger Wing (7w8, aka "The Realist"):** More assertive, driven, and grounded, combining adventurousness with boldness.  
+
+[Line Types]  
+- **Type 1: The Reformer:** Access to discipline, structure, and a focus on improvement.  
+- **Type 5: The Investigator:** Access to intellectual depth, curiosity, and a love for learning.  
+
+[Growth Practices]
+1. Practice staying present in the moment, even when it feels uncomfortable or mundane.  
+2. Explore and process difficult emotions rather than avoiding them through distractions.  
+3. Commit to fewer projects or goals, focusing deeply on what truly matters to you.  
+
+[Famous Examples]
+- Robin Williams  
+- Amelia Earhart  
+- Richard Branson  

@@ -143,3 +143,15 @@ model Analysis {
 
   @@index([assessmentId])
 }
+
+model UserTypeSelection {
+  id          String   @id @default(cuid())
+  userId      String   // This will be used when we add authentication
+  assessmentId String? // Optional link to their assessment
+  selectedType String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([assessmentId])
+}

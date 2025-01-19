@@ -5,10 +5,14 @@ export default {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@shadcn/ui/**/*.{js,ts,jsx,tsx}", // Add this line to include shadcn/ui components
+    "./node_modules/@shadcn/ui/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-montserrat)', 'system-ui', 'sans-serif'],
+        montserrat: ['var(--font-montserrat)', 'system-ui', 'sans-serif'],
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -26,7 +30,7 @@ export default {
     },
   },
   plugins: [
-    require('@tailwindcss/typography'), // For the prose class in the analysis section
-    require('@tailwindcss/forms'), // Useful for form elements (optional, but recommended)
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/forms'),
   ],
 } satisfies Config;
