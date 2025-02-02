@@ -17,7 +17,7 @@ export default function ComparePageLayout({
   preSelectedTypes 
 }: ComparePageLayoutProps) {
   return (
-    <div className="min-h-screen px-4" style={{ backgroundColor: theme.colors.background }}>
+    <div className="min-h-screen" style={{ backgroundColor: theme.colors.background }}>
       <AssessmentNavbar />
       <TypeComparisonPage 
         typesData={typesData} 

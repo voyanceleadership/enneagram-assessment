@@ -1,6 +1,7 @@
 import { TypeDataError } from './types';
 import { SECTION_NAMES } from './constants';
 import matter from 'gray-matter';
+import type { MisidentificationType } from './types';
 
 export class SectionParser {
   private currentSection: string = '';
@@ -8,6 +9,68 @@ export class SectionParser {
   private sections: Record<string, any> = {};
 
   constructor(private typeDigit: string) {}
+
+  private parseMisidentificationSection(lines: string[]): MisidentificationType[] {
+    console.log('\nParsing misidentification section');
+    console.log(`Input lines: ${lines.length}`);
+    
+    const types: MisidentificationType[] = [];
+    let currentType: Partial<MisidentificationType> = {};
+    let currentSection = '';
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      console.log(`Processing misidentification line: "${trimmed}"`);
+      
+      if (trimmed.startsWith('• Type')) {
+        if (Object.keys(currentType).length > 0) {
+          console.log(`Adding type: ${JSON.stringify(currentType)}`);
+          types.push(currentType as MisidentificationType);
+        }
+        currentType = {
+          type: trimmed.substring(2),
+          sharedTraits: [],
+          differences: {
+            coreMotivation: '',
+            behavioral: '',
+            stress: ''
+          }
+        };
+        console.log(`Started new type: ${trimmed.substring(2)}`);
+      } else if (trimmed.startsWith('- Shared Traits:')) {
+        currentSection = 'sharedTraits';
+        console.log('Switched to shared traits section');
+      } else if (trimmed.startsWith('- Key Differences:')) {
+        currentSection = 'differences';
+        console.log('Switched to differences section');
+      } else if (trimmed.startsWith('• ')) {
+        const trait = trimmed.substring(2);
+        if (currentSection === 'sharedTraits') {
+          currentType.sharedTraits?.push(trait);
+          console.log(`Added shared trait: ${trait}`);
+        } else if (currentSection === 'differences') {
+          if (trait.startsWith('Core Motivation:')) {
+            currentType.differences!.coreMotivation = trait.substring(15).trim();
+            console.log(`Added core motivation: ${trait.substring(15).trim()}`);
+          } else if (trait.startsWith('Behavioral Differences:')) {
+            currentType.differences!.behavioral = trait.substring(22).trim();
+            console.log(`Added behavioral differences: ${trait.substring(22).trim()}`);
+          } else if (trait.startsWith('Stress Behavior:')) {
+            currentType.differences!.stress = trait.substring(15).trim();
+            console.log(`Added stress behavior: ${trait.substring(15).trim()}`);
+          }
+        }
+      }
+    }
+
+    if (Object.keys(currentType).length > 0) {
+      console.log(`Adding final type: ${JSON.stringify(currentType)}`);
+      types.push(currentType as MisidentificationType);
+    }
+
+    console.log(`Parsed ${types.length} misidentification types`);
+    return types;
+  }
 
   private handleListItem(line: string, section: string): string {
     const trimmed = line.trim();
@@ -185,14 +248,6 @@ export class SectionParser {
   parseTextSection(lines: string[], sectionName: string): string {
     console.log(`\nParsing text section: ${sectionName}`);
     console.log(`Input lines: ${lines.length}`);
-
-    // Special handling for misidentification sections
-    if (sectionName === SECTION_NAMES.typesMisidentifyingAsThis || 
-        sectionName === SECTION_NAMES.thisTypeMayMisidentifyAs) {
-      const text = lines.join('\n');
-      console.log(`Preserving formatting for ${sectionName}, length: ${text.length}`);
-      return text;
-    }
     
     const text = lines.filter(line => line.trim()).join('\n').trim();
     
@@ -248,20 +303,23 @@ export class SectionParser {
       const sections = this.extractSections(markdownContent);
       
       return {
-        typeSummary: this.parseTextSection(sections[SECTION_NAMES.summary] || [], SECTION_NAMES.summary),
-        longDescription: this.parseTextSection(sections[SECTION_NAMES.longDescription] || [], SECTION_NAMES.longDescription),
-        mightBeType: this.parseListSection(sections[SECTION_NAMES.mightBeType] || [], SECTION_NAMES.mightBeType),
-        probablyNotType: this.parseListSection(sections[SECTION_NAMES.probablyNotType] || [], SECTION_NAMES.probablyNotType),
-        healthyLevel: this.parseTextSection(sections[SECTION_NAMES.healthyLevel] || [], SECTION_NAMES.healthyLevel),
-        averageLevel: this.parseTextSection(sections[SECTION_NAMES.averageLevel] || [], SECTION_NAMES.averageLevel),
-        unhealthyLevel: this.parseTextSection(sections[SECTION_NAMES.unhealthyLevel] || [], SECTION_NAMES.unhealthyLevel),
-        misconceptions: this.parseListSection(sections[SECTION_NAMES.misconceptions] || [], SECTION_NAMES.misconceptions),
-        typesMisidentifyingAsThis: this.parseTextSection(sections[SECTION_NAMES.typesMisidentifyingAsThis] || [], SECTION_NAMES.typesMisidentifyingAsThis),
-        thisTypeMayMisidentifyAs: this.parseTextSection(sections[SECTION_NAMES.thisTypeMayMisidentifyAs] || [], SECTION_NAMES.thisTypeMayMisidentifyAs),
-        wingTypes: this.parseWingTypes(sections[SECTION_NAMES.wingTypes] || []),
-        lineTypes: this.parseLineTypes(sections[SECTION_NAMES.lineTypes] || []),
-        growthPractices: this.parseListSection(sections[SECTION_NAMES.growthPractices] || [], SECTION_NAMES.growthPractices),
-        famousExamples: this.parseListSection(sections[SECTION_NAMES.famousExamples] || [], SECTION_NAMES.famousExamples)
+        ...frontmatter,
+        sections: {
+          typeSummary: this.parseTextSection(sections[SECTION_NAMES.summary] || [], SECTION_NAMES.summary),
+          longDescription: this.parseTextSection(sections[SECTION_NAMES.longDescription] || [], SECTION_NAMES.longDescription),
+          mightBeType: this.parseListSection(sections[SECTION_NAMES.mightBeType] || [], SECTION_NAMES.mightBeType),
+          probablyNotType: this.parseListSection(sections[SECTION_NAMES.probablyNotType] || [], SECTION_NAMES.probablyNotType),
+          healthyLevel: this.parseTextSection(sections[SECTION_NAMES.healthyLevel] || [], SECTION_NAMES.healthyLevel),
+          averageLevel: this.parseTextSection(sections[SECTION_NAMES.averageLevel] || [], SECTION_NAMES.averageLevel),
+          unhealthyLevel: this.parseTextSection(sections[SECTION_NAMES.unhealthyLevel] || [], SECTION_NAMES.unhealthyLevel),
+          misconceptions: this.parseListSection(sections[SECTION_NAMES.misconceptions] || [], SECTION_NAMES.misconceptions),
+          typesMisidentifyingAsThis: this.parseMisidentificationSection(sections[SECTION_NAMES.typesMisidentifyingAsThis] || []),
+          thisTypeMayMisidentifyAs: this.parseMisidentificationSection(sections[SECTION_NAMES.thisTypeMayMisidentifyAs] || []),
+          wingTypes: this.parseWingTypes(sections[SECTION_NAMES.wingTypes] || []),
+          lineTypes: this.parseLineTypes(sections[SECTION_NAMES.lineTypes] || []),
+          growthPractices: this.parseListSection(sections[SECTION_NAMES.growthPractices] || [], SECTION_NAMES.growthPractices),
+          famousExamples: this.parseListSection(sections[SECTION_NAMES.famousExamples] || [], SECTION_NAMES.famousExamples)
+        }
       };
     } catch (error) {
       console.error(`Error parsing type ${this.typeDigit}:`, error);

@@ -1,20 +1,17 @@
-//src/components/enneagram/comparison/TypeComparisonPage.tsx
-//Actual comparison UI component
-
 'use client';
 
 import React, { useState } from 'react';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { theme, styleUtils } from '@/styles/theme';
 import { TypeData } from '@/lib/types';
-
-interface TypeComparisonPageProps {
-  typesData: Record<string, TypeData>;
-  preSelectedTypes: string[];
-}
+import ComparisonRowLabel from './ComparisonRowLabel';
+import ComparisonColumnLabel from './ComparisonColumnLabel';
+import { useRouter } from 'next/navigation';
 
 const COMPARISON_ROWS = [
+  { label: 'Brief Description', field: 'briefDescription', type: 'text' },
+  { label: 'Top Priority', field: 'topPriority', type: 'text' },
   { label: 'Secondary Desires', field: 'secondaryDesires', type: 'list' },
   { label: 'Biggest Fear', field: 'biggestFear', type: 'text' },
   { label: 'Secondary Fears', field: 'secondaryFears', type: 'list' },
@@ -25,10 +22,75 @@ const COMPARISON_ROWS = [
   { label: 'Fundamental Flaw', field: 'fundamentalFlaw', type: 'text' },
   { label: 'False Narrative', field: 'falseNarrative', type: 'text' },
   { label: 'Key to Growth', field: 'keyToGrowth', type: 'text' },
+  { label: 'Learn More', field: 'learnMore', type: 'link' }
 ];
+
+interface TypeButtonProps {
+  type: string;
+  data: TypeData;
+  isSelected: boolean;
+  onSelect: () => void;
+  isDisabled: boolean;
+  onHover: (type: string | null) => void;
+}
+
+const TypeButton: React.FC<TypeButtonProps> = ({ 
+  type, 
+  data, 
+  isSelected, 
+  onSelect, 
+  isDisabled, 
+  onHover,
+}) => (
+  <Button
+    onClick={onSelect}
+    onMouseEnter={() => onHover(type)}
+    onMouseLeave={() => onHover(null)}
+    disabled={isDisabled}
+    className="w-full h-12 shadow-sm hover:shadow-md transition-all duration-200 text-base"
+    style={{
+      backgroundColor: isSelected 
+        ? theme.colors.primary
+        : `${theme.colors.primary}15`,
+      color: isSelected ? 'white' : theme.colors.primary,
+      border: 'none',
+      opacity: isDisabled ? 0.5 : 1
+    }}
+  >
+    <div className="flex justify-center items-center">
+      <div style={styleUtils.headingStyles}>
+        Type {type}: {data.typeName}
+      </div>
+    </div>
+  </Button>
+);
+
+interface TypeComparisonPageProps {
+  typesData: Record<string, TypeData>;
+  preSelectedTypes: string[];
+}
 
 const TypeComparisonPage: React.FC<TypeComparisonPageProps> = ({ typesData, preSelectedTypes = [] }) => {
   const [selectedTypes, setSelectedTypes] = useState<string[]>(preSelectedTypes);
+  const [hoveredType, setHoveredType] = useState<string | null>(null);
+  const router = useRouter();
+
+  // Calculate grid layout based on number of selected types
+  const gridLayout = () => {
+    // Label column is always 25% width
+    const labelWidth = '25%';
+    
+    if (selectedTypes.length === 1) {
+      // One type: Label 25%, content 75%
+      return `${labelWidth} 75%`;
+    } else if (selectedTypes.length === 2) {
+      // Two types: Label 25%, each type 37.5%
+      return `${labelWidth} 37.5% 37.5%`;
+    } else {
+      // Three types: Label 25%, each type 25%
+      return `${labelWidth} 25% 25% 25%`;
+    }
+  };
 
   const handleTypeSelect = (type: string) => {
     setSelectedTypes(current => {
@@ -43,87 +105,189 @@ const TypeComparisonPage: React.FC<TypeComparisonPageProps> = ({ typesData, preS
   };
 
   const renderCellContent = (typeData: TypeData, field: string, type: string) => {
+    if (field === 'learnMore') {
+      return (
+        <p 
+          style={{ 
+            ...styleUtils.bodyStyles,
+            color: theme.colors.text
+          }}
+        >
+          Click this card to view the detailed description of Type {typeData.typeDigit}: {typeData.typeName}
+        </p>
+      );
+    }
+
     const content = typeData[field as keyof TypeData];
     if (type === 'list' && Array.isArray(content)) {
       return (
         <ul className="list-disc pl-6 space-y-2">
           {content.map((item, idx) => (
-            <li key={idx} className="text-gray-700">{item}</li>
+            <li key={idx} className="text-base" style={{ color: theme.colors.text }}>
+              {item}
+            </li>
           ))}
         </ul>
       );
     }
-    return <p className="text-gray-700">{content as string}</p>;
+    return (
+      <p className="text-base" style={{ color: theme.colors.text }}>
+        {content as string}
+      </p>
+    );
   };
 
   return (
-    <div className="max-w-[90%] mx-auto px-4 py-8">
-      {/* Type Selection Buttons */}
-      <Card className="mb-8">
-        <CardHeader className="text-center">
-          <h1 className="text-3xl font-bold mb-4">Compare Enneagram Types</h1>
-          <p className="text-gray-600 mb-6">Select up to three types to compare</p>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-4">
-            {Object.entries(typesData).map(([type, data]) => (
-              <Button
-                key={type}
-                onClick={() => handleTypeSelect(type)}
-                disabled={selectedTypes.length >= 3 && !selectedTypes.includes(type)}
-                variant={selectedTypes.includes(type) ? "default" : "outline"}
-                className="h-auto p-4 text-left flex flex-col items-start"
-              >
-                <span className="font-bold mb-2">Type {type}: {data.typeName}</span>
-                <span className="text-sm opacity-80">{data.briefDescription}</span>
-              </Button>
-            ))}
+    <div className="min-h-screen" style={{ backgroundColor: theme.colors.background }}>
+      {/* Main Grid Container */}
+      <div 
+        className="grid"
+        style={{ 
+          gridTemplateColumns: '1fr min(1200px, 90%) 1fr',
+          columnGap: '0'
+        }}
+      >
+        {/* Content Grid Column */}
+        <div className="col-start-2">
+          {/* Page Header */}
+          <div className="py-8 text-center">
+            <h1 
+              className="text-4xl mb-4" 
+              style={{
+                ...styleUtils.headingStyles,
+                color: theme.colors.text
+              }}
+            >
+              Compare Enneagram Types
+            </h1>
+            <p 
+              className="text-xl" 
+              style={{
+                ...styleUtils.bodyStyles,
+                color: theme.colors.text
+              }}
+            >
+              Select up to three types to compare
+            </p>
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Comparison Matrix */}
-      {selectedTypes.length > 0 && (
-        <Card>
-          <CardContent className="p-6">
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                {/* Header Row */}
-                <thead>
-                  <tr>
-                    <th className="border border-gray-200 bg-gray-50 p-4 w-48"></th>
-                    {selectedTypes.map(type => (
-                      <th 
-                        key={type}
-                        className="border border-gray-200 bg-gray-50 p-4 font-semibold text-left"
-                        style={{ minWidth: '300px' }}
+          {/* Type Selection Grid */}
+          <div className="mb-16">
+            <div className="grid grid-cols-3 gap-4">
+              {Object.entries(typesData).map(([type, data]) => (
+                <div key={type} className="relative">
+                  <TypeButton
+                    type={type}
+                    data={data}
+                    isSelected={selectedTypes.includes(type)}
+                    onSelect={() => handleTypeSelect(type)}
+                    isDisabled={selectedTypes.length >= 3 && !selectedTypes.includes(type)}
+                    onHover={setHoveredType}
+                  />
+                  {hoveredType === type && !selectedTypes.includes(type) && (
+                    <div 
+                      className="absolute z-20 w-64 p-4 rounded-lg shadow-xl mt-2 left-1/2 transform -translate-x-1/2 bg-white"
+                      style={{ 
+                        border: `1px solid ${theme.colors.primary}30`,
+                      }}
+                    >
+                      <p 
+                        className="text-sm"
+                        style={{
+                          ...styleUtils.bodyStyles,
+                          color: theme.colors.text
+                        }}
                       >
-                        Type {type}: {typesData[type].typeName}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-
-                {/* Data Rows */}
-                <tbody>
-                  {COMPARISON_ROWS.map(row => (
-                    <tr key={row.field}>
-                      <td className="border border-gray-200 bg-gray-50 p-4 font-medium">
-                        {row.label}
-                      </td>
-                      {selectedTypes.map(type => (
-                        <td key={type} className="border border-gray-200 p-4">
-                          {renderCellContent(typesData[type], row.field, row.type)}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        {data.briefDescription}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
-          </CardContent>
-        </Card>
-      )}
+          </div>
+
+          {/* Comparison Matrix */}
+          {selectedTypes.length > 0 && (
+            <div 
+              className="flex justify-center items-center w-full"
+              style={{ minHeight: '50vh' }} // Adjust the height as needed for visual balance
+            >
+              <div className="relative pb-8 w-full max-w-screen-lg">
+                {/* Sticky Header Container */}
+                <div 
+                  className="sticky top-0 z-10"
+                  style={{ 
+                    backgroundColor: theme.colors.background,
+                    margin: '0 -100vw',
+                    padding: '0 100vw'
+                  }}
+                >
+                  <div className="mb-6">
+                    <div
+                      style={{ 
+                        display: 'grid',
+                        gridTemplateColumns: gridLayout(),
+                        gap: '1.5rem'
+                      }}
+                    >
+                      <div></div>
+                      {selectedTypes.map((type) => (
+                        <ComparisonColumnLabel
+                          key={type}
+                          type={type}
+                          data={typesData[type]}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Comparison Rows */}
+                {COMPARISON_ROWS.map((row) => (
+                  <div 
+                    key={row.field}
+                    className="mb-6"
+                    style={{ 
+                      display: 'grid',
+                      gridTemplateColumns: gridLayout(),
+                      gap: '1.5rem'
+                    }}
+                  >
+                    <ComparisonRowLabel field={row.field} />
+                    {selectedTypes.map((type) => (
+                      row.field === 'learnMore' ? (
+                        <Card
+                          key={type}
+                          onClick={() => router.push(`/enneagram/types/type${type}`)}
+                          className="bg-white shadow-md border-0 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+                        >
+                          <CardContent className="p-6">
+                            <div className="pt-4 pb-4 w-full" style={styleUtils.bodyStyles}>
+                              {renderCellContent(typesData[type], row.field, row.type)}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ) : (
+                        <Card
+                          key={type}
+                          className="bg-white shadow-md border-0"
+                        >
+                          <CardContent className="p-6">
+                            <div className="pt-4 pb-4 w-full" style={styleUtils.bodyStyles}>
+                              {renderCellContent(typesData[type], row.field, row.type)}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      )
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

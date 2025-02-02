@@ -1,7 +1,7 @@
 ---
 typeDigit: "1"
 typeNumber: "One"
-typeName: "Reformer"
+typeName: "The Reformer"
 essenceQuality: "Goodness"
 briefDescription: "Striving for integrity and perfection, Ones seek to improve themselves and the world around them."
 topPriority: "To have integrity and do the right thing."

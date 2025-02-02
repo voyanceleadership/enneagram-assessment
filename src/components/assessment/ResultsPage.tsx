@@ -95,8 +95,8 @@ const TypeSelectionFooter = ({ selectedTypes, onTypeSelect }) => {
               style={styleUtils.bodyStyles}
             >
               {selectedTypes.length === 0 
-                ? "Check the box for up to 3 types to compare them side-by-side"
-                : `${selectedTypes.length} ${selectedTypes.length === 1 ? 'type' : 'types'} selected`
+                ? "Select types to compare them side-by-side"
+                : `${selectedTypes.length} ${selectedTypes.length === 1 ? 'type' : 'types'} selected (maximum 3)`
               }
             </p>
             <div className="flex gap-2">
@@ -146,6 +146,7 @@ const ExpandableTypeCard = ({ type, score, typeData, isSelected, onSelect, disab
               }
             }}
             disabled={disabled && !isSelected}
+            className="bg-white border-2 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
           />
         </div>
       )}
@@ -373,32 +374,21 @@ export default function ResultsPage({
             <div className="space-y-8">
               {/* Header section with title and actions */}
               <div className="flex justify-between items-center">
-                <div>
-                  <h2 
-                    className="text-2xl mb-1"
-                    style={{ ...styleUtils.headingStyles, color: theme.colors.text }}
-                  >
-                    Your Scores
-                  </h2>
-                  {/* Comparison toggle section */}
-                  <div className="flex items-center gap-3">
-                    <p
-                      className="text-sm text-gray-600"
-                      style={styleUtils.bodyStyles}
-                    >
-                      Want to compare different types?
-                    </p>
-                    <Button
-                      variant="link"
-                      onClick={() => setIsComparing(prev => !prev)}
-                      className="text-primary p-0 h-auto text-sm hover:text-primary/80"
-                    >
-                      {isComparing ? 'Cancel Comparison' : 'Compare Types'}
-                    </Button>
-                  </div>
-                </div>
-                {/* Action buttons for sharing and downloading */}
+                <h2 
+                  className="text-2xl"
+                  style={{ ...styleUtils.headingStyles, color: theme.colors.text }}
+                >
+                  Your Scores
+                </h2>
                 <div className="flex gap-4">
+                  <Button
+                    onClick={() => setIsComparing(prev => !prev)}
+                    className="bg-primary hover:bg-primary/90 text-white px-6"
+                    title="Select up to three types to compare side-by-side"
+                  >
+                    <GitCompare className="h-4 w-4 mr-2" />
+                    {isComparing ? 'Cancel Comparison' : 'Compare Types'}
+                  </Button>
                   {!isAnalyzing && analysis && !analysisTimedOut && (
                     <Button
                       onClick={() => setIsEmailDialogOpen(true)}

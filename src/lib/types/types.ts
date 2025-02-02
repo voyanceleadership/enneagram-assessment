@@ -1,5 +1,15 @@
 import { z } from 'zod';
 
+export interface MisidentificationType {
+  type: string;
+  sharedTraits: string[];
+  differences: {
+    coreMotivation: string;
+    behavioral: string;
+    stress: string;
+  };
+}
+
 // Interface defining the structure of type data
 export interface TypeData {
   typeDigit: string;
@@ -7,7 +17,6 @@ export interface TypeData {
   typeName: string;
   essenceQuality: string;
   briefDescription: string;
-  // Comparison fields
   topPriority: string;
   secondaryDesires: string[];
   biggestFear: string;
@@ -19,7 +28,6 @@ export interface TypeData {
   fundamentalFlaw: string;
   falseNarrative: string;
   keyToGrowth: string;
-  // Detailed section content
   sections: {
     typeSummary: string;
     longDescription: string;
@@ -29,8 +37,8 @@ export interface TypeData {
     averageLevel: string;
     unhealthyLevel: string;
     misconceptions: string[];
-    typesMisidentifyingAsThis: string;
-    thisTypeMayMisidentifyAs: string;
+    typesMisidentifyingAsThis: MisidentificationType[];
+    thisTypeMayMisidentifyAs: MisidentificationType[];
     wingTypes: Record<string, string>;
     lineTypes: Record<string, string>;
     growthPractices: string[];
@@ -38,10 +46,8 @@ export interface TypeData {
   };
 }
 
-// Type alias for a map of type numbers to type data
 export type TypeDataMap = Record<string, TypeData>;
 
-// Error class for type data related errors
 export class TypeDataError extends Error {
   constructor(
     message: string,
@@ -54,7 +60,6 @@ export class TypeDataError extends Error {
   }
 }
 
-// Validation error class
 export class ValidationError extends Error {
   constructor(
     public typeDigit: string,
@@ -65,14 +70,12 @@ export class ValidationError extends Error {
   }
 }
 
-// Zod schema for validating type data
 export const TypeDataSchema = z.object({
   typeDigit: z.string(),
   typeNumber: z.string(),
   typeName: z.string(),
   essenceQuality: z.string(),
   briefDescription: z.string(),
-  // Comparison fields validation
   topPriority: z.string(),
   secondaryDesires: z.array(z.string()),
   biggestFear: z.string(),
@@ -84,7 +87,6 @@ export const TypeDataSchema = z.object({
   fundamentalFlaw: z.string(),
   falseNarrative: z.string(),
   keyToGrowth: z.string(),
-  // Sections validation
   sections: z.object({
     typeSummary: z.string(),
     longDescription: z.string(),
@@ -94,8 +96,24 @@ export const TypeDataSchema = z.object({
     averageLevel: z.string(),
     unhealthyLevel: z.string(),
     misconceptions: z.array(z.string()),
-    typesMisidentifyingAsThis: z.string(),
-    thisTypeMayMisidentifyAs: z.string(),
+    typesMisidentifyingAsThis: z.array(z.object({
+      type: z.string(),
+      sharedTraits: z.array(z.string()),
+      differences: z.object({
+        coreMotivation: z.string(),
+        behavioral: z.string(),
+        stress: z.string()
+      })
+    })),
+    thisTypeMayMisidentifyAs: z.array(z.object({
+      type: z.string(),
+      sharedTraits: z.array(z.string()),
+      differences: z.object({
+        coreMotivation: z.string(),
+        behavioral: z.string(),
+        stress: z.string()
+      })
+    })),
     wingTypes: z.record(z.string()),
     lineTypes: z.record(z.string()),
     growthPractices: z.array(z.string()),
@@ -103,12 +121,10 @@ export const TypeDataSchema = z.object({
   })
 });
 
-// Helper function to get displayable type name
 export function getDisplayTypeName(type: TypeData): string {
   return `Type ${type.typeDigit}: ${type.typeName}`;
 }
 
-// Helper function to get comparison fields
 export function getComparisonFields(type: TypeData) {
   return {
     typeName: getDisplayTypeName(type),

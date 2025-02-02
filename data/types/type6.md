@@ -154,12 +154,12 @@ Sixes may misidentify as other types due to their differing strategies for creat
      - **Stress Behavior:** Eights may become domineering and confrontational, while Sixes become anxious and overly cautious.  
 
 [Wing Types]  
-- **Type 6: The Loyalist Wing (7w6, aka "The Entertainer"):** More loyal, collaborative, and cautious, balancing spontaneity with careful planning.  
-- **Type 8: The Challenger Wing (7w8, aka "The Realist"):** More assertive, driven, and grounded, combining adventurousness with boldness.  
+- **Type 5: The Investigator Wing (6w5, aka "The Defender"):** More analytical, reserved, and focused on independence.  
+- **Type 7: The Enthusiast Wing (6w7, aka "The Buddy"):** More sociable, optimistic, and focused on forming connections.  
 
 [Line Types]  
-- **Type 1: The Reformer:** Access to discipline, structure, and a focus on improvement.  
-- **Type 5: The Investigator:** Access to intellectual depth, curiosity, and a love for learning.  
+- **Type 3: The Achiever:** Access to ambition and efficiency.  
+- **Type 9: The Peacemaker:** Access to calmness and reassurance.  
 
 [Growth Practices]  
 1. Build trust in yourself by recognizing your ability to handle uncertainty without excessive reassurance.  
