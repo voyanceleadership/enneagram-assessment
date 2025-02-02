@@ -2,25 +2,53 @@
 typeDigit: "9"
 typeNumber: "Nine"
 typeName: "The Peacemaker"
-essenceQuality: "Peace"
-briefDescription: "Calm and accommodating, Nines strive to maintain inner and outer harmony, often avoiding conflict and prioritizing unity."
-topPriority: "To maintain peace and harmony."
+essenceQuality:
+ summary: "Peace"
+ explanation: "Nines have an inherent connection to genuine peace and harmony. In their essence, they understand that true peace comes from integration rather than avoidance. This quality allows them to bring authentic reconciliation and unity while honoring all perspectives, including their own."
+briefDescription:
+ summary: "Calm and accommodating, Nines strive to maintain inner and outer harmony, often avoiding conflict and prioritizing unity."
+ explanation: "Nines naturally attune to others and seek to create harmonious environments. Their accommodating nature isn't just about avoiding conflict—it's about seeing and valuing multiple perspectives and finding ways to bring people together. This orientation leads them to be natural mediators who can help others find common ground."
+topPriority:
+ summary: "To maintain peace and harmony."
+ explanation: "For Nines, maintaining harmony isn't just about avoiding conflict—it's about creating and preserving a sense of unity and connection in their world. They prioritize peaceful relationships and environments because they deeply understand how conflict and discord can fragment connections and disrupt the natural flow of life."
 secondaryDesires:
-  - "To avoid conflict"
-  - "to be comfortable"
-  - "to feel connected"
-biggestFear: "Of conflict and disconnection."
+ - summary: "To avoid conflict"
+   explanation: "Nines' desire to avoid conflict stems from their deep sensitivity to discord and their awareness of how conflict can damage relationships and disturb peace. This isn't just about personal comfort—it's about preserving the connections and harmony they value so deeply."
+ - summary: "to be comfortable"
+   explanation: "The desire for comfort reflects Nines' need to maintain a sense of inner peace and stability. This comfort isn't just physical—it's about maintaining an environment and lifestyle that supports their natural inclination toward harmony and ease."
+ - summary: "to feel connected"
+   explanation: "Nines seek deep, harmonious connections with others and their environment. This desire goes beyond simple relationships—it's about feeling at one with life and experiencing a sense of unity with the people and world around them."
+biggestFear:
+ summary: "Of conflict and disconnection."
+ explanation: "At their core, Nines fear the loss of connection and the disturbance of peace through conflict. This isn't just about avoiding arguments—it's about the deep fear that conflict will irreparably damage relationships and disturb the harmony they work so hard to maintain."
 secondaryFears:
-  - "Of being overlooked"
-  - "ignored"
-  - "dismissed"
-atTheirBest: "Grounded, accepting, and empowering, bringing people together with ease and compassion."
-underStress: "Disengaged, stubborn, and overly accommodating to the point of self-neglect."
-wakeUpCall: "Believing they must suppress their own needs to maintain harmony."
-mentalHabit: "Numbing out and avoiding confrontation."
-fundamentalFlaw: "Inertia"
-falseNarrative: "It's not okay to assert myself."
-keyToGrowth: "To recognize and honor your own voice, desires, and worth."
+ - summary: "Of being overlooked"
+   explanation: "The fear of being overlooked stems from Nines' tendency to merge with others and minimize their own presence. While they may contribute to this by not asserting themselves, they fear becoming truly invisible or irrelevant to those around them."
+ - summary: "ignored"
+   explanation: "Being ignored represents more than just not being heard—it confirms Nines' fears about their own significance and whether their voice matters. This fear can reinforce their tendency to withdraw or not speak up."
+ - summary: "dismissed"
+   explanation: "Nines fear having their perspectives, needs, or feelings dismissed as unimportant. This fear often leads them to withhold their opinions or merge with others' viewpoints rather than risk being minimized."
+atTheirBest:
+ summary: "Grounded, accepting, and empowering, bringing people together with ease and compassion."
+ explanation: "When healthy, Nines channel their natural empathy and inclusive nature into active peacemaking while maintaining their own sense of self. Their acceptance becomes truly unconditional, including self-acceptance, and they can bring people together while staying grounded in their own truth."
+underStress:
+ summary: "Disengaged, stubborn, and overly accommodating to the point of self-neglect."
+ explanation: "When stressed, Nines' desire for peace can lead to withdrawal and passive resistance. Their natural accommodation can become self-abandonment, and their need for comfort can manifest as stubborn inertia. They might become increasingly disconnected from their own wants and needs."
+wakeUpCall:
+ summary: "Believing they must suppress their own needs to maintain harmony."
+ explanation: "When Nines find themselves consistently ignoring their own needs and desires to maintain peace, it's a sign they're becoming unbalanced. This pattern of self-effacement indicates they're losing touch with their own importance and the value of their voice."
+mentalHabit:
+ summary: "Numbing out and avoiding confrontation."
+ explanation: "Nines habitually disengage from conflict or discomfort by numbing themselves to their own feelings and needs. This mental habit of 'going to sleep' to problems and tensions can create a comfortable fog that makes it difficult to access their own clarity and motivation."
+characteristicVice:
+ summary: "Inertia"
+ explanation: "Nines' inertia manifests as a tendency to resist change and avoid taking decisive action. This isn't just about physical laziness—it's about maintaining the comfort of the status quo rather than engaging with the discomfort of change or conflict. This inertia can prevent them from actively participating in their own lives."
+innerStory:
+ summary: "It's not okay to assert myself."
+ explanation: "Nines operate under the belief that asserting their own views or needs will disturb the peace and threaten their connections with others. This inner story leads them to minimize their own presence and merge with others' agendas, making it difficult to recognize and honor their own importance."
+keyToGrowth:
+ summary: "To recognize and honor your own voice, desires, and worth."
+ explanation: "Growth for Nines involves learning that their own presence and participation in life is essential for true peace. This means developing the ability to stay awake to their own priorities and take action on their own behalf. True growth comes from recognizing that genuine harmony includes their own voice and that asserting themselves doesn't have to create conflict."
 ---
 
 [Type Summary]  
@@ -68,65 +96,56 @@ Nines are driven by a desire to maintain peace and harmony, both internally and 
 4. **Nines are lazy or unproductive.**  
    Nines are often busy and productive, but they tend to avoid tasks or situations that feel emotionally challenging—such as difficult conversations or overwhelming projects—while focusing on less emotionally taxing activities.  
 
-[Types That Commonly Misidentify as This Type]  
-1. **Type 2: The Helper**  
-   - **Shared Traits:**  
-     - Empathetic, relationship-oriented, and avoid conflict to some degree.  
-   - **Key Differences:**  
-     - **Core Motivation:** Twos focus on building closeness and intimacy to feel needed and loved, while Nines seek peace and avoid disconnection.  
-     - **Behavioral Differences:** Twos prioritize relationships for personal affirmation, while Nines prioritize harmony for inner and outer balance.  
-     - **Stress Behavior:** Twos become clingy and self-sacrificing, while Nines become disengaged and stubborn.  
+[Types That May Misidentify as This Type]
+• Type Two: The Helper
+  - Shared Traits:
+    • Empathetic, relationship-oriented, and caring toward others
+    • Prioritize maintaining close connections and supporting others
+  - Key Differences:
+    • Core Motivation: Twos seek to feel needed and loved, while Nines seek peace and connection
+    • Behavioral Differences: Twos actively nurture relationships, while Nines passively adapt to maintain harmony
+    • Stress Behavior: Twos become clingy, while Nines become disengaged
 
-2. **Type 5: The Investigator**  
-   - **Shared Traits:**  
-     - Withdrawn, introverted, and reserved.  
-   - **Key Differences:**  
-     - **Core Motivation:** Fives withdraw to pursue intellectual curiosity, while Nines withdraw to avoid conflict and preserve inner peace.  
-     - **Behavioral Differences:** Fives focus on mastery and independence, while Nines focus on maintaining comfort and connection.  
-     - **Stress Behavior:** Fives hoard resources, while Nines disengage and procrastinate.  
+• Type Four: The Individualist
+  - Shared Traits:
+    • Introspective, emotionally sensitive, and drawn to meaningful connections
+  - Key Differences:
+    • Core Motivation: Fours seek depth and individuality, while Nines seek peace and unity
+    • Behavioral Differences: Fours express their uniqueness, while Nines merge with others to avoid conflict
+    • Stress Behavior: Fours become melancholic, while Nines disengage and avoid issues
 
-3. **Type 6: The Loyalist**  
-   - **Shared Traits:**  
-     - Empathetic and care about how others feel.  
-   - **Key Differences:**  
-     - **Core Motivation:** Sixes seek security and trust, while Nines seek peace and harmony.  
-     - **Behavioral Differences:** Sixes are vigilant and question trust, while Nines are more complacent and agreeable.  
-     - **Stress Behavior:** Sixes display anxiety, while Nines withdraw and avoid conflict.  
+• Type Five: The Investigator
+  - Shared Traits:
+    • Withdrawn, introspective, and focused on conserving energy
+  - Key Differences:
+    • Core Motivation: Fives prioritize understanding and independence, while Nines prioritize harmony and comfort
+    • Behavioral Differences: Fives withdraw to pursue intellectual mastery, while Nines withdraw to avoid conflict and preserve inner peace
+    • Stress Behavior: Fives hoard resources and isolate themselves, while Nines become disengaged and procrastinate
 
-[This Type May Misidentify As...]  
-Nines are highly empathetic and see aspects of themselves in every type. However, they most commonly misidentify as the following:  
+[This Type May Misidentify as...]
+• Type Two: The Helper
+  - Shared Traits:
+    • Empathetic, relationship-oriented, and focused on others’ needs
+  - Key Differences:
+    • Core Motivation: Twos seek love and appreciation, while Nines seek peace and connection
+    • Behavioral Differences: Twos actively foster relationships, while Nines prioritize maintaining external and internal harmony
+    • Stress Behavior: Twos become self-sacrificing and dependent, while Nines become disengaged and avoidant
 
-1. **Type 2: The Helper**  
-   - **Shared Traits:**  
-     - Empathetic, relationship-oriented, and caring toward others.  
-   - **Key Differences:**  
-     - **Core Motivation:** Twos seek to feel needed and loved, while Nines seek peace and connection.  
-     - **Behavioral Differences:** Twos actively nurture relationships, while Nines passively adapt to maintain harmony.  
-     - **Stress Behavior:** Twos become clingy, while Nines become disengaged.  
+• Type Five: The Investigator
+  - Shared Traits:
+    • Withdrawn, introspective, and reserved
+  - Key Differences:
+    • Core Motivation: Fives focus on intellectual mastery and autonomy, while Nines seek peace and comfort
+    • Behavioral Differences: Fives detach to analyze, while Nines detach to avoid conflict
+    • Stress Behavior: Fives isolate themselves, while Nines become passive and resistant to change
 
-2. **Type 4: The Individualist**  
-   - **Shared Traits:**  
-     - Introspective, emotionally sensitive, and drawn to meaningful connections.  
-   - **Key Differences:**  
-     - **Core Motivation:** Fours seek depth and individuality, while Nines seek peace and unity.  
-     - **Behavioral Differences:** Fours express their uniqueness, while Nines merge with others to avoid conflict.  
-     - **Stress Behavior:** Fours become melancholic, while Nines disengage and avoid issues.  
-
-3. **Type 5: The Investigator**  
-   - **Shared Traits:**  
-     - Withdrawn, introspective, and focused on conserving energy.  
-   - **Key Differences:**  
-     - **Core Motivation:** Fives prioritize understanding and independence, while Nines prioritize harmony and comfort.  
-     - **Behavioral Differences:** Fives withdraw to pursue intellectual mastery, while Nines withdraw to avoid conflict and preserve inner peace.  
-     - **Stress Behavior:** Fives hoard resources and isolate themselves, while Nines become disengaged and procrastinate.  
-
-4. **Type 7: The Enthusiast**  
-   - **Shared Traits:**  
-     - Positive outlook, a desire to avoid conflict, and a focus on enjoyable activities.  
-   - **Key Differences:**  
-     - **Core Motivation:** Sevens seek joy and freedom, while Nines seek peace and connection.  
-     - **Behavioral Differences:** Sevens pursue excitement and variety, while Nines prioritize steadiness and comfort, often engaging in enjoyable activities to maintain their sense of wellbeing.  
-     - **Stress Behavior:** Sevens become scattered and avoidant, while Nines disengage and procrastinate.  
+• Type Seven: The Enthusiast
+  - Shared Traits:
+    • Positive outlook, a desire to avoid conflict, and a focus on enjoyable activities
+  - Key Differences:
+    • Core Motivation: Sevens seek joy and freedom, while Nines seek peace and connection
+    • Behavioral Differences: Sevens pursue excitement and variety, while Nines prioritize steadiness and comfort
+    • Stress Behavior: Sevens become scattered and avoidant, while Nines become disengaged and procrastinate
 
 [Wing Types]  
 - **Type 8: The Challenger Wing (9w8, aka "The Referee"):** More assertive, grounded, and focused on justice.  

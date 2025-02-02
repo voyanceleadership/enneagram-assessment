@@ -2,26 +2,55 @@
 typeDigit: "1"
 typeNumber: "One"
 typeName: "The Reformer"
-essenceQuality: "Goodness"
-briefDescription: "Striving for integrity and perfection, Ones seek to improve themselves and the world around them."
-topPriority: "To have integrity and do the right thing."
-secondaryDesires: 
-  - "Want to be right"
-  - "improve others"
-  - "uphold high standards"
-biggestFear: "Of being bad, corrupt, or defective."
+essenceQuality:
+  summary: "Goodness"
+  explanation: "Ones have an inherent connection to the quality of goodness and perfection. They naturally recognize how things ought to be and strive to embody and manifest this ideal in themselves and the world around them. This connection to what is 'good' and 'right' gives them a clear moral compass and strong ethical principles."
+briefDescription:
+  summary: "Striving for integrity and perfection, Ones seek to improve themselves and the world around them."
+  explanation: "Ones are motivated by a deep desire to live a righteous life and help make the world a better place. They believe in the importance of personal integrity and the power of continual self-improvement. This drive for betterment extends beyond themselves to their environment and others, as they feel a responsibility to uphold and promote high standards."
+topPriority:
+  summary: "To have integrity and do the right thing."
+  explanation: "For Ones, integrity isn't just about honesty—it's about complete alignment between their beliefs and actions. They prioritize doing what is right, even when it's difficult or no one is watching. This focus on moral correctness guides their decisions and behaviors in all aspects of life."
+secondaryDesires:
+  - summary: "Want to be right"
+    explanation: "Ones' desire to be right stems from their deep conviction that there are correct ways of doing things. They invest significant energy in understanding and following proper procedures, rules, and principles. This desire goes beyond mere correctness—it's about aligning with what they perceive as universal truths and standards."
+  - summary: "improve others"
+    explanation: "The drive to improve others comes from Ones' genuine belief in the potential for everything and everyone to be better. They see ideals clearly and want to help others reach these standards. However, this desire can sometimes manifest as criticism or perfectionism in relationships."
+  - summary: "uphold high standards"
+    explanation: "Ones believe that maintaining high standards is crucial for creating a better world. They see standards not as arbitrary rules but as essential guidelines for achieving excellence and moral rectitude. This commitment to high standards applies to their work, relationships, and personal conduct."
+biggestFear:
+  summary: "Of being bad, corrupt, or defective."
+  explanation: "At their core, Ones fear that they might be fundamentally flawed or corrupt. This fear drives their relentless pursuit of improvement and perfection. The thought of being morally defective or failing to live up to their high standards can be deeply distressing, leading to intense self-criticism and constant self-monitoring."
 secondaryFears:
-  - "Of making mistakes"
-  - "being wrong"
-  - "falling short"
-  - "being criticized"
-atTheirBest: "Ethical, wise, and discerning—act with integrity and inspire others to improve."
-underStress: "Rigid, judgmental, perfectionistic, and overly critical of themselves and others."
-wakeUpCall: "Feeling obligated to fix everything themselves."
-mentalHabit: "Judging others and themselves."
-fundamentalFlaw: "Resentment"
-falseNarrative: "It's not okay to make mistakes."
-keyToGrowth: "To live for a higher purpose—remembering that it is your true nature to be wise, discerning, and patient."
+  - summary: "Of making mistakes"
+    explanation: "Ones view mistakes not just as simple errors but as moral failures. Their fear of making mistakes stems from a deep conviction that they should always strive for perfection. This fear can lead to excessive checking, revision, and self-doubt."
+  - summary: "being wrong"
+    explanation: "The fear of being wrong goes beyond simple factual errors—it's about being wrong on a moral or ethical level. Ones invest heavily in developing strong principles and beliefs, and the possibility of these foundations being incorrect can be deeply unsettling."
+  - summary: "falling short"
+    explanation: "Ones fear falling short of their ideals and standards, seeing such shortcomings as personal failures. This fear can drive them to overwork and exhaust themselves in pursuit of perfection."
+  - summary: "being criticized"
+    explanation: "While Ones often engage in self-criticism, external criticism can be particularly painful because it confirms their worst fears about themselves. Their fear of criticism stems from their deep desire to be good and their concern that others might see them as flawed or imperfect."
+atTheirBest:
+  summary: "Ethical, wise, and discerning—act with integrity and inspire others to improve."
+  explanation: "When Ones are healthy and balanced, they channel their drive for improvement in ways that truly benefit themselves and others. They become wise teachers and mentors who can inspire positive change without being overly critical. Their strong ethical foundation combined with acceptance and understanding allows them to be both principled and compassionate."
+underStress:
+  summary: "Rigid, judgmental, perfectionistic, and overly critical of themselves and others."
+  explanation: "When stressed, Ones' desire for improvement transforms into rigid perfectionism. Their internal critic becomes louder, and they may become harshly judgmental of both themselves and others. Their usually constructive drive for betterment can become obsessive and counterproductive."
+wakeUpCall:
+  summary: "Feeling obligated to fix everything themselves."
+  explanation: "When Ones start feeling personally responsible for correcting every flaw and problem they perceive, it's a sign they're becoming unbalanced. This compulsion to fix everything can lead to burnout and resentment, as they take on more responsibility than any one person should bear."
+mentalHabit:
+  summary: "Judging others and themselves."
+  explanation: "Ones' minds naturally evaluate and assess, constantly comparing what is against what should be. This habit of judgment, while useful for identifying areas of improvement, can become excessive and exhausting. Their inner critic works overtime, noticing flaws and imperfections in themselves, others, and their environment."
+characteristicVice:
+  summary: "Resentment"
+  explanation: "Ones' characteristic vice of resentment emerges from the constant tension between reality and their ideals. They can become bitter about having to maintain such high standards while others seem unconcerned with improvement. This resentment often remains unconscious, masked by their efforts to be 'good' and their reluctance to acknowledge negative emotions."
+innerStory:
+  summary: "It's not okay to make mistakes."
+  explanation: "Ones operate under the belief that mistakes and imperfections are unacceptable. This inner story drives them to strive for perfection and can make it difficult to forgive themselves or others for human error. The narrative that mistakes are morally wrong rather than natural learning opportunities can create significant internal pressure."
+keyToGrowth:
+  summary: "To live for a higher purpose—remembering that it is your true nature to be wise, discerning, and patient."
+  explanation: "The key to growth for Ones lies in recognizing that their drive for improvement serves a greater purpose beyond mere perfection. When they connect with their essential wisdom and patience, they can maintain their high standards while accepting the inherent imperfection of human existence. True growth comes from balancing their ideals with compassion and understanding."
 ---
 
 [Type Summary]
@@ -62,83 +91,74 @@ Ones are principled, purposeful, self-controlled, and perfectionistic. They stri
 1. **All Ones are social crusaders.** While many social crusaders are Ones, many Ones are not social crusaders. What all Ones have in common is a desire to fix problems or issues and help things reach their potential, but this can show up in many forms. Some Ones focus their attention on social problems, while others focus on other aspects of life such as the quality of their work, improving themselves, or fixing problems that feel important to them.
 2. **Ones are perfectionistic about everything.** A common misconception about Ones is that they strive for perfection in every aspect of their lives. For example, people often expect Ones to have a perfectly tidy home. While many Ones do keep their environment “spic and span,” some Ones can actually be quite messy. The caveat to the perfectionism of Ones is that they’ll be perfectionistic about the things they care about. If keeping their world perfectly organized is important to them, they’ll do it to a T – if it’s not, they’ll focus their efforts elsewhere.
 
-[Types That May Misidentify as This Type]  
+[Types That May Misidentify as This Type]
+• Type Three: The Achiever
+  - Shared Traits:
+    • Hardworking, ambitious, focused on improvement
+    • Value competence and strive for success
+    • Appear organized, efficient, and goal-driven
+  - Key Differences:
+    • Core Motivation: Ones strive for integrity, Threes seek validation
+    • Behavioral Differences: Threes prioritize results, Ones follow moral compass
+    • Stress Behavior: Threes become image-conscious, Ones become rigid
 
-1. **Type Three: The Achiever**  
-   Threes may misidentify as Ones because of their shared focus on high standards and achieving excellence.  
-   - **Shared Traits:**  
-     - Hardworking, ambitious, and focused on improvement.  
-     - Value competence and strive for success in their endeavors.  
-     - Appear organized, efficient, and goal-driven.  
-   - **Key Differences:**  
-     - **Core Motivation:** Ones strive to be good people by living with integrity, while Threes are motivated by recognition and validation.  
-     - **Behavioral Differences:** Threes prioritize results and efficiency, often adapting their approach to fit their audience, while Ones are guided by their inner moral compass.  
-     - **Stress Behavior:** Threes may become overly image-conscious and preoccupied with external achievements, while Ones become overly self-critical and rigid.  
+• Type Five: The Investigator
+  - Shared Traits:
+    • Methodical, logical, focused on solving problems
+    • Value knowledge and competence
+    • Appear reserved, intellectual, and detail-oriented
+  - Key Differences:
+    • Core Motivation: Ones seek moral alignment, Fives prioritize understanding
+    • Behavioral Differences: Fives prefer observation, Ones actively engage to fix problems
+    • Stress Behavior: Fives withdraw and overanalyze, Ones double down on enforcing principles
 
-2. **Type Five: The Investigator**  
-   Fives may misidentify as Ones due to their shared analytical and precise approach to work and life.  
-   - **Shared Traits:**  
-     - Methodical, logical, and focused on solving problems.  
-     - Value knowledge and competence.  
-     - Appear reserved, intellectual, and detail-oriented.  
-   - **Key Differences:**  
-     - **Core Motivation:** Ones strive to be good by aligning their actions with their principles, while Fives prioritize understanding and independence.  
-     - **Behavioral Differences:** Fives prefer to observe and analyze situations from a distance, while Ones actively engage to fix or improve perceived problems.  
-     - **Stress Behavior:** Fives retreat into their inner world and overanalyze, while Ones double down on enforcing their principles.  
+• Type Six: The Loyalist
+  - Shared Traits:
+    • Dutiful, organized, focused on avoiding mistakes
+    • Value order and appreciate clear rules and systems
+    • Committed to solving problems and improving their environment
+  - Key Differences:
+    • Core Motivation: Ones seek moral integrity, Sixes seek security and reassurance
+    • Behavioral Differences: Sixes second-guess and seek external input, Ones act decisively
+    • Stress Behavior: Sixes display anxiety and indecision, Ones become rigid and perfectionistic
 
-3. **Type Six: The Loyalist**  
-   Sixes may misidentify as Ones because of their shared sense of responsibility and commitment to doing what is right.  
-   - **Shared Traits:**  
-     - Dutiful, organized, and focused on avoiding mistakes.  
-     - Value order and appreciate clear rules and systems.  
-     - Committed to solving problems and improving their environment.  
-   - **Key Differences:**  
-     - **Core Motivation:** Ones strive for moral alignment, while Sixes seek security and reassurance.  
-     - **Behavioral Differences:** Sixes often second-guess themselves and seek input from others, while Ones act decisively based on inner conviction.  
-     - **Stress Behavior:** Sixes display anxiety and indecision, while Ones become rigid and perfectionistic.  
-
-4. **Type Eight: The Challenger**  
-   Eights may misidentify as Ones because of their shared conviction and leadership tendencies.  
-   - **Shared Traits:**  
-     - Decisive, action-oriented, and willing to take charge.  
-     - Seen as strong-willed and commanding.  
-     - Value justice and advocate for what they believe in.  
-   - **Key Differences:**  
-     - **Core Motivation:** Ones strive to be good people, acting out of moral responsibility, while Eights are driven by strength and independence.  
-     - **Behavioral Differences:** Ones are measured and restrained, while Eights are bold, unapologetic, and unafraid of conflict.  
-     - **Stress Behavior:** Ones become critical and rigid, while Eights become confrontational and domineering.  
+• Type Eight: The Challenger
+  - Shared Traits:
+    • Decisive, action-oriented, willing to take charge
+    • Seen as strong-willed and commanding
+    • Value justice and advocate for their beliefs
+  - Key Differences:
+    • Core Motivation: Ones act from moral responsibility, Eights seek independence and control
+    • Behavioral Differences: Ones are measured and restrained, Eights are bold and unafraid of conflict
+    • Stress Behavior: Ones become critical and rigid, Eights become confrontational and domineering
 
 [This Type May Misidentify as...]
+• Type Three: The Achiever
+  - Shared Traits:
+    • Hardworking, focused, and results-driven
+    • Value efficiency and high performance
+  - Key Differences:
+    • Core Motivation: Ones seek moral integrity, Threes seek validation and recognition
+    • Behavioral Differences: Ones focus on doing things “right,” Threes align with external expectations
+    • Stress Behavior: Ones become overly self-critical, Threes hyper-focus on external achievements
 
-1. **Type Three: The Achiever**  
-   Ones may misidentify as Threes because of their shared drive for accomplishment and excellence.  
-   - **Shared Traits:**  
-     - Hardworking, focused, and results-driven.  
-     - Value efficiency and high performance.  
-   - **Key Differences:**  
-     - **Core Motivation:** Ones strive to be good, while Threes seek validation and recognition.  
-     - **Behavioral Differences:** Ones focus on doing things “right,” while Threes align with others’ expectations.  
-     - **Stress Behavior:** Ones become overly self-critical, while Threes hyper-focus on external achievements.  
+• Type Five: The Investigator
+  - Shared Traits:
+    • Precise, detail-oriented, and methodical
+    • Value knowledge and competence
+  - Key Differences:
+    • Core Motivation: Ones align actions with principles, Fives prioritize understanding and independence
+    • Behavioral Differences: Ones engage to make improvements, Fives analyze from a distance
+    • Stress Behavior: Ones become rigid and critical, Fives withdraw and overanalyze
 
-2. **Type Five: The Investigator**  
-   Ones may misidentify as Fives due to their shared logical tendencies.  
-   - **Shared Traits:**  
-     - Precise, detail-oriented, and methodical.  
-     - Value knowledge and competence.  
-   - **Key Differences:**  
-     - **Core Motivation:** Ones align actions with principles, while Fives prioritize understanding and independence.  
-     - **Behavioral Differences:** Ones engage to make improvements, while Fives analyze from a distance.  
-     - **Stress Behavior:** Ones become rigid and critical, while Fives withdraw and overanalyze.  
-
-3. **Type Eight: The Challenger**  
-   Ones may misidentify as Eights because of their shared conviction and leadership qualities.  
-   - **Shared Traits:**  
-     - Assertive, action-oriented, and willing to take charge.  
-     - Value justice and stand up for their beliefs.  
-   - **Key Differences:**  
-     - **Core Motivation:** Ones strive for moral responsibility, while Eights seek independence and control.  
-     - **Behavioral Differences:** Ones are measured, while Eights are bold and unafraid of conflict.  
-     - **Stress Behavior:** Ones become overly critical, while Eights assert control to avoid vulnerability.
+• Type Eight: The Challenger
+  - Shared Traits:
+    • Assertive, action-oriented, willing to take charge
+    • Value justice and stand up for their beliefs
+  - Key Differences:
+    • Core Motivation: Ones act from moral responsibility, Eights seek independence and control
+    • Behavioral Differences: Ones are measured, Eights are bold and unafraid of conflict
+    • Stress Behavior: Ones become overly critical, Eights assert control to avoid vulnerability
 
 [Wing Types]  
 - **Type 9: The Peacemaker Wing (1w9, aka "The Idealist"):** More withdrawn, objective, and focused on principles.  

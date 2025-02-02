@@ -2,25 +2,53 @@
 typeDigit: "5"
 typeNumber: "Five"
 typeName: "The Investigator"
-essenceQuality: "Wisdom"
-briefDescription: "Curious and independent, Fives seek knowledge and understanding to feel capable and prepared."
-topPriority: "To understand the world and feel competent."
+essenceQuality:
+ summary: "Wisdom"
+ explanation: "Fives have a natural connection to clarity and understanding. Their essential quality of wisdom manifests as an ability to observe and comprehend complex systems and ideas with remarkable objectivity. This innate wisdom allows them to perceive underlying patterns and principles that others might miss."
+briefDescription:
+ summary: "Curious and independent, Fives seek knowledge and understanding to feel capable and prepared."
+ explanation: "Fives are driven by an insatiable curiosity about how things work. Their pursuit of knowledge isn't merely academic—it's a strategy for feeling equipped to handle life's demands. They gather information and develop expertise as a way of building confidence and self-reliance, believing that understanding leads to capability."
+topPriority:
+ summary: "To understand the world and feel competent."
+ explanation: "For Fives, understanding isn't just about knowledge—it's about feeling prepared and capable in the world. They prioritize developing expertise and competence because they believe this is the key to navigating life successfully. This drive shapes how they interact with the world, often leading them to prioritize learning and observation over direct participation."
 secondaryDesires:
-  - "To master their interests"
-  - "to have privacy"
-  - "to be self-sufficient"
-biggestFear: "Of being helpless or incapable."
+ - summary: "To master their interests"
+   explanation: "Fives aren't content with surface-level understanding—they seek mastery of their chosen subjects. This desire for mastery goes beyond casual interest; it's about developing deep expertise that makes them feel confident and competent. They often become authorities in their areas of interest, developing unique insights and perspectives."
+ - summary: "to have privacy"
+   explanation: "Privacy for Fives is more than just being alone—it's about having the space to process information and recharge their energy. This desire stems from their need to maintain clear boundaries and protect their limited resources, allowing them to engage with the world on their own terms."
+ - summary: "to be self-sufficient"
+   explanation: "The desire for self-sufficiency stems from Fives' deep need to feel capable and independent. They seek to minimize their dependence on others by developing comprehensive knowledge and skills, often preparing extensively for potential scenarios to ensure they can handle situations independently."
+biggestFear:
+ summary: "Of being helpless or incapable."
+ explanation: "Fives' core fear revolves around being overwhelmed or incapable of handling life's demands. This isn't just about lacking knowledge—it's about feeling fundamentally unprepared or inadequate to meet the world's challenges. This fear drives them to continuously build their knowledge and skills as a defense against potential helplessness."
 secondaryFears:
-  - "Of being overwhelmed"
-  - "intruded upon"
-  - "dependent on others"
-atTheirBest: "Insightful, innovative, and perceptive, with a profound depth of knowledge."
-underStress: "Detached, overly private, and disconnected from their emotions."
-wakeUpCall: "Believing they lack the resources or knowledge to handle the demands of life."
-mentalHabit: "Retreating into their thoughts and intellectualizing emotions."
-fundamentalFlaw: "Detachment"
-falseNarrative: "It’s not okay to depend on others."
-keyToGrowth: "To balance intellectual pursuits with emotional connection and trust others enough to share their inner world."
+ - summary: "Of being overwhelmed"
+   explanation: "The fear of being overwhelmed relates to Fives' sense of having limited internal resources. They worry about depleting their energy through excessive demands or engagement, leading them to carefully manage their commitments and engagement with others."
+ - summary: "intruded upon"
+   explanation: "Fives fear violations of their personal space and boundaries, seeing intrusion as a threat to their autonomy and energy reserves. This fear can lead them to create elaborate systems of boundaries to protect their private space and internal resources."
+ - summary: "dependent on others"
+   explanation: "The fear of dependency strikes at the heart of Fives' desire for self-sufficiency. They see reliance on others as a potential threat to their independence and capability, often leading them to develop extensive knowledge and skills to avoid needing help."
+atTheirBest:
+ summary: "Insightful, innovative, and perceptive, with a profound depth of knowledge."
+ explanation: "When healthy, Fives channel their observant nature and deep knowledge into genuine innovation and valuable insights. Their capacity for objective analysis combines with engaged curiosity, allowing them to make unique contributions while maintaining meaningful connections with others. They share their wisdom generously while maintaining healthy boundaries."
+underStress:
+ summary: "Detached, overly private, and disconnected from their emotions."
+ explanation: "When stressed, Fives can retreat too far into their mental world, losing touch with their emotions and physical experiences. Their natural tendency toward privacy can become extreme isolation, and their analytical nature can turn into rigid intellectualization of all experience, creating distance from both themselves and others."
+wakeUpCall:
+ summary: "Believing they lack the resources or knowledge to handle the demands of life."
+ explanation: "When Fives find themselves constantly feeling unprepared or insufficient despite their knowledge, it's a sign they're becoming unbalanced. This persistent sense of inadequacy can drive them to withdraw further into gathering information while paradoxically becoming less capable of applying their knowledge effectively."
+mentalHabit:
+ summary: "Retreating into their thoughts and intellectualizing emotions."
+ explanation: "Fives habitually process experience through the filter of analysis and understanding. This mental habit of retreating into thought and converting emotional experiences into intellectual concepts can create distance from direct experience and emotional connection. While this provides a sense of safety, it can also lead to disconnection from themselves and others."
+characteristicVice:
+ summary: "Detachment"
+ explanation: "Fives' detachment manifests as a tendency to step back from direct experience and emotional engagement. This isn't just about being reserved—it's a fundamental stance of observing life rather than fully participating in it. While this detachment can aid in objective analysis, it can also prevent them from fully engaging with life and relationships."
+innerStory:
+ summary: "It's not okay to depend on others."
+ explanation: "Fives operate under the belief that they must be entirely self-sufficient to be secure. This inner story drives them to minimize their needs and maximize their independence, often at the cost of meaningful connection and support. The narrative that dependency is dangerous can prevent them from developing healthy interdependence."
+keyToGrowth:
+ summary: "To balance intellectual pursuits with emotional connection and trust others enough to share their inner world."
+ explanation: "Growth for Fives involves learning to embrace both knowledge and direct experience, understanding that true wisdom includes emotional and physical engagement with life. This means developing trust in others and recognizing that sharing themselves and their knowledge enriches rather than depletes them. True growth comes from realizing that connection and interdependence can coexist with autonomy and competence."
 ---
 
 [Type Summary]
@@ -72,67 +100,61 @@ Fives are defined by their desire to understand the world and gain mastery over 
    While many Fives pursue formal education, their love for learning is independent of academic achievement. A Five might gain expertise through self-directed study, personal projects, or hands-on experience rather than formal schooling.
 
 [Types That May Misidentify as This Type]
-1. **Type 1: The Reformer**  
-   Ones and Fives share a logical and thorough approach to problems, but their motivations and styles differ:  
-   - **Shared Traits:**  
-     - Logical and detail-oriented.  
-     - Organized and thoughtful in their approach.  
-     - Focused on problem-solving and improvement.  
-   - **Key Differences:**  
-     - **Core Motivation:** Ones are driven by a sense of duty and moral alignment, while Fives are motivated by curiosity and the need to understand.  
-     - **Behavioral Differences:** Ones are more action-oriented in fixing problems, while Fives prefer observation and analysis.  
-     - **Stress Behavior:** Ones may become critical and rigid, while Fives withdraw and overanalyze.  
+• Type One: The Reformer
+  - Shared Traits:
+    • Logical and detail-oriented
+    • Organized and thoughtful in their approach
+    • Focused on problem-solving and improvement
+  - Key Differences:
+    • Core Motivation: Ones are driven by a sense of duty and moral alignment, while Fives are motivated by curiosity and the need to understand
+    • Behavioral Differences: Ones are more action-oriented in fixing problems, while Fives prefer observation and analysis
+    • Stress Behavior: Ones may become critical and rigid, while Fives withdraw and overanalyze
 
-2. **Type 3: The Achiever**  
-   Threes and Fives both value competence and excel at mastering their fields, but their focus diverges:  
-   - **Shared Traits:**  
-     - Highly goal-oriented and focused on achieving expertise.  
-     - Demonstrate competence and confidence in their pursuits.  
-   - **Key Differences:**  
-     - **Core Motivation:** Threes prioritize external success and recognition, while Fives are internally driven, focusing on mastery and understanding.  
-     - **Behavioral Differences:** Threes adapt their behavior to impress, while Fives focus on their own knowledge and satisfaction.  
-     - **Stress Behavior:** Threes become overly image-conscious, while Fives become overly private and withdrawn.  
+• Type Three: The Achiever
+  - Shared Traits:
+    • Highly goal-oriented and focused on achieving expertise
+    • Demonstrate competence and confidence in their pursuits
+  - Key Differences:
+    • Core Motivation: Threes prioritize external success and recognition, while Fives are internally driven, focusing on mastery and understanding
+    • Behavioral Differences: Threes adapt their behavior to impress, while Fives focus on their own knowledge and satisfaction
+    • Stress Behavior: Threes become overly image-conscious, while Fives become overly private and withdrawn
 
-3. **Type 9: The Peacemaker**  
-   Both Fives and Nines are withdrawn types, but their motivations for withdrawing differ:  
-   - **Shared Traits:**  
-     - Prefer solitude and avoid overwhelming social demands.  
-     - Appear calm and introspective.  
-   - **Key Differences:**  
-     - **Core Motivation:** Nines prioritize inner peace and avoiding conflict, while Fives prioritize intellectual mastery and self-sufficiency.  
-     - **Behavioral Differences:** Nines withdraw to maintain peace, while Fives withdraw to focus on intellectual exploration.  
-     - **Stress Behavior:** Nines become disengaged and complacent, while Fives overanalyze and hoard knowledge.  
+• Type Nine: The Peacemaker
+  - Shared Traits:
+    • Prefer solitude and avoid overwhelming social demands
+    • Appear calm and introspective
+  - Key Differences:
+    • Core Motivation: Nines prioritize inner peace and avoiding conflict, while Fives prioritize intellectual mastery and self-sufficiency
+    • Behavioral Differences: Nines withdraw to maintain peace, while Fives withdraw to focus on intellectual exploration
+    • Stress Behavior: Nines become disengaged and complacent, while Fives overanalyze and hoard knowledge
 
 [This Type May Misidentify as...]
-1. **Type 1: The Reformer**  
-   Fives may misidentify as Ones because of their shared precision and logical thinking.  
-   - **Shared Traits:**  
-     - Analytical and detail-oriented.  
-     - Focused on solving problems and improving situations.  
-   - **Key Differences:**  
-     - **Core Motivation:** Ones are driven by moral alignment, while Fives focus on understanding and knowledge.  
-     - **Behavioral Differences:** Ones actively engage in fixing problems, while Fives prefer observation and analysis.  
-     - **Stress Behavior:** Ones become rigid and self-critical, while Fives become withdrawn and detached.  
+• Type One: The Reformer
+  - Shared Traits:
+    • Analytical and detail-oriented
+    • Focused on solving problems and improving situations
+  - Key Differences:
+    • Core Motivation: Ones are driven by moral alignment, while Fives focus on understanding and knowledge
+    • Behavioral Differences: Ones actively engage in fixing problems, while Fives prefer observation and analysis
+    • Stress Behavior: Ones become rigid and self-critical, while Fives become withdrawn and detached
 
-2. **Type 3: The Achiever**  
-   Fives may misidentify as Threes due to their shared drive for competence and expertise.  
-   - **Shared Traits:**  
-     - Focused on mastery and achieving goals.  
-     - Value competence and confidence in their work.  
-   - **Key Differences:**  
-     - **Core Motivation:** Threes seek external validation and recognition, while Fives focus on self-sufficiency and understanding.  
-     - **Behavioral Differences:** Threes adapt to impress others, while Fives remain private and independent.  
-     - **Stress Behavior:** Threes become preoccupied with image, while Fives retreat into their thoughts.  
+• Type Three: The Achiever
+  - Shared Traits:
+    • Focused on mastery and achieving goals
+    • Value competence and confidence in their work
+  - Key Differences:
+    • Core Motivation: Threes seek external validation and recognition, while Fives focus on self-sufficiency and understanding
+    • Behavioral Differences: Threes adapt to impress others, while Fives remain private and independent
+    • Stress Behavior: Threes become preoccupied with image, while Fives retreat into their thoughts
 
-3. **Type 9: The Peacemaker**  
-   Fives may misidentify as Nines because of their shared preference for solitude.  
-   - **Shared Traits:**  
-     - Withdrawn and introspective.  
-     - Avoid excessive social demands.  
-   - **Key Differences:**  
-     - **Core Motivation:** Nines prioritize harmony and peace, while Fives focus on intellectual pursuits and self-sufficiency.  
-     - **Behavioral Differences:** Nines disengage to avoid conflict, while Fives withdraw to focus on intellectual mastery.  
-     - **Stress Behavior:** Nines become complacent, while Fives become overly private and detached.  
+• Type Nine: The Peacemaker
+  - Shared Traits:
+    • Withdrawn and introspective
+    • Avoid excessive social demands
+  - Key Differences:
+    • Core Motivation: Nines prioritize harmony and peace, while Fives focus on intellectual pursuits and self-sufficiency
+    • Behavioral Differences: Nines disengage to avoid conflict, while Fives withdraw to focus on intellectual mastery
+    • Stress Behavior: Nines become complacent, while Fives become overly private and detached
 
 [Wing Types]  
 - **Type 4: The Individualist Wing (5w4, aka "The Iconoclast"):** More introspective, creative, and emotionally attuned, blending intellectual curiosity with a desire for self-expression.  

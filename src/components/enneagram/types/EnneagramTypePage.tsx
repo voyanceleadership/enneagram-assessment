@@ -1,7 +1,7 @@
 // src/components/enneagram/types/EnneagramTypePage.tsx
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { TypeSection, BulletList, LevelsSection, RelatedTypesSection } from './TypePageSections';
 import { TypeData } from '@/lib/types/types';
 import { TYPE_NUMBERS } from '@/lib/types/constants';
@@ -13,7 +13,7 @@ import {
   FileText, Target, ListChecks, AlertTriangle, ShieldAlert,
   Star, CloudRain, Bell, Brain, Ban, MessageSquareX,
   TrendingUp, Users, GitBranch, Shuffle, Sparkles, CheckCircle2,
-  AlertOctagon
+  AlertOctagon, ChevronDown, ChevronUp
 } from 'lucide-react';
 
 // ===== Types =====
@@ -27,6 +27,44 @@ interface SectionHeaderProps {
   title: string;
   topOffset?: number;
 }
+
+interface ExpandableContentProps {
+  summary: string;
+  explanation: string;
+}
+
+// ===== Expandable Content Component =====
+const ExpandableContent: React.FC<ExpandableContentProps> = ({ summary, explanation }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div>
+      <div 
+        className="flex items-center justify-between cursor-pointer mb-2"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <p 
+          className="text-lg"
+          style={{ color: theme.colors.text }}
+        >
+          {summary}
+        </p>
+        {isExpanded ? 
+          <ChevronUp className="flex-shrink-0" size={20} /> : 
+          <ChevronDown className="flex-shrink-0" size={20} />
+        }
+      </div>
+      {isExpanded && (
+        <p
+          className="text-base text-gray-600 mt-2"
+          style={{ color: theme.colors.text }}
+        >
+          {explanation}
+        </p>
+      )}
+    </div>
+  );
+};
 
 // ===== Header Component =====
 const SectionHeader: React.FC<SectionHeaderProps> = ({ 
@@ -108,14 +146,14 @@ const SNAPSHOT_SECTIONS = {
     label: "Mental Habit",
     description: "The typical thought patterns of this type"
   },
-  fundamentalFlaw: {
+  characteristicVice: {
     icon: Ban,
-    label: "Fundamental Flaw",
+    label: "Characteristic Vice",
     description: "The core challenge this type faces"
   },
-  falseNarrative: {
+  innerStory: {
     icon: MessageSquareX,
-    label: "False Narrative",
+    label: "Inner Story",
     description: "The limiting belief this type tends to hold"
   },
   keyToGrowth: {
@@ -124,6 +162,16 @@ const SNAPSHOT_SECTIONS = {
     description: "Essential practices for this type's development"
   }
 };
+
+const renderArrayContent = (items: Array<{ summary: string; explanation: string }>) => (
+  <ul className="list-disc pl-6 space-y-4">
+    {items.map((item, idx) => (
+      <li key={idx} className="text-base">
+        <ExpandableContent summary={item.summary} explanation={item.explanation} />
+      </li>
+    ))}
+  </ul>
+);
 
 const SECTIONS = [
   {
@@ -167,26 +215,42 @@ const SECTIONS = [
             {/* Content Card */}
             <Card className="bg-white shadow-md border-0">
               <div className="p-6">
-                {Array.isArray(typeData[key as keyof typeof typeData]) ? (
-                  <ul className="list-disc pl-6 space-y-2">
-                    {(typeData[key as keyof typeof typeData] as string[]).map((item, idx) => (
-                      <li 
-                        key={idx} 
-                        className="text-base"
+              {(() => {
+                const data = typeData[key as keyof typeof typeData];
+                if (Array.isArray(data)) {
+                  return (
+                    <ul className="list-disc pl-6 space-y-2">
+                      {data.map((item: any, idx: number) => (
+                        <li 
+                          key={idx} 
+                          className="text-base"
+                          style={{ color: theme.colors.text }}
+                        >
+                          {item.summary}
+                        </li>
+                      ))}
+                    </ul>
+                  );
+                } else if (data && typeof data === 'object' && 'summary' in data) {
+                  return (
+                    <div>
+                      <p 
+                        className="text-lg mb-2"
                         style={{ color: theme.colors.text }}
                       >
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p 
-                    className="text-base"
-                    style={{ color: theme.colors.text }}
-                  >
-                    {typeData[key as keyof typeof typeData] as string}
-                  </p>
-                )}
+                        {data.summary}
+                      </p>
+                      <p
+                        className="text-base text-gray-600"
+                        style={{ color: theme.colors.text }}
+                      >
+                        {data.explanation}
+                      </p>
+                    </div>
+                  );
+                }
+                return null;
+              })()}
               </div>
             </Card>
           </div>

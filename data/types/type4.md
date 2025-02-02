@@ -2,25 +2,53 @@
 typeDigit: "4"
 typeNumber: "Four"
 typeName: "The Individualist"
-essenceQuality: "Depth"
-briefDescription: "Introspective and creative, Fours seek authenticity and meaning in their lives."
-topPriority: "To be authentic and unique."
+essenceQuality:
+ summary: "Depth"
+ explanation: "Fours have an innate connection to emotional and creative depth. They naturally perceive and experience life's profound dimensions, seeing beauty and meaning in both joy and melancholy. This capacity for depth allows them to understand and express the full range of human experience in uniquely authentic ways."
+briefDescription:
+ summary: "Introspective and creative, Fours seek authenticity and meaning in their lives."
+ explanation: "Fours possess a natural inclination toward self-exploration and creative expression. They are driven by a deep desire to understand themselves and their place in the world. Their introspective nature leads them to continually examine their experiences and emotions, seeking to discover and express their authentic truth through various forms of creative expression."
+topPriority:
+ summary: "To be authentic and unique."
+ explanation: "For Fours, authenticity isn't just about honesty—it's about fully embodying and expressing their unique identity. They prioritize staying true to their personal truth and emotional experience, often regardless of social conventions. This drive for authenticity shapes their choices, relationships, and how they present themselves to the world."
 secondaryDesires:
-  - "Want to express themselves"
-  - "to find meaning"
-  - "to connect deeply with others"
-biggestFear: "Of being insignificant or without personal identity."
+ - summary: "Want to express themselves"
+   explanation: "Fours feel a compelling need to give voice to their inner world through various forms of self-expression. This desire goes beyond simple communication—it's about translating their rich emotional landscape and unique perspectives into forms that others can understand and appreciate."
+ - summary: "to find meaning"
+   explanation: "The search for meaning is central to Fours' experience. They seek to understand the deeper significance of their experiences, emotions, and relationships. This isn't just intellectual curiosity—it's a fundamental need to make sense of their place in the world and their unique contribution to it."
+ - summary: "to connect deeply with others"
+   explanation: "Fours desire profound, meaningful connections that honor their emotional depth. They seek relationships where they can be fully seen and understood in their complexity, wanting others to appreciate both their uniqueness and their struggles."
+biggestFear:
+ summary: "Of being insignificant or without personal identity."
+ explanation: "Fours deeply fear losing their sense of personal identity or discovering they have no significant impact on the world. This isn't just about being forgotten—it's about the terror of being indistinct, unremarkable, or lacking a unique contribution to make. This core fear drives their quest for authenticity and significance."
 secondaryFears:
-  - "Of being misunderstood"
-  - "overlooked"
-  - "ordinary"
-atTheirBest: "Profoundly creative, emotionally deep, and uniquely authentic."
-underStress: "Overly self-absorbed, moody, and envious of others."
-wakeUpCall: "Believing they are fundamentally flawed or lacking something others have."
-mentalHabit: "Comparing themselves to others."
-fundamentalFlaw: "Envy"
-falseNarrative: "It’s not okay to be ordinary."
-keyToGrowth: "To embrace their inherent worth and cultivate gratitude, finding beauty in both themselves and the world around them."
+ - summary: "Of being misunderstood"
+   explanation: "For Fours, being misunderstood threatens their sense of identity and connection. They fear that others won't grasp the depth of their feelings or appreciate their unique perspective, leading to a profound sense of isolation and alienation."
+ - summary: "overlooked"
+   explanation: "Being overlooked represents more than social invisibility—it confirms Fours' fears about their significance. This fear can drive them to emphasize their uniqueness, sometimes at the cost of potential connections with others."
+ - summary: "ordinary"
+   explanation: "The fear of being ordinary strikes at the heart of Fours' identity. They equate being ordinary with being insignificant or lacking value, driving them to cultivate and emphasize their uniqueness, sometimes to the point of self-alienation."
+atTheirBest:
+ summary: "Profoundly creative, emotionally deep, and uniquely authentic."
+ explanation: "When healthy, Fours channel their emotional depth and sensitivity into genuine creativity and authentic self-expression. Their capacity for understanding human experience becomes a gift that helps others connect with their own depth. They find ways to transform their personal experiences into universal truths that resonate with others."
+underStress:
+ summary: "Overly self-absorbed, moody, and envious of others."
+ explanation: "When stressed, Fours can become lost in their emotions, withdrawing into self-absorption and melancholy. Their sensitivity to what's missing in their lives intensifies, leading to painful comparisons with others and mood swings. Their desire for authenticity can turn into a preoccupation with their differences and perceived deficiencies."
+wakeUpCall:
+ summary: "Believing they are fundamentally flawed or lacking something others have."
+ explanation: "When Fours find themselves fixating on their perceived deficiencies and idealizing what others have, it's a sign they're becoming unbalanced. This belief in their fundamental flaws can lead to a self-fulfilling prophecy of alienation and melancholy."
+mentalHabit:
+ summary: "Comparing themselves to others."
+ explanation: "Fours habitually compare themselves to others, often focusing on what they lack or what makes them different. This mental habit leads them to amplify their sense of deficiency while idealizing what others have, creating a painful cycle of longing and dissatisfaction."
+characteristicVice:
+ summary: "Envy"
+ explanation: "Fours' envy stems from their acute awareness of what they feel is missing in themselves or their lives. This isn't just wanting what others have—it's a deep-seated belief that others possess some essential quality they lack. This envy can drive them to perpetual longing and dissatisfaction, even when they achieve what they previously envied."
+innerStory:
+ summary: "It's not okay to be ordinary."
+ explanation: "Fours operate under the belief that being ordinary means being worthless. This inner story drives them to constantly seek and emphasize their uniqueness, sometimes at the cost of genuine connection and contentment. The pressure to be extraordinary can prevent them from appreciating the beauty in everyday experiences."
+keyToGrowth:
+ summary: "To embrace their inherent worth and cultivate gratitude, finding beauty in both themselves and the world around them."
+ explanation: "Growth for Fours involves learning to appreciate both their uniqueness and their commonality with others. By cultivating gratitude and recognizing their inherent worth, they can move beyond the cycle of longing and comparison. True growth comes from realizing that their depth and creativity don't depend on being different, but on being authentically themselves."
 ---
 
 [Type Summary]  
@@ -65,38 +93,39 @@ Fours are defined by their deep introspection and desire to connect with their i
 2. **Fours are always starving artists.** While Fours often gravitate toward creative fields, they aren’t confined to independent professions. Some thrive in corporate settings within creative roles (e.g., marketing) or industries (e.g., fashion). A Four with a Three wing may adapt well to larger organizations, while a Four with a Five wing might find fulfillment in professions that blend creativity with logic, such as architecture or computer science.  
 3. **All Fours “look different.”** Fours often express their individuality through personal style, preferring unique or niche brands over mainstream options. However, this doesn’t always manifest in physical appearance. Some Fours prefer subtle ways to stand out, such as owning a distinctive car or focusing on less visible expressions of uniqueness.  
 
-[Types That May Misidentify as This Type]  
-1. **Type 6: The Loyalist**  
-   Sixes and Fours share a tendency toward introspection, emotional depth, and authenticity, but their motivations differ:  
-   - **Shared Traits:** Deeply introspective, emotionally aware, and reflective.  
-   - **Key Differences:**  
-     - **Core Motivation:** Fours seek self-expression and individuality, while Sixes prioritize security and loyalty.  
-     - **Behavioral Differences:** Fours embrace emotional authenticity and creativity, while Sixes lean on relationships and preparation to manage anxiety.  
-     - **Stress Behavior:** Fours become emotionally volatile, while Sixes become anxious and overly dependent on support systems.  
+[Types That May Misidentify as This Type]
+• Type Six: The Loyalist
+  - Shared Traits:
+    • Deeply introspective, emotionally aware, and reflective
+  - Key Differences:
+    • Core Motivation: Fours seek self-expression and individuality, while Sixes prioritize security and loyalty
+    • Behavioral Differences: Fours embrace emotional authenticity and creativity, while Sixes lean on relationships and preparation to manage anxiety
+    • Stress Behavior: Fours become emotionally volatile, while Sixes become anxious and overly dependent on support systems
 
-2. **Other Types Resonating with Creativity**  
-   Many other types may identify with the creativity and emotional depth of Fours, but their motivations and approaches differ:  
-   - **Type 3:** Creativity is often a means of achieving success and recognition.  
-   - **Type 7:** Creativity serves as a form of exploration and fun.  
-   - **Type 1:** Creativity is often pursued as a way of improving or perfecting something.  
-   For Fours, creativity is a core part of their identity and self-expression, driven by their search for meaning and authenticity.  
+• Type Nine: The Peacemaker
+  - Shared Traits:
+    • Reflective, introspective, and focused on internal stability
+  - Key Differences:
+    • Core Motivation: Fours seek individuality and self-expression, while Nines prioritize peace and conflict avoidance
+    • Behavioral Differences: Fours actively pursue meaning and emotional authenticity, while Nines avoid conflict and prioritize harmony
+    • Stress Behavior: Fours retreat into emotional intensity, while Nines disengage and detach
 
-[This Type May Misidentify as...]  
-1. **Type 6: The Loyalist**  
-   Fours may misidentify as Sixes because of their introspection and emotional awareness.  
-   - **Shared Traits:** Reflective, emotionally aware, and focused on relationships.  
-   - **Key Differences:**  
-     - **Core Motivation:** Fours prioritize individuality, while Sixes focus on security and loyalty.  
-     - **Behavioral Differences:** Fours embrace emotional expression, while Sixes are more future-focused and anxious.  
-     - **Stress Behavior:** Fours become emotionally intense, while Sixes become reactive and insecure.  
+[This Type May Misidentify as...]
+• Type Six: The Loyalist
+  - Shared Traits:
+    • Reflective, emotionally aware, and focused on relationships
+  - Key Differences:
+    • Core Motivation: Fours prioritize individuality, while Sixes focus on security and loyalty
+    • Behavioral Differences: Fours embrace emotional expression, while Sixes are more future-focused and anxious
+    • Stress Behavior: Fours become emotionally intense, while Sixes become reactive and insecure
 
-2. **Type 9: The Peacemaker**  
-   Fours may misidentify as Nines due to their shared introspective and harmonious tendencies.  
-   - **Shared Traits:** Reflective, introspective, and focused on internal stability.  
-   - **Key Differences:**  
-     - **Core Motivation:** Fours seek individuality and self-expression, while Nines prioritize peace and conflict avoidance.  
-     - **Behavioral Differences:** Fours actively pursue meaning and emotional authenticity, while Nines avoid conflict and prioritize harmony.  
-     - **Stress Behavior:** Fours retreat into emotional intensity, while Nines disengage and detach.  
+• Type Nine: The Peacemaker
+  - Shared Traits:
+    • Reflective, introspective, and focused on internal stability
+  - Key Differences:
+    • Core Motivation: Fours seek individuality and self-expression, while Nines prioritize peace and conflict avoidance
+    • Behavioral Differences: Fours actively pursue meaning and emotional authenticity, while Nines avoid conflict and prioritize harmony
+    • Stress Behavior: Fours retreat into emotional intensity, while Nines disengage and detach
 
 [Wing Types]  
 - **Type 3: The Achiever Wing (4w3, aka "The Aristocrat"):** More image-conscious and driven to achieve recognition for their creativity.  

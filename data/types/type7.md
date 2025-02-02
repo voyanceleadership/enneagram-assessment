@@ -2,25 +2,53 @@
 typeDigit: "7"
 typeNumber: "Seven"
 typeName: "The Enthusiast"
-essenceQuality: "Joy"
-briefDescription: "Joyful and adventurous, Sevens are driven by a desire to experience life to its fullest."
-topPriority: "To pursue joy and avoid pain."
+essenceQuality:
+ summary: "Joy"
+ explanation: "Sevens have an inherent connection to genuine joy and delight. In their essence, they recognize that true joy comes from being fully present to all of life's experiences. This quality allows them to see possibilities and find authentic happiness even in life's ordinary moments."
+briefDescription:
+ summary: "Joyful and adventurous, Sevens are driven by a desire to experience life to its fullest."
+ explanation: "Sevens possess a natural enthusiasm for life's possibilities and experiences. Their adventurous spirit isn't just about seeking pleasure—it's about engaging with life's full potential and staying open to new opportunities. This orientation leads them to be naturally optimistic and capable of inspiring others to see life's possibilities."
+topPriority:
+ summary: "To pursue joy and avoid pain."
+ explanation: "For Sevens, the pursuit of joy is more than pleasure-seeking—it's about maintaining a positive outlook and keeping life's options open. They prioritize activities and experiences that maintain their sense of freedom and possibility, often moving quickly away from anything that feels limiting or painful. This drive shapes how they approach challenges and make decisions."
 secondaryDesires:
-  - "To feel free"
-  - "to have fun"
-  - "to avoid limits"
-biggestFear: "Of being deprived or trapped in emotional pain."
+ - summary: "To feel free"
+   explanation: "Sevens' desire for freedom runs deep—it's about maintaining the ability to choose their experiences and direct their own lives. This freedom isn't just physical; it's about keeping their options open and avoiding any situation that feels constraining to their spirit or choices."
+ - summary: "to have fun"
+   explanation: "The desire for fun reflects Sevens' natural ability to find excitement and pleasure in life. It's more than simple entertainment—it's about maintaining a positive engagement with life and finding ways to make even ordinary experiences more enjoyable and stimulating."
+ - summary: "to avoid limits"
+   explanation: "Sevens seek to transcend limitations of all kinds—physical, emotional, and circumstantial. This desire stems from their need to keep life's possibilities open and avoid feeling trapped. They often become skilled at finding creative ways around apparent constraints."
+biggestFear:
+ summary: "Of being deprived or trapped in emotional pain."
+ explanation: "At their core, Sevens fear being caught in inescapable pain or deprivation. This isn't just about avoiding physical discomfort—it's about the terror of being trapped in emotional suffering without escape. This fear drives them to maintain multiple options and escape routes in all situations."
 secondaryFears:
-  - "Of missing out"
-  - "being stuck"
-  - "losing freedom"
-atTheirBest: "Optimistic, spontaneous, and imaginative, with the ability to focus deeply and inspire others."
-underStress: "Frustrated, impulsive, and overly scattered, constantly seeking distractions to avoid discomfort."
-wakeUpCall: "Believing they must avoid pain at all costs to maintain happiness."
-mentalHabit: "Anticipating and idealizing the future."
-fundamentalFlaw: "Gluttony"
-falseNarrative: "It's not okay to depend on anyone or anything to feel satisfied."
-keyToGrowth: "To embrace stillness, process difficult emotions, and find contentment in the present."
+ - summary: "Of missing out"
+   explanation: "The fear of missing out (FOMO) for Sevens goes beyond social anxiety—it's about potentially missing life-enriching experiences. This fear can drive them to overcommit and try to keep too many options open at once."
+ - summary: "being stuck"
+   explanation: "The fear of being stuck represents more than physical constraints—it's about losing the freedom to change their circumstances or experience new things. This can lead to difficulty committing or following through on long-term plans."
+ - summary: "losing freedom"
+   explanation: "Sevens deeply fear any situation that might limit their options or force them to confront uncomfortable realities. This fear of lost freedom can make it challenging to accept necessary limitations or commit to specific paths."
+atTheirBest:
+ summary: "Optimistic, spontaneous, and imaginative, with the ability to focus deeply and inspire others."
+ explanation: "When healthy, Sevens channel their enthusiasm and optimism into productive ventures while maintaining the ability to be present with all experiences, including challenging ones. Their natural joy becomes contagious, inspiring others to see possibilities while remaining grounded in reality. They develop the capacity to find depth and satisfaction in focused endeavors."
+underStress:
+ summary: "Frustrated, impulsive, and overly scattered, constantly seeking distractions to avoid discomfort."
+ explanation: "When stressed, Sevens' need for positive experiences can become frantic and escapist. Their natural spontaneity can devolve into impulsivity, and their desire for options can lead to scattered attention and inability to follow through. They may compulsively seek new experiences to avoid dealing with current challenges."
+wakeUpCall:
+ summary: "Believing they must avoid pain at all costs to maintain happiness."
+ explanation: "When Sevens find themselves unable to sit with any discomfort or negative feelings, it's a sign they're becoming unbalanced. This compulsive avoidance of pain indicates they're losing touch with their ability to find genuine joy through engaging with all of life's experiences."
+mentalHabit:
+ summary: "Anticipating and idealizing the future."
+ explanation: "Sevens' minds habitually plan future activities and experiences, often idealizing what's next while devaluing what's present. This mental habit of constantly looking ahead can make it difficult to fully engage with current experiences or process uncomfortable emotions."
+characteristicVice:
+ summary: "Gluttony"
+ explanation: "Sevens' gluttony manifests as an insatiable appetite for positive experiences and options. This isn't just about physical excess—it's about an underlying belief that more is always better and that satisfaction lies in the next experience rather than the present moment."
+innerStory:
+ summary: "It's not okay to depend on anyone or anything to feel satisfied."
+ explanation: "Sevens operate under the belief that they must maintain complete independence and keep all options open to be happy. This inner story drives them to avoid commitment and dependency, making it difficult to develop deep satisfaction through sustained focus and connection."
+keyToGrowth:
+ summary: "To embrace stillness, process difficult emotions, and find contentment in the present."
+ explanation: "Growth for Sevens involves learning to find joy and satisfaction in the present moment, even when it includes discomfort or limitation. This means developing the capacity to stay with experiences long enough to discover their depth and value. True growth comes from recognizing that genuine satisfaction often requires engaging with all aspects of life, including its challenges and limitations."
 ---
 
 [Type Summary]
@@ -67,58 +95,59 @@ Sevens are natural optimists and adventurers, constantly seeking out new opportu
 3. **Sevens are always happy-go-lucky.**  
    While Sevens are often associated with joy and optimism, their high expectations can lead to frustration when reality doesn’t meet their ideals. They can become irritable or restless when things feel slow or disappointing, revealing the tension beneath their cheerful exterior.
 
-[Types That Commonly Misidentify as This Type]
-1. **Type 2: The Helper**  
-   Twos may misidentify as Sevens due to their shared warmth, optimism, and relational focus.  
-   - **Shared Traits:**  
-     - Friendly, engaging, and people-focused.  
-     - Enjoy making others feel good and appreciated.  
-     - Naturally upbeat and outgoing.  
-   - **Key Differences:**  
-     - **Core Motivation:** Twos seek connection and love through relationships, while Sevens are driven by the pursuit of joy and freedom.  
-     - **Behavioral Differences:** Twos prioritize relationships and emotional closeness, while Sevens focus on excitement and avoiding limitations.  
-     - **Stress Behavior:** Twos become clingy and people-pleasing, while Sevens withdraw and seek distractions.  
+[Types That May Misidentify as This Type]
+• Type Two: The Helper
+  - Shared Traits:
+    • Friendly, engaging, and people-focused
+    • Enjoy making others feel good and appreciated
+    • Naturally upbeat and outgoing
+  - Key Differences:
+    • Core Motivation: Twos seek connection and love through relationships, while Sevens are driven by the pursuit of joy and freedom
+    • Behavioral Differences: Twos prioritize relationships and emotional closeness, while Sevens focus on excitement and avoiding limitations
+    • Stress Behavior: Twos become clingy and people-pleasing, while Sevens withdraw and seek distractions
 
-2. **Type 3: The Achiever**  
-   Threes may misidentify as Sevens due to their shared assertiveness, ambition, and energy.  
-   - **Shared Traits:**  
-     - Productive and action-oriented.  
-     - Enjoy achieving goals and maintaining a busy lifestyle.  
-     - Appear confident and enthusiastic.  
-   - **Key Differences:**  
-     - **Core Motivation:** Threes seek validation and recognition through success, while Sevens prioritize experiences and personal freedom.  
-     - **Behavioral Differences:** Threes adapt their actions to align with others’ expectations, while Sevens focus on pursuing their own interests and happiness.  
-     - **Stress Behavior:** Threes become image-conscious and overworked, while Sevens become scattered and avoidant.  
+• Type Three: The Achiever
+  - Shared Traits:
+    • Productive and action-oriented
+    • Enjoy achieving goals and maintaining a busy lifestyle
+    • Appear confident and enthusiastic
+  - Key Differences:
+    • Core Motivation: Threes seek validation and recognition through success, while Sevens prioritize experiences and personal freedom
+    • Behavioral Differences: Threes adapt their actions to align with others’ expectations, while Sevens focus on pursuing their own interests and happiness
+    • Stress Behavior: Threes become image-conscious and overworked, while Sevens become scattered and avoidant
 
-[This Type May Misidentify As...]
-Sevens may misidentify as 2s, 3s, 4s, or 9s due to shared traits and overlapping motivations.  
-1. **Type 2: The Helper**  
-   - **Shared Traits:** Upbeat, positive, and caring about others.  
-   - **Key Differences:**  
-     - **Core Motivation:** Twos seek to be loved and needed, while Sevens prioritize freedom and joy.  
-     - **Behavioral Differences:** Twos focus on emotional connection, while Sevens avoid emotional entanglements that limit their freedom.  
-     - **Stress Behavior:** Twos become clingy, while Sevens avoid commitments and distract themselves.  
+[This Type May Misidentify as...]
+• Type Two: The Helper
+  - Shared Traits:
+    • Upbeat, positive, and caring about others
+  - Key Differences:
+    • Core Motivation: Twos seek to be loved and needed, while Sevens prioritize freedom and joy
+    • Behavioral Differences: Twos focus on emotional connection, while Sevens avoid emotional entanglements that limit their freedom
+    • Stress Behavior: Twos become clingy, while Sevens avoid commitments and distract themselves
 
-2. **Type 3: The Achiever**  
-   - **Shared Traits:** Energetic, ambitious, and goal-driven.  
-   - **Key Differences:**  
-     - **Core Motivation:** Threes seek admiration and external validation, while Sevens pursue freedom and new experiences.  
-     - **Behavioral Differences:** Threes adapt to fit others’ expectations, while Sevens pursue their personal passions.  
-     - **Stress Behavior:** Threes become overly competitive, while Sevens avoid challenges that seem limiting.  
+• Type Three: The Achiever
+  - Shared Traits:
+    • Energetic, ambitious, and goal-driven
+  - Key Differences:
+    • Core Motivation: Threes seek admiration and external validation, while Sevens pursue freedom and new experiences
+    • Behavioral Differences: Threes adapt to fit others’ expectations, while Sevens pursue their personal passions
+    • Stress Behavior: Threes become overly competitive, while Sevens avoid challenges that seem limiting
 
-3. **Type 4: The Individualist**  
-   - **Shared Traits:** Creative and introspective.  
-   - **Key Differences:**  
-     - **Core Motivation:** Fours seek authenticity and depth, while Sevens focus on variety and new opportunities.  
-     - **Behavioral Differences:** Fours immerse themselves in emotional experiences, while Sevens avoid emotional heaviness.  
-     - **Stress Behavior:** Fours withdraw into melancholy, while Sevens escape into distractions.  
+• Type Four: The Individualist
+  - Shared Traits:
+    • Creative and introspective
+  - Key Differences:
+    • Core Motivation: Fours seek authenticity and depth, while Sevens focus on variety and new opportunities
+    • Behavioral Differences: Fours immerse themselves in emotional experiences, while Sevens avoid emotional heaviness
+    • Stress Behavior: Fours withdraw into melancholy, while Sevens escape into distractions
 
-4. **Type 9: The Peacemaker**  
-   - **Shared Traits:** Positive, adaptable, and easygoing.  
-   - **Key Differences:**  
-     - **Core Motivation:** Nines seek peace and harmony, while Sevens prioritize excitement and avoiding pain.  
-     - **Behavioral Differences:** Nines avoid conflict to maintain inner peace, while Sevens avoid discomfort to maintain happiness.  
-     - **Stress Behavior:** Nines disengage and become passive, while Sevens become scattered and impulsive.  
+• Type Nine: The Peacemaker
+  - Shared Traits:
+    • Positive, adaptable, and easygoing
+  - Key Differences:
+    • Core Motivation: Nines seek peace and harmony, while Sevens prioritize excitement and avoiding pain
+    • Behavioral Differences: Nines avoid conflict to maintain inner peace, while Sevens avoid discomfort to maintain happiness
+    • Stress Behavior: Nines disengage and become passive, while Sevens become scattered and impulsive
 
 [Wing Types]  
 - **Type 6: The Loyalist Wing (7w6, aka "The Entertainer"):** More loyal, collaborative, and cautious, balancing spontaneity with careful planning.  
