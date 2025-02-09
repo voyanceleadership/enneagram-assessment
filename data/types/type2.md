@@ -78,13 +78,28 @@ Twos are warm, empathetic, and highly relational individuals who thrive on meani
 - You prioritize your own needs before those of others.
 
 [Healthy Level of Development]
-- Warm, empathetic, and selfless, Twos provide genuine care and support to those around them.
+- Nurturing:
+  At their healthiest, Twos express genuine care and support without expectation of return. Their natural empathy becomes a source of true connection, allowing them to give freely while maintaining healthy boundaries.
+- Self-Aware:
+  They develop clear insight into their own needs and feelings. Rather than focusing solely on others, they maintain a balanced awareness of both self and others' needs, leading to authentic relationships.
+- Empowering:
+  Their desire to help transforms into empowering others. Instead of creating dependency, they support others in developing their own strength and autonomy while maintaining meaningful connections.
 
 [Average Level of Development]
-- Overly focused on the needs of others, Twos may neglect their own well-being and struggle with boundaries.
+- People-Pleasing:
+  Their natural helpfulness becomes focused on gaining approval. They may override their own needs to accommodate others, often struggling to say no or set boundaries.
+- Pride-Seeking:
+  They begin to take pride in being needed and may manipulate situations to feel indispensable. Their self-worth becomes increasingly tied to their ability to help others.
+- Overinvolved:
+  Their caring nature leads to excessive involvement in others' lives. They may give unsolicited advice or help, sometimes crossing boundaries in their desire to be needed.
 
 [Unhealthy Level of Development]
-- Dependent on being needed, Twos may become manipulative, intrusive, or overly possessive in relationships.
+- Manipulative:
+  Their helping becomes a means of control. They may use guilt or emotional leverage to maintain relationships, keeping track of what they've done for others.
+- Possessive:
+  They become overly attached to those they help. Their fear of abandonment leads to clingy or controlling behavior, making it difficult for others to maintain healthy boundaries.
+- Martyred:
+  They see themselves as perpetually self-sacrificing victims. Their unmet needs emerge as bitter resentment, yet they continue to deny their own needs while dramatically highlighting their sacrifices.
 
 [Common Misconceptions About This Type]
 1. **Twos are typically women.** Western society has categorized the attributes associated with Twos as “feminine,” leading to women being socialized to emulate these traits. However, these attributes are personality-driven, not gender-specific.
@@ -130,12 +145,12 @@ Twos are warm, empathetic, and highly relational individuals who thrive on meani
     • Stress Behavior: Twos may become clingy, while Nines become disengaged
 
 [Wing Types]  
-- **Type 1: The Reformer Wing (2w1, aka "The Servant"):** Focused on helping with a sense of duty and responsibility.  
-- **Type 3: The Achiever Wing (2w3, aka "The Host/Hostess"):** More image-conscious and focused on charm and presentation.  
+Type 1: The Reformer Wing (2w1, aka "The Servant"): Focused on helping with a sense of duty and responsibility.  
+Type 3: The Achiever Wing (2w3, aka "The Host/Hostess"): More image-conscious and focused on charm and presentation.  
 
 [Line Types]  
-- **Type 4: The Individualist:** Access to emotional depth and creativity.  
-- **Type 8: The Challenger:** Access to assertiveness and strength.  
+Type 4: The Individualist: Access to emotional depth and creativity.  
+Type 8: The Challenger: Access to assertiveness and strength.  
 
 [Growth Practices]
 1. Practice self-care and learn to prioritize your own needs.

@@ -77,13 +77,28 @@ Threes are ambitious, adaptable, and results-driven individuals who are often se
 - You’re not particularly goal-oriented or competitive.
 
 [Healthy Level of Development]
-- Confident, inspiring, and motivating, Threes are role models for excellence and leadership.
+- Authentic:
+  At their healthiest, Threes integrate their drive for achievement with their true self. They pursue goals that align with their genuine values rather than external expectations, finding satisfaction in authentic accomplishment.
+- Motivating:
+  Their natural enthusiasm and confidence becomes truly inspiring to others. Rather than competing, they use their energy to elevate those around them, creating environments where everyone can succeed.
+- Self-Accepting:
+  They develop the ability to value themselves apart from their achievements. Their self-worth becomes grounded in who they are rather than what they accomplish.
 
 [Average Level of Development]
-- Highly driven and image-conscious, Threes focus on meeting expectations and achieving success.
+- Image-Conscious:
+  Their focus shifts toward maintaining a successful image. They become increasingly concerned with others' perceptions, adapting their behavior to match what they believe will earn approval.
+- Competitive:
+  Their drive for success becomes more focused on outperforming others. They may view life as a constant competition, measuring their worth through comparisons with others.
+- Achievement-Driven:
+  They become overly focused on goals and productivity. While highly effective, they may struggle to slow down or enjoy the present moment, always pushing toward the next achievement.
 
 [Unhealthy Level of Development]
-- Overly competitive and disconnected from their authentic self, Threes may engage in deceit or manipulation to maintain their image.
+- Deceptive:
+  Their concern for image deteriorates into active deception. They may fabricate or exaggerate accomplishments, unable to distinguish between their true self and their crafted image.
+- Exploitative:
+  Their pursuit of success becomes ruthless. They may disregard others' feelings and needs, seeing people as either obstacles or tools for achieving their goals.
+- Self-Destructive:
+  Their relentless drive pushes them toward burnout. They may engage in increasingly risky or unethical behavior to maintain their image of success, even as their true self crumbles.
 
 [Common Misconceptions About This Type]
 1. **All Threes are charming.** While some Threes are naturally charismatic, this depends on their level of social skill and how much emphasis they place on building relationships. Not all Threes prioritize charm as a path to success.
@@ -150,12 +165,12 @@ Threes are ambitious, adaptable, and results-driven individuals who are often se
     • Stress Behavior: Threes fixate on their public image, while Sevens scatter their focus to avoid negative emotions
 
 [Wing Types]  
-- **Type 2: The Helper Wing (3w2, aka "The Charmer"):** More relational and people-oriented, focusing on charm and connection.  
-- **Type 4: The Individualist Wing (3w4, aka "The Professional"):** More introspective and creative, focusing on unique self-expression.  
+Type 2: The Helper Wing (3w2, aka "The Charmer"): More relational and people-oriented, focusing on charm and connection.  
+Type 4: The Individualist Wing (3w4, aka "The Professional"): More introspective and creative, focusing on unique self-expression.  
 
 [Line Types]  
-- **Type 6: The Loyalist:** Access to loyalty and collaboration.  
-- **Type 9: The Peacemaker:** Access to calmness and groundedness.  
+Type 6: The Loyalist: Access to loyalty and collaboration.  
+Type 9: The Peacemaker: Access to calmness and groundedness.  
 
 [Growth Practices]
 1. Reflect on your motivations and reconnect with your authentic self.

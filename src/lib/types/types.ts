@@ -1,7 +1,13 @@
+// types.ts
 import { z } from 'zod';
 
 const SummaryExplanationSchema = z.object({
   summary: z.string(),
+  explanation: z.string()
+});
+
+const LevelTraitSchema = z.object({
+  trait: z.string(),
   explanation: z.string()
 });
 
@@ -14,6 +20,12 @@ export interface MisidentificationType {
     stress: string;
   };
 }
+
+// Define the schema for wing data
+const WingDataSchema = z.object({
+  description: z.string(),
+  alias: z.string()
+});
 
 export const TypeDataSchema = z.object({
   typeDigit: z.string(),
@@ -37,9 +49,9 @@ export const TypeDataSchema = z.object({
     longDescription: z.string(),
     mightBeType: z.array(z.string()),
     probablyNotType: z.array(z.string()),
-    healthyLevel: z.string(),
-    averageLevel: z.string(),
-    unhealthyLevel: z.string(),
+    healthyLevel: z.array(LevelTraitSchema),
+    averageLevel: z.array(LevelTraitSchema),
+    unhealthyLevel: z.array(LevelTraitSchema),
     misconceptions: z.array(z.string()),
     typesMisidentifyingAsThis: z.array(z.object({
       type: z.string(),
@@ -59,7 +71,7 @@ export const TypeDataSchema = z.object({
         stress: z.string()
       })
     })),
-    wingTypes: z.record(z.string()),
+    wingTypes: z.record(WingDataSchema),
     lineTypes: z.record(z.string()),
     growthPractices: z.array(z.string()),
     famousExamples: z.array(z.string())
@@ -128,13 +140,22 @@ export interface TypeData {
     longDescription: string;
     mightBeType: string[];
     probablyNotType: string[];
-    healthyLevel: string;
-    averageLevel: string;
-    unhealthyLevel: string;
+    healthyLevel: Array<{
+      trait: string;
+      explanation: string;
+    }>;
+    averageLevel: Array<{
+      trait: string;
+      explanation: string;
+    }>;
+    unhealthyLevel: Array<{
+      trait: string;
+      explanation: string;
+    }>;
     misconceptions: string[];
     typesMisidentifyingAsThis: MisidentificationType[];
     thisTypeMayMisidentifyAs: MisidentificationType[];
-    wingTypes: Record<string, string>;
+    wingTypes: Record<string, { description: string; alias: string }>;
     lineTypes: Record<string, string>;
     growthPractices: string[];
     famousExamples: string[];

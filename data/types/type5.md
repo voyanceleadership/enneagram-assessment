@@ -78,16 +78,28 @@ Fives are defined by their desire to understand the world and gain mastery over 
 - You feel more comfortable in emotional or social situations than intellectual ones.  
 
 [Healthy Level of Development]
-- Deeply insightful and innovative, with a mastery of their interests.  
-- Share their knowledge generously and engage meaningfully with others.  
+- Insightful:
+  At their healthiest, Fives transform their intellectual curiosity into profound wisdom. Their deep understanding becomes a gift they can share with others, moving beyond pure theory to practical application.
+- Objective:
+  They develop the ability to observe and analyze while remaining engaged. Their detachment becomes a tool for clear perception rather than an escape from reality.
+- Pioneering:
+  Their extensive knowledge leads to groundbreaking innovations. They synthesize complex information into new insights, contributing unique perspectives that advance understanding.
 
 [Average Level of Development]
-- Focused and knowledgeable but prone to detachment.  
-- Avoid emotional vulnerability and over-intellectualize their experiences.  
+- Detached:
+  Their natural objectivity becomes emotional distance. While they remain curious about the world, they may struggle to connect with others or engage directly with experiences.
+- Intellectualizing:
+  They retreat into the world of ideas and analysis. They may substitute thinking about life for living it, using knowledge as a buffer against emotional engagement.
+- Minimizing:
+  They become increasingly protective of their resources and energy. They may limit their needs and connections, believing self-sufficiency is crucial for survival.
 
 [Unhealthy Level of Development]
-- Isolated and overly withdrawn, feeling incapable of handling the demands of life.  
-- Become paranoid, hoarding knowledge and resources to feel safe.  
+- Isolated:
+  Their detachment becomes extreme isolation. They may completely withdraw from others, seeing the world as hostile and overwhelming.
+- Nihilistic:
+  Their analytical nature turns destructively cynical. They may reject all meaning or value, seeing everything as ultimately empty or pointless.
+- Schizoid:
+  Their disconnect from reality becomes severe. They may lose touch with physical needs and practical concerns, retreating entirely into their mental world.
 
 [Common Misconceptions About This Type]
 1. **Fives are the smartest type.**  
@@ -157,12 +169,12 @@ Fives are defined by their desire to understand the world and gain mastery over 
     • Stress Behavior: Nines become complacent, while Fives become overly private and detached
 
 [Wing Types]  
-- **Type 4: The Individualist Wing (5w4, aka "The Iconoclast"):** More introspective, creative, and emotionally attuned, blending intellectual curiosity with a desire for self-expression.  
-- **Type 6: The Loyalist Wing (5w6, aka "The Problem Solver"):** More focused on security, logical analysis, and planning, blending intellectual depth with practicality.  
+Type 4: The Individualist Wing (5w4, aka "The Iconoclast"): More introspective, creative, and emotionally attuned, blending intellectual curiosity with a desire for self-expression.  
+Type 6: The Loyalist Wing (5w6, aka "The Problem Solver"): More focused on security, logical analysis, and planning, blending intellectual depth with practicality.  
 
 [Line Types]  
-- **Type 7: The Enthusiast:** Adds spontaneity and enthusiasm, encouraging exploration beyond intellectual boundaries.  
-- **Type 8: The Challenger:** Adds assertiveness and decisiveness, enabling Fives to take action on their ideas.  
+Type 7: The Enthusiast: Adds spontaneity and enthusiasm, encouraging exploration beyond intellectual boundaries.  
+Type 8: The Challenger: Adds assertiveness and decisiveness, enabling Fives to take action on their ideas.  
 
 [Growth Practices]
 1. Balance intellectual pursuits with emotional connection by investing time in meaningful relationships.  

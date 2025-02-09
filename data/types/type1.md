@@ -79,13 +79,28 @@ Ones are principled, purposeful, self-controlled, and perfectionistic. They stri
 - You prefer spontaneity to planning.
 
 [Healthy Level of Development]
-- Accepting and objective, Ones inspire others with their wisdom and discernment.
+- Wise:
+  At their healthiest, Ones' natural discernment transforms into true wisdom. They can see what needs improvement while maintaining perspective and accepting natural imperfection. Their strong principles become a foundation for balanced judgment rather than rigid rules.
+- Discerning:
+  Their ability to distinguish right from wrong evolves into nuanced understanding. Rather than seeing things in black and white, they recognize the complexity in situations and can make balanced assessments that account for context and human nature.
+- Accepting:
+  They develop a deep acceptance of reality, including imperfection. This doesn't mean lowering their standards, but rather understanding that the path to improvement includes accepting things as they are before working to change them.
 
 [Average Level of Development]
-- Orderly and organized, Ones focus on maintaining high standards and fixing problems.
+- Conscientious:
+  Their strong sense of responsibility, while admirable, can become consuming. They focus intensely on doing things correctly and meeting their high standards, sometimes at the expense of flexibility or personal well-being.
+- Perfectionistic:
+  Their desire for improvement becomes more rigid. They may get caught up in details and "shoulds," measuring everything against their internal standard of perfection. While their work is often excellent, they struggle to feel satisfied with results.
+- Critical:
+  Their ability to see what needs improvement shifts toward finding fault. They may become overly focused on correcting errors and pointing out problems, both in themselves and others.
 
 [Unhealthy Level of Development]
-- Judgmental and inflexible, Ones become overly critical and rigid in their pursuit of perfection.
+- Judgmental:
+  Their discernment deteriorates into harsh judgment. They become unable to see past flaws and imperfections, condemning themselves and others for failing to meet impossible standards.
+- Inflexible:
+  Their principles become absolutist rules. They resist any deviation from their way of doing things, seeing compromise as a moral failure rather than a practical necessity.
+- Self-Righteous:
+  Their conviction about what's right becomes an inflated sense of moral superiority. They may see themselves as the only ones who truly care about standards and ethics, leading to bitterness toward others who seem less conscientious.
 
 [Common Misconceptions About This Type]
 1. **All Ones are social crusaders.** While many social crusaders are Ones, many Ones are not social crusaders. What all Ones have in common is a desire to fix problems or issues and help things reach their potential, but this can show up in many forms. Some Ones focus their attention on social problems, while others focus on other aspects of life such as the quality of their work, improving themselves, or fixing problems that feel important to them.
@@ -160,13 +175,13 @@ Ones are principled, purposeful, self-controlled, and perfectionistic. They stri
     • Behavioral Differences: Ones are measured, Eights are bold and unafraid of conflict
     • Stress Behavior: Ones become overly critical, Eights assert control to avoid vulnerability
 
-[Wing Types]  
-- **Type 9: The Peacemaker Wing (1w9, aka "The Idealist"):** More withdrawn, objective, and focused on principles.  
-- **Type 2: The Helper Wing (1w2, aka "The Advocate"):** More interpersonal, empathetic, and inclined to help others.  
+[Wing Types]
+Type 9: The Peacemaker Wing (1w9, aka "The Idealist"): More withdrawn, objective, and focused on principles.  
+Type 2: The Helper Wing (1w2, aka "The Advocate"): More interpersonal, empathetic, and inclined to help others.  
 
 [Line Types]  
-- **Type 4: The Individualist:** Access to creativity and emotional depth.  
-- **Type 7: The Enthusiast:** Access to playfulness and optimism. 
+Type 4: The Individualist: Access to creativity and emotional depth.  
+Type 7: The Enthusiast: Access to playfulness and optimism.
 
 [Growth Practices]
 1. Practice self-compassion by accepting your imperfections as part of being human.

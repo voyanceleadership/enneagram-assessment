@@ -77,13 +77,28 @@ Sevens are natural optimists and adventurers, constantly seeking out new opportu
 - You prefer to reflect deeply before taking action.  
 
 [Healthy Level of Development]
-- Radiantly optimistic and imaginative, Sevens inspire others to embrace life fully and explore its endless possibilities.
+- Joyful:
+  At their healthiest, Sevens experience deep, authentic joy rather than superficial pleasure. They find genuine satisfaction in their experiences while remaining grounded and present.
+- Focused:
+  Their abundant energy becomes channeled into meaningful pursuits. They can commit to long-term goals while maintaining their enthusiasm and innovative spirit.
+- Grateful:
+  Their appreciation for life deepens beyond mere excitement. They find contentment in simple pleasures and maintain optimism while accepting life's full range of experiences.
 
 [Average Level of Development]
-- Enthusiastic and fun-loving, Sevens seek stimulation and variety but may struggle with follow-through or overcommitting.
+- Scattered:
+  Their enthusiasm becomes dispersed across too many interests. They may struggle to follow through, constantly chasing new experiences before completing current projects.
+- Pleasure-Seeking:
+  Their natural joy shifts toward escapist tendencies. They may avoid discomfort by pursuing constant stimulation and entertainment, missing deeper meaning.
+- Impulsive:
+  Their spontaneity becomes excessive. They may act without considering consequences, making commitments they can't keep while avoiding responsibility.
 
 [Unhealthy Level of Development]
-- Impulsive and avoidant, Sevens become scattered and restless, relying on distractions to escape discomfort or dissatisfaction.
+- Manic:
+  Their need for stimulation becomes desperate and compulsive. They may engage in reckless behavior to escape pain or boredom, unable to find satisfaction.
+- Escapist:
+  Their avoidance of pain becomes extreme. They may use any means to maintain a positive state, denying serious problems that need attention.
+- Self-Destructive:
+  Their pursuit of pleasure becomes dangerous. They may engage in increasingly risky behavior, unable to stop even when facing severe consequences.
 
 [Common Misconceptions About This Type]
 1. **Sevens can’t be serious.**  
@@ -150,12 +165,12 @@ Sevens are natural optimists and adventurers, constantly seeking out new opportu
     • Stress Behavior: Nines disengage and become passive, while Sevens become scattered and impulsive
 
 [Wing Types]  
-- **Type 6: The Loyalist Wing (7w6, aka "The Entertainer"):** More loyal, collaborative, and cautious, balancing spontaneity with careful planning.  
-- **Type 8: The Challenger Wing (7w8, aka "The Realist"):** More assertive, driven, and grounded, combining adventurousness with boldness.  
+Type 6: The Loyalist Wing (7w6, aka "The Entertainer"): More loyal, collaborative, and cautious, balancing spontaneity with careful planning.  
+Type 8: The Challenger Wing (7w8, aka "The Realist"): More assertive, driven, and grounded, combining adventurousness with boldness.  
 
 [Line Types]  
-- **Type 1: The Reformer:** Access to discipline, structure, and a focus on improvement.  
-- **Type 5: The Investigator:** Access to intellectual depth, curiosity, and a love for learning.  
+Type 1: The Reformer: Access to discipline, structure, and a focus on improvement.  
+Type 5: The Investigator: Access to intellectual depth, curiosity, and a love for learning.  
 
 [Growth Practices]
 1. Practice staying present in the moment, even when it feels uncomfortable or mundane.  

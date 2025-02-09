@@ -25,20 +25,21 @@ export class SectionParser {
       }
     };
     let currentSection = '';
-
+  
     for (const line of lines) {
       const trimmed = line.trim();
-      console.log(`Processing misidentification line: "${trimmed}"`);
+      console.log(`Processing line: "${trimmed}"`);
       
-      if (trimmed.match(/^• Type \d+:/)) {
+      // Look for type header with bullet point
+      if (trimmed.startsWith('• Type')) {
         // If we already have a type in progress, save it
         if (currentType.type) {
-          console.log(`Adding type: ${JSON.stringify(currentType)}`);
+          console.log(`Adding completed type: ${JSON.stringify(currentType)}`);
           types.push({...currentType});
         }
-        // Start a new type
+        // Start a new type, preserving the full type string (e.g., "• Type 3: The Achiever")
         currentType = {
-          type: trimmed,
+          type: trimmed.substring(2), // Remove the bullet point
           sharedTraits: [],
           differences: {
             coreMotivation: '',
@@ -46,18 +47,21 @@ export class SectionParser {
             stress: ''
           }
         };
-        console.log(`Started new type: ${trimmed}`);
+        console.log(`Started new type: ${currentType.type}`);
       } 
-      else if (trimmed === '- Shared Traits:') {
+      // Look for section headers
+      else if (trimmed.startsWith('- Shared Traits')) {
         currentSection = 'sharedTraits';
         console.log('Switched to shared traits section');
       } 
-      else if (trimmed === '- Key Differences:') {
+      else if (trimmed.startsWith('- Key Differences')) {
         currentSection = 'differences';
         console.log('Switched to differences section');
       } 
+      // Handle bulleted items
       else if (trimmed.startsWith('•')) {
-        const trait = trimmed.replace(/^•\s*/, '').trim();
+        const trait = trimmed.substring(1).trim(); // Remove the bullet point
+        console.log(`Processing trait: ${trait}`);
         
         if (currentSection === 'sharedTraits') {
           currentType.sharedTraits.push(trait);
@@ -65,28 +69,28 @@ export class SectionParser {
         } 
         else if (currentSection === 'differences') {
           if (trait.startsWith('Core Motivation:')) {
-            currentType.differences.coreMotivation = trait.substring(15).trim();
-            console.log(`Added core motivation: ${trait.substring(15).trim()}`);
+            currentType.differences.coreMotivation = trait.substring('Core Motivation:'.length).trim();
+            console.log(`Added core motivation: ${currentType.differences.coreMotivation}`);
           } 
           else if (trait.startsWith('Behavioral Differences:')) {
-            currentType.differences.behavioral = trait.substring(22).trim();
-            console.log(`Added behavioral differences: ${trait.substring(22).trim()}`);
+            currentType.differences.behavioral = trait.substring('Behavioral Differences:'.length).trim();
+            console.log(`Added behavioral difference: ${currentType.differences.behavioral}`);
           } 
           else if (trait.startsWith('Stress Behavior:')) {
-            currentType.differences.stress = trait.substring(15).trim();
-            console.log(`Added stress behavior: ${trait.substring(15).trim()}`);
+            currentType.differences.stress = trait.substring('Stress Behavior:'.length).trim();
+            console.log(`Added stress behavior: ${currentType.differences.stress}`);
           }
         }
       }
     }
-
-    // Add the last type if it exists
+  
+    // Don't forget to add the last type
     if (currentType.type) {
       console.log(`Adding final type: ${JSON.stringify(currentType)}`);
       types.push({...currentType});
     }
-
-    console.log(`Parsed ${types.length} misidentification types`);
+  
+    console.log(`Parsed ${types.length} types:`, types);
     return types;
   }
 
@@ -110,6 +114,44 @@ export class SectionParser {
     const result = trimmed.replace(/^-\s/, '').replace(/^\d+\.\s/, '').trim();
     console.log(`Processed list item: "${result}"`);
     return result;
+  }
+
+  private parseLevelTraits(lines: string[]): Array<{ trait: string; explanation: string }> {
+    const traits: Array<{ trait: string; explanation: string }> = [];
+    let currentTrait = '';
+    let currentExplanation = '';
+  
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed.startsWith('- ')) {
+        // If we have a previous trait, save it
+        if (currentTrait) {
+          traits.push({
+            trait: currentTrait,
+            explanation: currentExplanation.trim()
+          });
+        }
+        // Start new trait, splitting on the colon
+        const colonIndex = trimmed.indexOf(':');
+        if (colonIndex !== -1) {
+          currentTrait = trimmed.substring(2, colonIndex).trim();
+          currentExplanation = trimmed.substring(colonIndex + 1).trim();
+        }
+      } else if (trimmed && currentTrait) {
+        // Add to current explanation
+        currentExplanation += ' ' + trimmed;
+      }
+    }
+  
+    // Don't forget to add the last trait
+    if (currentTrait) {
+      traits.push({
+        trait: currentTrait,
+        explanation: currentExplanation.trim()
+      });
+    }
+  
+    return traits;
   }
 
   private validateRequiredFrontmatter(frontmatter: any) {
@@ -191,48 +233,79 @@ export class SectionParser {
   }
 
   parseWingTypes(lines: string[]): Record<string, string> {
-    console.log('\nParsing wing types section');
-    console.log(`Input lines: ${lines.length}`);
+    console.log('\n========== DEBUG WING TYPES ==========');
+    console.log('Input lines:', lines);
+    console.log('Number of lines:', lines.length);
     
     const wings: Record<string, string> = {};
     
     for (const line of lines) {
-      console.log(`Processing wing line: "${line.trim()}"`);
-      if (line.trim().startsWith('- **')) {
-        const match = line.match(/- \*\*Type \d+: .+? Wing.+?\*\*:(.*)/);
+      console.log('Processing line:', line);
+      const trimmedLine = line.trim();
+      if (trimmedLine.startsWith('Type')) {
+        console.log('Found wing type line:', trimmedLine);
+        // Capture everything between parentheses as a single group
+        const match = trimmedLine.match(/Type (\d+): (.+?) Wing (\([^)]+\)): (.+)/);
+        console.log('Match result:', match);
         if (match) {
-          const [, description] = match;
-          const key = line.match(/\*\*(.+?)\*\*/)[1];
-          console.log(`Found wing type: "${key}" with description: "${description.trim()}"`);
-          wings[key] = description.trim();
+          const [, typeNum, name, fullAlias, description] = match;
+          const key = `Type ${typeNum}: ${name}`;
+          console.log('Parsed wing type:', {
+            key,
+            typeNum,
+            name,
+            fullAlias,
+            description: description.trim()
+          });
+          // Store the full alias with the description
+          wings[key] = {
+            description: description.trim(),
+            alias: fullAlias
+          };
+        } else {
+          console.log('No match found for line:', trimmedLine);
         }
       }
     }
 
-    console.log(`Parsed ${Object.keys(wings).length} wing types`);
+    console.log('Final wings object:', wings);
+    console.log('=====================================\n');
     return wings;
   }
 
   parseLineTypes(lines: string[]): Record<string, string> {
-    console.log('\nParsing line types section');
-    console.log(`Input lines: ${lines.length}`);
+    console.log('\n========== DEBUG LINE TYPES ==========');
+    console.log('Input lines:', lines);
+    console.log('Number of lines:', lines.length);
     
     const lineTypes: Record<string, string> = {};
     
     for (const line of lines) {
-      console.log(`Processing line type: "${line.trim()}"`);
-      if (line.trim().startsWith('- **')) {
-        const match = line.match(/- \*\*Type \d+: .+?\*\*:(.*)/);
+      console.log('Processing line:', line);
+      const trimmedLine = line.trim();
+      // Match the exact format from your markdown
+      if (trimmedLine.startsWith('Type')) {
+        console.log('Found line type line:', trimmedLine);
+        const match = trimmedLine.match(/Type (\d+): ([^:]+): (.+)/);
+        console.log('Match result:', match);
         if (match) {
-          const [, description] = match;
-          const key = line.match(/\*\*(.+?)\*\*/)[1];
-          console.log(`Found line type: "${key}" with description: "${description.trim()}"`);
+          const [, typeNum, name, description] = match;
+          const key = `Type ${typeNum}: ${name}`;
+          console.log('Parsed line type:', {
+            key,
+            typeNum,
+            name,
+            description: description.trim()
+          });
           lineTypes[key] = description.trim();
+        } else {
+          console.log('No match found for line:', trimmedLine);
         }
       }
     }
 
-    console.log(`Parsed ${Object.keys(lineTypes).length} line types`);
+    console.log('Final lineTypes object:', lineTypes);
+    console.log('=====================================\n');
     return lineTypes;
   }
 
@@ -343,9 +416,9 @@ export class SectionParser {
           longDescription: this.parseTextSection(sections[SECTION_NAMES.longDescription] || [], SECTION_NAMES.longDescription),
           mightBeType: this.parseListSection(sections[SECTION_NAMES.mightBeType] || [], SECTION_NAMES.mightBeType),
           probablyNotType: this.parseListSection(sections[SECTION_NAMES.probablyNotType] || [], SECTION_NAMES.probablyNotType),
-          healthyLevel: this.parseTextSection(sections[SECTION_NAMES.healthyLevel] || [], SECTION_NAMES.healthyLevel),
-          averageLevel: this.parseTextSection(sections[SECTION_NAMES.averageLevel] || [], SECTION_NAMES.averageLevel),
-          unhealthyLevel: this.parseTextSection(sections[SECTION_NAMES.unhealthyLevel] || [], SECTION_NAMES.unhealthyLevel),
+          healthyLevel: this.parseLevelTraits(sections[SECTION_NAMES.healthyLevel] || []),
+          averageLevel: this.parseLevelTraits(sections[SECTION_NAMES.averageLevel] || []),
+          unhealthyLevel: this.parseLevelTraits(sections[SECTION_NAMES.unhealthyLevel] || []),
           misconceptions: this.parseListSection(sections[SECTION_NAMES.misconceptions] || [], SECTION_NAMES.misconceptions),
           typesMisidentifyingAsThis: this.parseMisidentificationSection(
             sections[SECTION_NAMES.typesMisidentifyingAsThis] || []

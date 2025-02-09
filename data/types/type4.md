@@ -76,17 +76,29 @@ Fours are defined by their deep introspection and desire to connect with their i
 - You rarely compare yourself to others or feel envious of their experiences.  
 - You prefer pragmatic solutions to emotional exploration.  
 
-[Healthy Level of Development]  
-- Emotionally self-aware, creative, and deeply compassionate.  
-- Embrace their individuality and inspire others with their authenticity.  
+[Healthy Level of Development]
+- Creative:
+  At their healthiest, Fours channel their emotional depth into meaningful creative expression. Their sensitivity becomes a source of insight and inspiration, allowing them to transform personal experience into universal truth.
+- Self-Aware:
+  They develop profound understanding of their emotional landscape without being overwhelmed by it. They can observe and process their feelings while maintaining perspective and balance.
+- Connected:
+  Their quest for authenticity leads to genuine connection with others. Rather than focusing on what's missing, they appreciate deep connections while maintaining their unique identity.
 
-[Average Level of Development]  
-- Introspective and expressive, but prone to moodiness and self-doubt.  
-- Focused on curating their identity and feeling unique.  
+[Average Level of Development]
+- Melancholic:
+  Their emotional sensitivity tends toward focusing on what's lacking. They may dwell on feelings of deficiency or alienation, romanticizing what they don't have.
+- Self-Conscious:
+  Their desire for uniqueness becomes more pronounced. They may amplify their differences from others, sometimes creating drama to feel more real or significant.
+- Withdrawn:
+  They retreat into their inner world when feeling misunderstood. While this can fuel creativity, it may also lead to excessive self-absorption and disconnection from others.
 
-[Unhealthy Level of Development]  
-- Overwhelmed by feelings of inadequacy and envy.  
-- Become overly self-absorbed, withdrawn, and emotionally volatile.  
+[Unhealthy Level of Development]
+- Self-Destructive:
+  Their emotional intensity turns inward destructively. They may engage in self-sabotaging behavior, pushing away support while desperately craving connection.
+- Envious:
+  Their focus on what's missing becomes consuming. They may feel tortured by others' seeming happiness or normalcy, leading to deep resentment and shame.
+- Alienated:
+  Their sense of difference becomes extreme isolation. They may see themselves as fundamentally flawed or defective, making genuine connection feel impossible.
 
 [Common Misconceptions About This Type]  
 1. **All Fours are outwardly emotionally expressive.** While Fours deeply process their emotions, they may not always express them outwardly. Many Fours present as cheerful and social, reserving their deeper thoughts and feelings for those they trust and feel understood by.  
@@ -128,12 +140,12 @@ Fours are defined by their deep introspection and desire to connect with their i
     • Stress Behavior: Fours retreat into emotional intensity, while Nines disengage and detach
 
 [Wing Types]  
-- **Type 3: The Achiever Wing (4w3, aka "The Aristocrat"):** More image-conscious and driven to achieve recognition for their creativity.  
-- **Type 5: The Investigator (4w5, aka "The Bohemian"):** More introspective and intellectual, blending creativity with deep analysis.  
+Type 3: The Achiever Wing (4w3, aka "The Aristocrat"): More image-conscious and driven to achieve recognition for their creativity.  
+Type 5: The Investigator (4w5, aka "The Bohemian"): More introspective and intellectual, blending creativity with deep analysis.  
 
 [Line Types]  
-- **Type 1: The Reformer:** Brings discipline and a desire for improvement.  
-- **Type 2: The Helper:** Adds warmth and a focus on connection.  
+Type 1: The Reformer: Brings discipline and a desire for improvement.  
+Type 2: The Helper: Adds warmth and a focus on connection.  
 
 [Growth Practices]  
 1. Practice self-compassion and learn to value yourself as you are, not for what makes you unique.  

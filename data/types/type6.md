@@ -77,16 +77,29 @@ Sixes thrive on creating security and stability in their lives, often relying on
 - You don’t value loyalty or trust as highly in your relationships.  
 - You’re generally calm and unbothered by uncertainty.  
 
-[Healthy Level of Development]  
-- Loyal, courageous, and supportive, Sixes build trust and foster a sense of safety in their relationships and communities.  
+[Healthy Level of Development]
+- Courageous:
+  At their healthiest, Sixes transform their awareness of danger into true courage. They face challenges directly, drawing strength from their support systems while maintaining their independence.
+- Loyal:
+  Their commitment to others becomes a source of mutual strength. They build genuine trust and cooperation without sacrificing their own judgment or autonomy.
+- Discerning:
+  Their natural skepticism evolves into wise discernment. They can assess situations clearly while remaining open to possibilities, finding balance between caution and trust.
 
-[Average Level of Development]  
-- Thoughtful and responsible, but prone to overthinking and anxiety.  
-- Seek reassurance and avoid taking risks without adequate preparation.  
+[Average Level of Development]
+- Vigilant:
+  Their awareness of potential problems becomes heightened anxiety. They may constantly scan for threats, struggling to distinguish between reasonable and unreasonable fears.
+- Defensive:
+  They become increasingly protective of themselves and their allies. While their loyalty remains strong, they may react defensively to perceived challenges or criticism.
+- Doubt-Ridden:
+  Their questioning nature turns to persistent doubt. They may struggle with decision-making, second-guessing themselves and seeking excessive reassurance from others.
 
-[Unhealthy Level of Development]  
-- Overwhelmed by fear and mistrust, Sixes become overly suspicious, controlling, or dependent.  
-- Struggle to make decisions and over-rely on external validation.  
+[Unhealthy Level of Development]
+- Paranoid:
+  Their vigilance deteriorates into paranoid thinking. They may see threats everywhere, unable to trust anyone or anything, including their own judgment.
+- Reactive:
+  Their defensiveness becomes aggressive reactivity. They may lash out at perceived threats, alternating between fight and flight responses.
+- Self-Defeating:
+  Their fears become self-fulfilling prophecies. They may create the very scenarios they fear most through their defensive or aggressive reactions.
 
 [Common Misconceptions About This Type]  
 1. **All Sixes are great planners or highly responsible.**  
@@ -140,12 +153,12 @@ Sixes thrive on creating security and stability in their lives, often relying on
     • Stress Behavior: Threes may become overly image-conscious and self-promoting, while Sixes may become anxious and reliant on others for reassurance 
 
 [Wing Types]  
-- **Type 5: The Investigator Wing (6w5, aka "The Defender"):** More analytical, reserved, and focused on independence.  
-- **Type 7: The Enthusiast Wing (6w7, aka "The Buddy"):** More sociable, optimistic, and focused on forming connections.  
+Type 5: The Investigator Wing (6w5, aka "The Defender"): More analytical, reserved, and focused on independence.  
+Type 7: The Enthusiast Wing (6w7, aka "The Buddy"): More sociable, optimistic, and focused on forming connections.  
 
 [Line Types]  
-- **Type 3: The Achiever:** Access to ambition and efficiency.  
-- **Type 9: The Peacemaker:** Access to calmness and reassurance.  
+Type 3: The Achiever: Access to ambition and efficiency.  
+Type 9: The Peacemaker: Access to calmness and reassurance.  
 
 [Growth Practices]  
 1. Build trust in yourself by recognizing your ability to handle uncertainty without excessive reassurance.  

@@ -74,14 +74,29 @@ Nines are driven by a desire to maintain peace and harmony, both internally and 
 - You find it easy to address emotionally challenging tasks or conversations.  
 - You rarely feel the need to mediate or smooth over conflicts in your environment.  
 
-[Healthy Level of Development]  
-- Grounded, accepting, and empowering, Nines bring people together with ease and compassion.  
+[Healthy Level of Development]
+- Harmonizing:
+  At their healthiest, Nines actively create peace rather than just avoiding conflict. Their natural ability to see all sides becomes a tool for genuine reconciliation and integration.
+- Present:
+  They develop true engagement with life. Rather than merging with others or numbing out, they maintain their own identity while staying connected to their experiences and relationships.
+- Dynamic:
+  Their receptivity becomes balanced with initiative. They channel their peaceful nature into purposeful action, making positive changes while maintaining inner calm.
 
-[Average Level of Development]  
-- Adaptable and accommodating, Nines focus on maintaining harmony but may neglect their own needs.  
+[Average Level of Development]
+- Accommodating:
+  Their desire for peace leads to excessive compromise. They may forget their own priorities, agreeing with others to avoid disrupting harmony.
+- Disengaged:
+  Their natural calmness shifts toward emotional numbness. They may withdraw from conflict or tension by "checking out" mentally and emotionally.
+- Procrastinating:
+  Their relaxed nature becomes inertia. They may resist change and avoid important tasks, maintaining comfort at the expense of growth.
 
-[Unhealthy Level of Development]  
-- Disengaged and overly accommodating, Nines suppress their desires and avoid conflict to the point of self-neglect.  
+[Unhealthy Level of Development]
+- Resigned:
+  Their acceptance becomes passive resignation. They may completely withdraw from life's challenges, refusing to acknowledge problems that need attention.
+- Neglectful:
+  Their self-forgetting becomes severe self-neglect. They may ignore their own needs and boundaries to the point of psychological or physical harm.
+- Dissociated:
+  Their withdrawal becomes complete disconnection. They may lose touch with their own identity and agency, becoming internally "frozen" to avoid any disturbance.
 
 [Common Misconceptions About This Type]  
 1. **Nines are always accommodating.**  
@@ -148,12 +163,12 @@ Nines are driven by a desire to maintain peace and harmony, both internally and 
     • Stress Behavior: Sevens become scattered and avoidant, while Nines become disengaged and procrastinate
 
 [Wing Types]  
-- **Type 8: The Challenger Wing (9w8, aka "The Referee"):** More assertive, grounded, and focused on justice.  
-- **Type 1: The Reformer Wing (9w1, aka "The Dreamer"):** More idealistic, principled, and focused on doing what is right.  
+Type 8: The Challenger Wing (9w8, aka "The Referee"): More assertive, grounded, and focused on justice.  
+Type 1: The Reformer Wing (9w1, aka "The Dreamer"): More idealistic, principled, and focused on doing what is right.  
 
 [Line Types]  
-- **Type 3: The Achiever:** Access to ambition and focus.  
-- **Type 6: The Loyalist:** Access to vigilance and collaboration.  
+Type 3: The Achiever: Access to ambition and focus.  
+Type 6: The Loyalist: Access to vigilance and collaboration.  
 
 [Growth Practices]  
 1. Practice expressing your thoughts and preferences directly, even in small situations.  

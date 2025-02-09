@@ -75,14 +75,29 @@ Eights are decisive, action-oriented, and protective individuals who stand up fo
 - You prioritize being agreeable over being strong.  
 - You easily show vulnerability and rely on others for support.  
 
-[Healthy Level of Development]  
-- Fair, courageous, and empowering, Eights inspire others and use their strength to protect and uplift those around them.  
+[Healthy Level of Development]
+- Protective:
+  At their healthiest, Eights channel their strength into defending and empowering others. Their natural intensity becomes a force for positive change, protecting the vulnerable without dominating them.
+- Magnanimous:
+  Their power is expressed through genuine generosity. They use their resources and influence to lift others up, finding fulfillment in supporting growth and justice.
+- Self-Mastered:
+  They develop control over their powerful impulses. Their strength becomes tempered with wisdom, allowing them to be both powerful and gentle as circumstances require.
 
-[Average Level of Development]  
-- Decisive and assertive, Eights focus on maintaining control and standing up for themselves and others.  
+[Average Level of Development]
+- Domineering:
+  Their natural leadership becomes more forceful and controlling. While still protective of others, they may steamroll opposition and resist being controlled themselves.
+- Confrontational:
+  Their directness turns increasingly aggressive. They may see life as a series of power struggles, challenging others and asserting dominance unnecessarily.
+- Excessive:
+  Their intensity becomes overwhelming. They may push too hard and demand too much, both of themselves and others, believing excess equals strength.
 
-[Unhealthy Level of Development]  
-- Overly confrontational and domineering, Eights become distrustful and unwilling to show vulnerability.  
+[Unhealthy Level of Development]
+- Destructive:
+  Their power becomes ruthlessly expressed. They may deliberately intimidate or harm others, seeing vulnerability as weakness that must be eliminated.
+- Tyrannical:
+  Their need for control becomes absolute. They may attempt to dominate all aspects of their environment, reacting violently to any perceived challenge.
+- Megalomaniacal:
+  Their sense of power becomes grandiose. They may see themselves as above all laws and moral constraints, justifying any action that maintains their sense of power. 
 
 [Common Misconceptions About This Type]  
 1. **Eights are always angry or aggressive.**  
@@ -154,12 +169,12 @@ Eights are decisive, action-oriented, and protective individuals who stand up fo
     • Stress Behavior: Eights become confrontational, while Threes become overly focused on their image
 
 [Wing Types]  
-- **Type 7: The Enthusiast Wing (8w7, aka "The Maverick"):** More adventurous, energetic, and focused on experiencing life.  
-- **Type 9: The Peacemaker Wing (8w9, aka "The Bear"):** More patient, grounded, and focused on maintaining harmony.  
+Type 7: The Enthusiast Wing (8w7, aka "The Maverick"): More adventurous, energetic, and focused on experiencing life.  
+Type 9: The Peacemaker Wing (8w9, aka "The Bear"): More patient, grounded, and focused on maintaining harmony.  
 
 [Line Types]  
-- **Type 2: The Helper:** Access to compassion and a focus on supporting others.  
-- **Type 5: The Investigator:** Access to depth, intellectual focus, and strategic thinking.  
+Type 2: The Helper: Access to compassion and a focus on supporting others.  
+Type 5: The Investigator: Access to depth, intellectual focus, and strategic thinking.  
 
 [Growth Practices]  
 1. Embrace vulnerability by sharing your thoughts and feelings with trusted loved ones.  
