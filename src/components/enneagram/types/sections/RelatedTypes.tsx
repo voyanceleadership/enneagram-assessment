@@ -11,6 +11,11 @@ interface RelatedTypesProps {
   typeData: TypeData;
 }
 
+interface WingData {
+  description: string;
+  alias: string;
+}
+
 export default function RelatedTypes({ typeData }: RelatedTypesProps) {
   const sectionColor = theme.colors.text; // Dark Grey-Blue
   const sections = [
@@ -19,7 +24,7 @@ export default function RelatedTypes({ typeData }: RelatedTypesProps) {
       title: 'Wing Types',
       color: sectionColor,
       content: typeData.sections.wingTypes
-    } as SubSection,
+    },
     {
       id: 'lines',
       title: 'Line Types',
@@ -38,8 +43,8 @@ export default function RelatedTypes({ typeData }: RelatedTypesProps) {
       {/* Tabs */}
       <div 
         ref={tabsContainerRef}
-        className="sticky bg-white z-10"
-        style={{ top: '168px' }}
+        className="sticky top-[168px] bg-white z-10"
+        data-tabs-container
       >
         <SubSectionTabs
           sections={sections}
@@ -49,12 +54,16 @@ export default function RelatedTypes({ typeData }: RelatedTypesProps) {
         />
       </div>
 
+      {/* Add space-y-6 equivalent spacing */}
+      <div className="h-6" />
+
       {/* Content sections */}
-      <div className="space-y-6 mt-6">
+      <div className="space-y-6">
         {sections.map((section, idx) => (
           <div 
             key={idx}
             ref={el => contentRefs.current[idx] = el}
+            data-subsection-id={section.id}
           >
             <Card className="bg-white shadow-md border-0">
               <div className="p-6">
@@ -68,6 +77,7 @@ export default function RelatedTypes({ typeData }: RelatedTypesProps) {
                   {Object.entries(section.content || {}).map(([typeString, data]) => {
                     const typeNumber = typeString.match(/Type (\d+)/)?.[1];
                     const typeName = typeString.replace(/Type \d+: /, '');
+                    const wingData = section.id === 'wings' ? data as WingData : null;
                     
                     return typeNumber ? (
                       <div key={typeString} className="flex flex-col items-center text-center">
@@ -81,19 +91,19 @@ export default function RelatedTypes({ typeData }: RelatedTypesProps) {
                         >
                           Type {typeNumber}: {typeName}
                         </h4>
-                        {section.id === 'wings' && (
+                        {wingData && (
                           <div 
                             className="text-sm mb-4"
                             style={{ color: section.color }}
                           >
-                            {(data as any).alias}
+                            {wingData.alias}
                           </div>
                         )}
                         <p 
                           className="text-base"
                           style={{ color: theme.colors.text }}
                         >
-                          {section.id === 'wings' ? (data as any).description : data}
+                          {wingData ? wingData.description : data}
                         </p>
                       </div>
                     ) : null;

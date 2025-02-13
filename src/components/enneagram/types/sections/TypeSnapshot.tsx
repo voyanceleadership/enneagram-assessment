@@ -3,6 +3,8 @@ import React from 'react';
 import { TypeData } from '@/lib/types/types';
 import SnapshotCard from '../components/SnapshotCard';
 import ExpandableContent from '../components/ExpandableContent';
+import SubSectionTabs from '../components/SubSectionTabs';
+import { useSubSectionTabs } from '@/hooks/useSubSectionTabs';
 import {
   FileText, Target, ListChecks, AlertTriangle, ShieldAlert,
   Star, CloudRain, Bell, Brain, Ban, MessageSquareX, TrendingUp
@@ -13,73 +15,102 @@ interface TypeSnapshotProps {
 }
 
 // Configuration for snapshot sections with their icons and descriptions
-const SNAPSHOT_SECTIONS = {
-  briefDescription: {
+const SNAPSHOT_SECTIONS = [
+  {
+    id: 'brief-description',
+    title: 'Brief Description',
     icon: FileText,
-    label: "Brief Description",
-    description: "A quick overview of this type's core motivation and behavior"
+    description: "A quick overview of this type's core motivation and behavior",
+    key: 'briefDescription'
   },
-  topPriority: {
+  {
+    id: 'top-priority',
+    title: 'Top Priority',
     icon: Target,
-    label: "Top Priority",
-    description: "The main driving force behind this type's decisions"
+    description: "The main driving force behind this type's decisions",
+    key: 'topPriority'
   },
-  secondaryDesires: {
+  {
+    id: 'secondary-desires',
+    title: 'Secondary Desires',
     icon: ListChecks,
-    label: "Secondary Desires",
-    description: "Additional motivations that influence this type"
+    description: "Additional motivations that influence this type",
+    key: 'secondaryDesires'
   },
-  biggestFear: {
+  {
+    id: 'biggest-fear',
+    title: 'Biggest Fear',
     icon: AlertTriangle,
-    label: "Biggest Fear",
-    description: "The core fear that shapes this type's behavior"
+    description: "The core fear that shapes this type's behavior",
+    key: 'biggestFear'
   },
-  secondaryFears: {
+  {
+    id: 'secondary-fears',
+    title: 'Secondary Fears',
     icon: ShieldAlert,
-    label: "Secondary Fears",
-    description: "Additional concerns that influence this type's actions"
+    description: "Additional concerns that influence this type's actions",
+    key: 'secondaryFears'
   },
-  atTheirBest: {
+  {
+    id: 'at-their-best',
+    title: 'At Their Best',
     icon: Star,
-    label: "At Their Best",
-    description: "How this type shows up when healthy and balanced"
+    description: "How this type shows up when healthy and balanced",
+    key: 'atTheirBest'
   },
-  underStress: {
+  {
+    id: 'under-stress',
+    title: 'Under Stress',
     icon: CloudRain,
-    label: "Under Stress",
-    description: "Common behaviors when this type is under pressure"
+    description: "Common behaviors when this type is under pressure",
+    key: 'underStress'
   },
-  wakeUpCall: {
+  {
+    id: 'wake-up-call',
+    title: 'Wake-Up Call',
     icon: Bell,
-    label: "Wake-Up Call",
-    description: "Signs that this type is becoming unbalanced"
+    description: "Signs that this type is becoming unbalanced",
+    key: 'wakeUpCall'
   },
-  mentalHabit: {
+  {
+    id: 'mental-habit',
+    title: 'Mental Habit',
     icon: Brain,
-    label: "Mental Habit",
-    description: "The typical thought patterns of this type"
+    description: "The typical thought patterns of this type",
+    key: 'mentalHabit'
   },
-  characteristicVice: {
+  {
+    id: 'characteristic-vice',
+    title: 'Characteristic Vice',
     icon: Ban,
-    label: "Characteristic Vice",
-    description: "The core challenge this type faces"
+    description: "The core challenge this type faces",
+    key: 'characteristicVice'
   },
-  innerStory: {
+  {
+    id: 'inner-story',
+    title: 'Inner Story',
     icon: MessageSquareX,
-    label: "Inner Story",
-    description: "The limiting belief this type tends to hold"
+    description: "The limiting belief this type tends to hold",
+    key: 'innerStory'
   },
-  keyToGrowth: {
+  {
+    id: 'key-to-growth',
+    title: 'Key to Growth',
     icon: TrendingUp,
-    label: "Key to Growth",
-    description: "Essential practices for this type's development"
+    description: "Essential practices for this type's development",
+    key: 'keyToGrowth'
   }
-} as const;
+] as const;
 
 // Component for displaying the type snapshot section with expandable content
 export default function TypeSnapshot({ typeData }: TypeSnapshotProps) {
-  const renderContent = (key: keyof typeof SNAPSHOT_SECTIONS) => {
-    const data = typeData[key as keyof TypeData];
+  const { activeTab, handleTabChange, contentRefs, tabsContainerRef } = useSubSectionTabs({
+    sections: SNAPSHOT_SECTIONS,
+    sectionId: 'snapshot'
+  });
+
+  const renderContent = (key: typeof SNAPSHOT_SECTIONS[number]['key']) => {
+    const data = typeData[key];
     
     // Handle arrays (secondary desires and fears)
     if (Array.isArray(data)) {
@@ -128,15 +159,21 @@ export default function TypeSnapshot({ typeData }: TypeSnapshotProps) {
 
   return (
     <div className="space-y-6">
-      {Object.entries(SNAPSHOT_SECTIONS).map(([key, section]) => (
-        <SnapshotCard
-          key={key}
-          icon={section.icon}
-          label={section.label}
-          description={section.description}
+      {SNAPSHOT_SECTIONS.map((section, idx) => (
+        <div
+          key={section.id}
+          ref={el => contentRefs.current[idx] = el}
+          data-subsection-id={section.id}
+          id={`section-${section.id}`}
         >
-          {renderContent(key as keyof typeof SNAPSHOT_SECTIONS)}
-        </SnapshotCard>
+          <SnapshotCard
+            icon={section.icon}
+            label={section.title}
+            description={section.description}
+          >
+            {renderContent(section.key)}
+          </SnapshotCard>
+        </div>
       ))}
     </div>
   );

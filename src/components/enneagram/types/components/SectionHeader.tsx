@@ -24,6 +24,7 @@ export default function SectionHeader({
         top: `${topOffset}px`,
         position: 'sticky'
       }}
+      data-section-header
     >
       <div className="max-w-4xl mx-auto px-4">
         <div className="py-6">

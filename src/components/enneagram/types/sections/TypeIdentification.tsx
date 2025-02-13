@@ -6,26 +6,23 @@ import BulletList from '../components/BulletList';
 import SubSectionTabs from '../components/SubSectionTabs';
 import { useSubSectionTabs } from '@/hooks/useSubSectionTabs';
 import { TypeData } from '@/lib/types/types';
-import type { SubSection } from '../components/SubSectionTabs';
 
 interface TypeIdentificationProps {
   typeData: TypeData;
 }
 
 export default function TypeIdentification({ typeData }: TypeIdentificationProps) {
-  const sectionColor = theme.colors.text; // Dark Grey-Blue
-  // Use the section color for both tabs
   const sections = [
     {
-      id: 'mightBe',
+      id: 'might-be',  // Match the ID used in EnneagramTypePage
       title: `You Might Be a ${typeData.typeNumber} If...`,
-      color: sectionColor,
+      color: theme.colors.text,
       content: typeData.sections.mightBeType
-    } as SubSection,
+    },
     {
-      id: 'probablyNot',
+      id: 'probably-not',  // Match the ID used in EnneagramTypePage
       title: `You're Probably Not a ${typeData.typeNumber} If...`,
-      color: sectionColor,
+      color: theme.colors.text,
       content: typeData.sections.probablyNotType
     }
   ];
@@ -40,8 +37,8 @@ export default function TypeIdentification({ typeData }: TypeIdentificationProps
       {/* Tabs */}
       <div 
         ref={tabsContainerRef}
-        className="sticky bg-white z-10"
-        style={{ top: '168px' }}
+        className="sticky top-[168px] bg-white z-10"
+        data-tabs-container
       >
         <SubSectionTabs
           sections={sections}
@@ -51,12 +48,17 @@ export default function TypeIdentification({ typeData }: TypeIdentificationProps
         />
       </div>
 
+      {/* Add space-y-6 equivalent spacing */}
+      <div className="h-6" />
+
       {/* Content sections */}
-      <div className="space-y-6 mt-6">
+      <div className="space-y-6">
         {sections.map((section, idx) => (
           <div 
             key={idx}
             ref={el => contentRefs.current[idx] = el}
+            data-subsection-id={section.id}
+            id={`section-${section.id}`}  // Add ID for scroll targeting
           >
             <Card className="bg-white shadow-md border-0">
               <div className="p-6">

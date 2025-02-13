@@ -31,18 +31,17 @@ export default function SubSectionTabs({
   };
 
   return (
-    <div className="flex border-t border-gray-200 bg-white relative">
-      {/* Add a bottom shadow/border that's always visible */}
-      <div 
-        className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200"
-        style={{ boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)' }}
-      />
-      
+    <div 
+      className="flex border-t border-gray-200 bg-white"
+      data-tabs-container
+    >
       {sections.map((section, idx) => (
         <button
           key={idx}
           ref={el => tabRefs.current[idx] = el}
           onClick={() => onTabChange(idx)}
+          data-tab-id={section.id}
+          data-tab-index={idx}
           className={`
             py-3 px-6 text-sm font-medium transition-all duration-300 relative
             ${equalWidth ? 'flex-1' : ''}
@@ -52,7 +51,7 @@ export default function SubSectionTabs({
           {/* Content */}
           <span className="relative z-10">{section.title}</span>
           
-          {/* Active indicator - increase z-index to appear above shadow */}
+          {/* Active indicator */}
           <div
             className="absolute inset-x-0 bottom-0 h-0.5 transform transition-transform duration-300 ease-in-out z-20"
             style={{
@@ -71,6 +70,12 @@ export default function SubSectionTabs({
           />
         </button>
       ))}
+
+      {/* Bottom shadow for visual separation */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200"
+        style={{ boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)' }}
+      />
     </div>
   );
 }

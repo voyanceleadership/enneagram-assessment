@@ -35,7 +35,7 @@ export default function DevelopmentLevels({ typeData }: DevelopmentLevelsProps) 
 
   const { activeTab, handleTabChange, contentRefs, tabsContainerRef } = useSubSectionTabs({
     sections,
-    sectionId: 'development'
+    sectionId: 'levels'
   });
 
   return (
@@ -44,6 +44,7 @@ export default function DevelopmentLevels({ typeData }: DevelopmentLevelsProps) 
       <div 
         ref={tabsContainerRef}
         className="sticky top-[168px] bg-white z-10"
+        data-tabs-container
       >
         <SubSectionTabs
           sections={sections}
@@ -62,6 +63,7 @@ export default function DevelopmentLevels({ typeData }: DevelopmentLevelsProps) 
           <div 
             key={idx}
             ref={el => contentRefs.current[idx] = el}
+            data-subsection-id={section.id}
           >
             <Card className="bg-white shadow-md border-0">
               <div className="p-6">

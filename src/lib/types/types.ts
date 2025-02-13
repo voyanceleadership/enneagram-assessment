@@ -21,6 +21,18 @@ export interface MisidentificationType {
   };
 }
 
+export interface TypeSection {
+  id: string;
+  title: string | ((typeNumber: string) => string);
+  subsections?: TypeSubsection[];
+}
+
+export interface TypeSubsection {
+  id: string;
+  title: string | ((typeNumber: string) => string);
+  key?: keyof TypeData['sections'] | keyof TypeData;
+}
+
 // Define the schema for wing data
 const WingDataSchema = z.object({
   description: z.string(),
