@@ -6,7 +6,8 @@ import { theme } from '@/styles/theme';
 import Navbar from '@/components/navigation/Navbar';
 import TypeSidebar from './components/TypeSidebar';
 import SectionHeader from './components/SectionHeader';
-import { TYPE_SECTIONS } from '@/lib/types/constants'
+import { TYPE_SECTIONS } from '@/lib/types/constants';
+import InteractiveEnneagramDiagram from '../symbol/InteractiveEnneagramDiagram';
 
 // Import all section components
 import TypeHeader from './sections/TypeHeader';
@@ -28,6 +29,9 @@ interface EnneagramTypePageProps {
 
 export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTypePageProps) {
   const [activeSection, setActiveSection] = useState(TYPE_SECTIONS[0].id);
+
+  // State for the diagram's initial configuration
+  const initialVariation = 'related-types';
 
   const handleSectionClick = (sectionId: string, subsectionId?: string) => {
     if (subsectionId) {
@@ -141,6 +145,15 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
           typeName={typeData.typeName} 
           typeDigit={typeData.typeDigit} 
         />
+
+        {/* Enneagram Diagram */}
+        <div className="my-8">
+          <InteractiveEnneagramDiagram 
+            defaultType={parseInt(typeNumber) as 1|2|3|4|5|6|7|8|9}
+            defaultVariation={initialVariation}
+            interactive={false}
+          />
+        </div>
 
         {/* Content Sections */}
         <div className="space-y-12">

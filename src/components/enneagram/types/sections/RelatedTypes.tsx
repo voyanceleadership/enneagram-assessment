@@ -1,8 +1,7 @@
-// src/components/enneagram/types/sections/RelatedTypes.tsx
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { theme, styleUtils } from '@/styles/theme';
-import TypeSymbol from '../components/TypeSymbol';
+import InteractiveEnneagramDiagram from '../../symbol/InteractiveEnneagramDiagram';
 import SubSectionTabs from '../components/SubSectionTabs';
 import { useSubSectionTabs } from '@/hooks/useSubSectionTabs';
 import { TypeData } from '@/lib/types/types';
@@ -81,7 +80,13 @@ export default function RelatedTypes({ typeData }: RelatedTypesProps) {
                     
                     return typeNumber ? (
                       <div key={typeString} className="flex flex-col items-center text-center">
-                        <TypeSymbol type={typeNumber} size={100} />
+                        <div className="w-32">
+                          <InteractiveEnneagramDiagram 
+                            defaultType={parseInt(typeNumber) as 1|2|3|4|5|6|7|8|9}
+                            defaultVariation="type-only"
+                            interactive={false}
+                          />
+                        </div>
                         <h4 
                           className="text-xl mt-4 mb-2"
                           style={{ 

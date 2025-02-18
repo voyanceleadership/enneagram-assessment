@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 type EnneagramType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type SymbolVariation = 
@@ -19,6 +19,12 @@ interface TypeRelationships {
   growth: EnneagramType;
   related: EnneagramType[];
 }
+
+interface InteractiveEnneagramDiagramProps {
+    defaultType?: EnneagramType;
+    defaultVariation?: SymbolVariation;
+    interactive?: boolean;
+  }
 
 const ENNEAGRAM_RELATIONSHIPS: Record<EnneagramType, TypeRelationships> = {
   1: { left: 9, right: 2, stress: 4, growth: 7, related: [9, 2, 4, 7] },
@@ -97,9 +103,23 @@ const EnneagramControls: React.FC<{
     );
   };
 
-const InteractiveEnneagramDiagram: React.FC = () => {
+  const InteractiveEnneagramDiagram: React.FC<InteractiveEnneagramDiagramProps> = ({
+    defaultType = null,
+    defaultVariation = 'all',
+    interactive = true
+  }) => {
     const [selectedType, setSelectedType] = useState<EnneagramType | null>(null);
     const [variation, setVariation] = useState<SymbolVariation>('all');
+
+    // Update selected type when defaultType prop changes
+    useEffect(() => {
+        setSelectedType(defaultType);
+    }, [defaultType]);
+
+    // Update variation when defaultVariation prop changes
+    useEffect(() => {
+        setVariation(defaultVariation);
+    }, [defaultVariation]);
   
     // Helper function to determine if wings should be swapped
     const shouldSwapWings = (type: EnneagramType | null): boolean => {
@@ -129,40 +149,129 @@ const InteractiveEnneagramDiagram: React.FC = () => {
 
   // Base styles
   const styles = {
-    st0: { fill: 'none' },
-    st1: { fill: 'none', stroke: 'aqua', strokeWidth: '2px', strokeMiterlimit: 10 },
-    st2: { 
-      fill: 'none', 
-      stroke: 'aqua', 
-      strokeMiterlimit: 10,
-      strokeDasharray: '12 6 12 6 12 6'
+    // Typography
+    font: {
+      family: "'niveau-grotesk', sans-serif",
+      default: {
+        size: '60px',
+        weight: '300',  // Light
+        lineHeight: '1'
+      },
+      selected: {
+        size: '72px',
+        weight: '400'  // Regular
+      }
     },
-    st3: { 
-      display: 'none',
-      stroke: '#000',
-      strokeWidth: '3px',
-      strokeMiterlimit: 10,
-      fill: 'none'
+  
+    // Colors
+    colors: {
+      primary: '#000000',    // Default black
+      deemphasized: {
+        grey: '#e6e6e6',     // For inactive numbers and lines
+        white: '#ffffff'      // For inactive type labels
+      }
     },
-    st4: { 
-      fill: 'none',
-      stroke: '#000',
-      strokeWidth: '3px',
-      strokeMiterlimit: 10
+  
+    // Circles
+    circle: {
+      default: {
+        radius: '42.5',
+        strokeWidth: '3px',
+        fill: '#ffffff',
+        stroke: '#000000'
+      },
+      selected: {
+        radius: '50',
+        strokeWidth: '5px'
+      },
+      deemphasized: {
+        stroke: '#e6e6e6'
+      }
     },
-    st5: { fill: '#e6e6e6' },
-    st6: { 
-      fill: '#fff',
-      stroke: '#000',
-      strokeWidth: '3px',
-      strokeMiterlimit: 10
+  
+    // Connection Lines
+    connectionLine: {
+      default: {
+        fill: 'none',
+        stroke: '#000000',
+        strokeWidth: '3px',
+        strokeMiterlimit: 10
+      },
+      deemphasized: {
+        stroke: '#e6e6e6'
+      }
     },
-    st7: {
-      fontFamily: "'niveau-grotesk', sans-serif",
-      fontSize: '60px',
-      fontWeight: 300
+  
+    // Outer Ring
+    outerRing: {
+      base: {
+        display: 'none',
+        stroke: '#000000',
+        strokeWidth: '3px',
+        strokeMiterlimit: 10,
+        fill: 'none'
+      },
+      grey: {
+        fill: '#e6e6e6'
+      }
+    },
+  
+    // Transitions
+    transition: {
+      default: 'fill 0.3s ease, stroke 0.3s ease, stroke-width 0.3s ease, font-size 0.3s ease, font-weight 0.3s ease'
     }
   };
+  
+  // Then our getter functions would use these styles:
+  const getCircleStyle = (typeNumber: number) => ({
+    fill: styles.circle.default.fill,
+    stroke: isTypeHighlighted(typeNumber as EnneagramType) 
+      ? styles.circle.default.stroke 
+      : styles.circle.deemphasized.stroke,
+    strokeWidth: typeNumber === selectedType 
+      ? styles.circle.selected.strokeWidth 
+      : styles.circle.default.strokeWidth,
+    strokeMiterlimit: 10,
+    r: typeNumber === selectedType 
+      ? styles.circle.selected.radius 
+      : styles.circle.default.radius,
+    transition: styles.transition.default
+  });
+  
+  const getTypeNumberStyle = (typeNumber: number) => ({
+    fontFamily: styles.font.family,
+    fontSize: typeNumber === selectedType 
+      ? styles.font.selected.size 
+      : styles.font.default.size,
+    fontWeight: typeNumber === selectedType 
+      ? styles.font.selected.weight 
+      : styles.font.default.weight,
+    fill: isTypeHighlighted(typeNumber as EnneagramType) 
+      ? styles.colors.primary 
+      : styles.colors.deemphasized.grey,
+    transition: styles.transition.default
+  });
+  
+  const getTypeLabelStyle = (typeNumber: number) => ({
+    fontFamily: styles.font.family,
+    fontSize: typeNumber === selectedType 
+      ? styles.font.selected.size 
+      : styles.font.default.size,
+    fontWeight: typeNumber === selectedType 
+      ? styles.font.selected.weight 
+      : styles.font.default.weight,
+    fill: isTypeHighlighted(typeNumber as EnneagramType) 
+      ? styles.colors.primary 
+      : styles.colors.deemphasized.white,
+    transition: styles.transition.default
+  });
+  
+  const getLineStyle = (from: EnneagramType, to: EnneagramType) => ({
+    ...styles.connectionLine.default,
+    stroke: isConnectionHighlighted(from, to) 
+      ? styles.connectionLine.default.stroke 
+      : styles.connectionLine.deemphasized.stroke
+  });
 
   const isTypeHighlighted = (type: EnneagramType): boolean => {
     if (!selectedType) return true;
@@ -228,52 +337,24 @@ const InteractiveEnneagramDiagram: React.FC = () => {
     }
   };
 
-const getTypeLabelStyle = (typeNumber: number) => ({
-    fontFamily: "'niveau-grotesk', sans-serif",
-    fontSize: typeNumber === selectedType ? '72px' : '60px',
-    fontWeight: typeNumber === selectedType ? '400' : '300',
-    fill: isTypeHighlighted(typeNumber as EnneagramType) ? '#000' : '#fff',
-    transition: 'all 0.3s ease'
-  });
-  
-  const getTypeNumberStyle = (typeNumber: number) => ({
-    fontFamily: "'niveau-grotesk', sans-serif",
-    fontSize: typeNumber === selectedType ? '72px' : '60px',
-    fontWeight: typeNumber === selectedType ? '400' : '300',
-    fill: isTypeHighlighted(typeNumber as EnneagramType) ? '#000' : '#e6e6e6',
-    transition: 'all 0.3s ease'
-  });
-
-  const getCircleStyle = (typeNumber: number) => ({
-    fill: '#fff',
-    stroke: isTypeHighlighted(typeNumber as EnneagramType) ? '#000' : '#e6e6e6',
-    strokeWidth: typeNumber === selectedType ? '5px' : '3px',
-    strokeMiterlimit: 10,
-    r: typeNumber === selectedType ? '50' : '42.5',
-    transition: 'all 0.3s ease'
-  });
-
-  const getLineStyle = (from: EnneagramType, to: EnneagramType) => ({
-    ...styles.st4,
-    stroke: isConnectionHighlighted(from, to) ? '#000' : '#e6e6e6'
-  });
-
   return (
     <div className="flex flex-col w-full">
-      <EnneagramControls
-        selectedType={selectedType}
-        setSelectedType={setSelectedType}
-        variation={variation}
-        setVariation={setVariation}
-        variations={variations}
-      />
+      {interactive && (
+        <EnneagramControls
+          selectedType={selectedType}
+          setSelectedType={setSelectedType}
+          variation={variation}
+          setVariation={setVariation}
+          variations={variations}
+        />
+      )}
       <div className="w-full aspect-square">
         <svg 
           xmlns="http://www.w3.org/2000/svg" 
           xmlnsXlink="http://www.w3.org/1999/xlink" 
           version="1.1" 
           viewBox="0 0 2048 2048"
-          className="w-full h-full"
+          className="w-full h-full enneagram-diagram"
         >
           <defs>
             <path id="textCirclePath" d="M 1024,263.5 A 760.5,760.5 0 1 1 1023.9,263.5 A 760.5,760.5 0 1 1 1024,263.5" />
@@ -281,10 +362,10 @@ const getTypeLabelStyle = (typeNumber: number) => ({
 
           {/* Outer Ring */}
           <g id="Outer_Ring">
-            <circle style={styles.st3} cx="1024" cy="1024" r="839"/>
+            <circle style={styles.outerRing.base} cx="1024" cy="1024" r="839"/>
             <path 
               id="Grey_Ring" 
-              style={styles.st5} 
+              style={styles.outerRing.grey} 
               d="M1705.77,1024c0,376.84-304.93,681.77-681.77,681.77s-681.77-304.93-681.77-681.77,304.93-681.77,681.77-681.77,681.77,304.93,681.77,681.77ZM1024,185c-463.74,0-839,375.26-839,839s375.26,839,839,839,839-375.26,839-839S1487.74,185,1024,185Z"
             />
           </g>
