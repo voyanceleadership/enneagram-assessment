@@ -38,6 +38,32 @@ const ENNEAGRAM_RELATIONSHIPS: Record<EnneagramType, TypeRelationships> = {
   9: { left: 8, right: 1, stress: 6, growth: 3, related: [8, 1, 6, 3] }
 };
 
+
+const ARROWHEADS = {
+    stress: {
+      "2-8": "670.5,569.5 702.72,568.22 691.9,577.27 694.39,591.15 670.5,569.5",
+      "8-5": "807.5,1557.5 790.31,1530.22 803.55,1535.08 814.33,1525.99 807.5,1557.5",
+      "5-7": "441.5,954.5 467.01,974.22 452.91,974.2 445.9,986.44 441.5,954.5",
+      "7-1": "1377.5,569.5 1353.61,591.15 1356.1,577.27 1345.28,568.23 1377.5,569.5",
+      "1-4": "1240.5,1557.5 1233.69,1525.98 1244.47,1535.08 1257.71,1530.23 1240.5,1557.5",
+      "4-2": "1606.5,954.5 1602.1,986.44 1595.09,974.2 1580.99,974.22 1606.5,954.5",
+      "3-9": "1044.5,448.5 1048.89,480.44 1055.9,468.2 1070,468.23 1044.5,448.5",
+      "9-6": "514.5,1293.5 518.87,1261.55 525.89,1273.79 539.99,1273.75 514.5,1293.5",
+      "6-3": "1513,1330.5 1483.15,1342.7 1490.23,1330.5 1483.15,1318.31 1513,1330.5"
+    },
+    growth: {
+      "8-2": "1587.5,902.5 1563.61,880.85 1566.1,894.73 1555.28,903.77 1587.5,902.5",
+      "2-4": "1254.5,1562.5 1280.01,1542.78 1265.91,1542.8 1258.9,1530.56 1254.5,1562.5",
+      "4-1": "1410.5,596.5 1393.29,623.77 1406.53,618.92 1417.31,628.02 1410.5,596.5",
+      "1-7": "460.5,902.5 492.72,903.78 481.9,894.73 484.39,880.85 460.5,902.5",
+      "7-5": "793.5,1562.5 789.1,1530.56 782.09,1542.8 767.99,1542.78 793.5,1562.5",
+      "5-8": "638.5,597.5 631.66,629.01 642.45,619.92 655.68,624.78 638.5,597.5",
+      "3-6": "536,1330.5 565.85,1342.7 558.77,1330.5 565.85,1318.31 536,1330.5",
+      "6-9": "1002.5,448.5 977.01,468.25 991.11,468.21 998.13,480.44 1002.5,448.5",
+      "9-3": "1533.5,1293.5 1507.99,1273.78 1522.1,1273.8 1529.1,1261.56 1533.5,1293.5"
+    }
+  };
+
 const TYPE_NAMES = {
   1: 'Reformer',
   2: 'Helper',
@@ -337,6 +363,26 @@ const EnneagramControls: React.FC<{
     }
   };
 
+  const shouldShowArrowhead = (from: EnneagramType, to: EnneagramType, type: 'stress' | 'growth'): boolean => {
+    if (!selectedType) return false;
+    const relationships = ENNEAGRAM_RELATIONSHIPS[selectedType];
+    
+    // Only show arrowheads when originating from the selected type
+    if (selectedType !== from) return false;
+
+    switch (variation) {
+      case 'related-types':
+      case 'both-lines':
+        return type === 'stress' ? to === relationships.stress : to === relationships.growth;
+      case 'stress-line':
+        return type === 'stress' && to === relationships.stress;
+      case 'growth-line':
+        return type === 'growth' && to === relationships.growth;
+      default:
+        return false;
+    }
+  };
+
   return (
     <div className="flex flex-col w-full">
       {interactive && (
@@ -475,6 +521,44 @@ const EnneagramControls: React.FC<{
             {isConnectionHighlighted(9, 3) && <line style={getLineStyle(9, 3)} x1="1024" y1="411.5" x2="1554.52" y2="1330.3"/>}
             {isConnectionHighlighted(9, 6) && <line style={getLineStyle(9, 6)} x1="1024" y1="411.5" x2="493.48" y2="1330.3"/>}
           </g>
+
+          <g id="Arrowheads">
+            {/* Stress arrowheads */}
+            {Object.entries(ARROWHEADS.stress).map(([connection, points]) => {
+            const [from, to] = connection.split('-').map(Number) as [EnneagramType, EnneagramType];
+            if (shouldShowArrowhead(from, to, 'stress')) {
+                return (
+                <polygon
+                    key={`stress-${connection}`}
+                    points={points}
+                    style={{
+                    fill: styles.colors.primary,
+                    transition: styles.transition.default
+                    }}
+                />
+                );
+            }
+            return null;
+            })}
+            
+            {/* Growth arrowheads */}
+            {Object.entries(ARROWHEADS.growth).map(([connection, points]) => {
+            const [from, to] = connection.split('-').map(Number) as [EnneagramType, EnneagramType];
+            if (shouldShowArrowhead(from, to, 'growth')) {
+                return (
+                <polygon
+                    key={`growth-${connection}`}
+                    points={points}
+                    style={{
+                    fill: styles.colors.primary,
+                    transition: styles.transition.default
+                    }}
+                />
+                );
+            }
+            return null;
+            })}
+        </g>
 
           {/* Type Numbers and Circles (rendered last to be on top) */}
           <g id="Type_Numbers_And_Circles">
