@@ -1,5 +1,39 @@
 'use client';
 
+/**
+ * EnneagramTypePage Component
+ * 
+ * A comprehensive page component for displaying detailed information about a specific Enneagram type.
+ * This component serves as the main container for all type-specific content and manages the layout,
+ * navigation, and scroll behavior for the various sections of type information.
+ * 
+ * Key Responsibilities:
+ * - Manages the overall layout and structure of type pages
+ * - Handles scroll-based navigation and section highlighting
+ * - Coordinates between the sidebar navigation and main content
+ * - Manages the interactive Enneagram symbol display
+ * 
+ * Dependencies:
+ * - Navbar: Global navigation component
+ * - TypeSidebar: Section navigation component
+ * - SectionHeader: Section title component
+ * - DynamicEnneagramSymbol: Interactive Enneagram diagram
+ * - Various section components (TypeSnapshot, TypeSummary, etc.)
+ * 
+ * Data Flow:
+ * - Receives typeData and typeNumber as props
+ * - Passes relevant data to child components
+ * - Manages active section state based on scroll position
+ * 
+ * Usage:
+ * ```tsx
+ * <EnneagramTypePage 
+ *   typeData={typeData} 
+ *   typeNumber="1"
+ * />
+ * ```
+ */
+
 import React, { useState, useEffect } from 'react';
 import { TypeData } from '@/lib/types/types';
 import { theme } from '@/styles/theme';
@@ -7,7 +41,7 @@ import Navbar from '@/components/navigation/Navbar';
 import TypeSidebar from './components/TypeSidebar';
 import SectionHeader from './components/SectionHeader';
 import { TYPE_SECTIONS } from '@/lib/types/constants';
-import InteractiveEnneagramDiagram from '../symbol/InteractiveEnneagramDiagram';
+import DynamicEnneagramSymbol from '../symbol/DynamicEnneagramSymbol';
 
 // Import all section components
 import TypeHeader from './sections/TypeHeader';
@@ -27,46 +61,64 @@ interface EnneagramTypePageProps {
   typeNumber: string;
 }
 
+/**
+ * Title component for the navbar
+ * Displays the current type name and number in the center of the navigation bar
+ */
+const TypeTitle = ({ typeNumber, typeName }: { typeNumber: string; typeName: string }) => (
+  <h2 
+    className="text-lg font-semibold"
+    style={{ color: theme.colors.accent3 }}
+  >
+    Type {typeNumber}: {typeName}
+  </h2>
+);
+
 export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTypePageProps) {
+  // Track the currently active section for navigation highlighting
   const [activeSection, setActiveSection] = useState(TYPE_SECTIONS[0].id);
 
-  // State for the diagram's initial configuration
-  const initialVariation = 'related-types';
+  // Configuration for the Enneagram diagram
+  const initialVariation = 'type-only';
 
+  /**
+   * Handles clicking on a section in the sidebar navigation
+   * Manages smooth scrolling to the target section and subsection handling
+   */
   const handleSectionClick = (sectionId: string, subsectionId?: string) => {
     if (subsectionId) {
       // Find the parent section element
       const sectionElement = document.getElementById(`section-${sectionId}`);
       if (!sectionElement) return;
-
-      // Find the section header height
-      const sectionHeader = sectionElement.querySelector('[data-section-header]');
-      const headerHeight = sectionHeader?.getBoundingClientRect().height || 0;
-
+  
+      // Find the section header height (for both main section and subsection)
+      const mainSectionHeader = sectionElement.querySelector('[data-section-header]');
+      const mainHeaderHeight = mainSectionHeader?.getBoundingClientRect().height || 0;
+  
       // Find the tabs container
       const tabsContainer = sectionElement.querySelector('[data-tabs-container]');
       const tabsHeight = tabsContainer?.getBoundingClientRect().height || 0;
-
-      // Find the content for this specific subsection
+  
+      // Find the subsection content
       const subsectionContent = sectionElement.querySelector(`[data-subsection-id="${subsectionId}"]`);
       if (!subsectionContent) return;
-
-      // Calculate total offset
+  
+      // Calculate total offset including main section header
       const navbarHeight = 64; // Height of main navigation
       const padding = 24; // Additional padding
-      const totalOffset = navbarHeight + headerHeight + tabsHeight + padding;
-
+      const totalOffset = navbarHeight + mainHeaderHeight + tabsHeight + padding;
+  
       // First switch to the correct tab
       const tabElement = sectionElement.querySelector(`[data-tab-id="${subsectionId}"]`);
       if (tabElement instanceof HTMLElement) {
         tabElement.click();
       }
-
+  
       // Then scroll after a small delay to allow for tab switch animation
       setTimeout(() => {
         const elementPosition = subsectionContent.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
-
+  
         window.scrollTo({
           top: offsetPosition,
           behavior: 'smooth'
@@ -88,12 +140,15 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
     }
   };
 
-  // Track active section based on scroll position
+  /**
+   * Track active section based on scroll position
+   * Updates the active section state as the user scrolls through the page
+   */
   useEffect(() => {
     const handleScroll = () => {
       const offset = 100;
       
-      // Find all section elements
+      // Find all section elements including subsections
       const sectionElements = TYPE_SECTIONS.flatMap(section => {
         const mainElement = document.getElementById(`section-${section.id}`);
         const subElements = section.subsections?.map(sub => 
@@ -123,13 +178,17 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: theme.colors.background }}>
-      {/* Navigation */}
-      <div className="w-full border-b fixed top-0 left-0 right-0 z-50 bg-white shadow-sm" 
-        style={{ borderColor: `${theme.colors.text}10` }}
-      >
-        <Navbar />
-      </div>
+      {/* Global Navigation */}
+      <Navbar 
+        centerContent={
+          <TypeTitle 
+            typeNumber={typeNumber} 
+            typeName={typeData.typeName} 
+          />
+        }
+      />
 
+      {/* Sidebar Navigation */}
       <TypeSidebar 
         sections={TYPE_SECTIONS}
         activeSection={activeSection}
@@ -138,25 +197,19 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
       />
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 pt-20">
-        {/* Header */}
-        <TypeHeader 
-          typeNumber={typeNumber} 
-          typeName={typeData.typeName} 
-          typeDigit={typeData.typeDigit} 
-        />
-
+      <div className="max-w-4xl mx-auto px-4 pt-6">
         {/* Enneagram Diagram */}
-        <div className="my-8">
-          <InteractiveEnneagramDiagram 
+        <div className="w-2/3 mx-auto">
+          <DynamicEnneagramSymbol 
             defaultType={parseInt(typeNumber) as 1|2|3|4|5|6|7|8|9}
-            defaultVariation={initialVariation}
+            defaultVariation="related-types"
             interactive={false}
           />
         </div>
 
         {/* Content Sections */}
         <div className="space-y-12">
+          {/* Each section is wrapped in a div with a unique ID for navigation */}
           <div id="section-snapshot">
             <SectionHeader 
               sectionNumber="01"

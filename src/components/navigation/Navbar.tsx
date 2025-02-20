@@ -1,13 +1,39 @@
 'use client';
 
-// src/components/navigation/Navbar.tsx
+/**
+ * Navbar Component
+ * 
+ * A responsive navigation bar component that handles both global navigation and context-specific content.
+ * 
+ * Features:
+ * - Dropdown menus for primary navigation sections
+ * - Dynamic center content that can display page-specific information
+ * - Type-safe handling of Enneagram type information
+ * - Responsive design with mobile considerations
+ * 
+ * Usage:
+ * ```tsx
+ * // For type pages:
+ * <Navbar centerContent={<TypeTitle number="1" name="The Reformer" />} />
+ * 
+ * // For regular pages:
+ * <Navbar centerContent={<PageTitle>About the Enneagram</PageTitle>} />
+ * ```
+ * 
+ * Props:
+ * - centerContent?: React.ReactNode - Optional content to display in the center of the navbar
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { theme, styleUtils } from '@/styles/theme';
 
-const TYPE_NAMES = {
+// Type definitions for the Enneagram types
+type EnneagramNumber = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+
+const TYPE_NAMES: Record<EnneagramNumber, string> = {
   '1': 'Type 1: The Reformer',
   '2': 'Type 2: The Helper',
   '3': 'Type 3: The Achiever',
@@ -19,12 +45,14 @@ const TYPE_NAMES = {
   '9': 'Type 9: The Peacemaker'
 };
 
+// Navigation menu structure
 interface NavMenuItem {
   label: string;
   href?: string;
   items?: NavMenuItem[];
 }
 
+// Main navigation structure
 const navigationMenu: NavMenuItem[] = [
   {
     label: "My Dashboard",
@@ -50,16 +78,29 @@ const navigationMenu: NavMenuItem[] = [
   }
 ];
 
-const DropdownMenu: React.FC<{ 
+// Props interface for the DropdownMenu component
+interface DropdownMenuProps {
   item: NavMenuItem;
   isOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
-}> = ({ item, isOpen, onToggle, onClose }) => {
+}
+
+/**
+ * DropdownMenu Component
+ * Handles individual dropdown menus in the navigation bar
+ */
+const DropdownMenu: React.FC<DropdownMenuProps> = ({ 
+  item, 
+  isOpen, 
+  onToggle, 
+  onClose 
+}) => {
   const [subMenuOpen, setSubMenuOpen] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const subMenuRef = useRef<HTMLDivElement>(null);
 
+  // Handle clicks outside the dropdown to close it
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -105,6 +146,7 @@ const DropdownMenu: React.FC<{
           {item.items?.map((subItem, index) => (
             <div key={index}>
               {subItem.items ? (
+                // Nested menu items
                 <div>
                   <button
                     className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center justify-between"
@@ -133,13 +175,16 @@ const DropdownMenu: React.FC<{
                           className="block px-8 py-2 hover:bg-gray-100 transition-colors duration-200"
                           onClick={() => onClose()}
                         >
-                          <span className="text-sm">{TYPE_NAMES[idx + 1]}</span>
+                          <span className="text-sm">
+                            {TYPE_NAMES[(idx + 1).toString() as EnneagramNumber]}
+                          </span>
                         </Link>
                       ))}
                     </div>
                   </div>
                 </div>
               ) : (
+                // Regular menu items
                 <Link
                   href={subItem.href || '#'}
                   className="block px-4 py-2 hover:bg-gray-50 transition-colors duration-200"
@@ -156,13 +201,22 @@ const DropdownMenu: React.FC<{
   );
 };
 
-const Navbar: React.FC = () => {
+// Props interface for the Navbar component
+interface NavbarProps {
+  centerContent?: React.ReactNode;
+}
+
+/**
+ * Main Navbar component
+ */
+const Navbar: React.FC<NavbarProps> = ({ centerContent }) => {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white border-b z-50" style={{ borderColor: `${theme.colors.text}10` }}>
       <div className="w-full px-8">
         <div className="flex items-center justify-between h-16">
+          {/* Left section */}
           <div className="flex-1 flex justify-start">
             <DropdownMenu
               item={navigationMenu[0]}
@@ -172,6 +226,12 @@ const Navbar: React.FC = () => {
             />
           </div>
 
+          {/* Center section */}
+          <div className="flex-1 flex justify-center">
+            {centerContent}
+          </div>
+
+          {/* Right section */}
           <div className="flex-1 flex justify-end">
             <div className="flex items-center gap-6">
               <DropdownMenu

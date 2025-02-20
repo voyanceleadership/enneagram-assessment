@@ -6,6 +6,7 @@
 @tailwind utilities;
 
 :root {
+  /* Custom Theme Colors */
   --primary: #337196;
   --background: #F9FAFB;
   --text: #45546A;
@@ -13,9 +14,43 @@
   --accent2: #FF7E67;
   --accent3: #7986CB;
   --accent4: #B4A7D6;
+
+  /* Select Component Variables */
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 224 71.4% 4.1%;
+  --radius: 0.5rem;
+  
+  /* Popover Colors */
+  --popover: 0 0% 100%;
+  --popover-foreground: 224 71.4% 4.1%;
+  
+  /* Accent Colors for UI Components */
+  --accent: 220 14.3% 95.9%;
+  --accent-foreground: 220.9 39.3% 11%;
+  
+  /* Muted Colors */
+  --muted: 220 14.3% 95.9%;
+  --muted-foreground: 220 8.9% 46.1%;
+  
+  /* Card Colors */
+  --card: 0 0% 100%;
+  --card-foreground: 224 71.4% 4.1%;
+  
+  /* Interactive States */
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 20% 98%;
+  
+  /* Input Elements */
+  --input: 220 13% 91%;
+  --ring: 224 71.4% 4.1%;
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
+  
   html {
     font-family: 'Inter', system-ui, sans-serif;
     background-color: var(--background);
@@ -26,6 +61,10 @@
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     letter-spacing: -0.02em;
     font-weight: 600;
+  }
+
+  body {
+    @apply bg-background text-foreground;
   }
 }
 
@@ -86,6 +125,7 @@
   ring: 2px solid var(--primary);
 }
 
+/* Enneagram Diagram Animations */
 .enneagram-diagram path,
 .enneagram-diagram line,
 .enneagram-diagram circle,
@@ -96,6 +136,44 @@
               r 0.3s ease-in-out,
               font-size 0.3s ease-in-out,
               font-weight 0.3s ease-in-out;
+}
+
+/* Select Component Animations */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slide-down {
+  from { height: 0; }
+  to { height: var(--radix-select-content-height); }
+}
+
+@keyframes slide-up {
+  from { height: var(--radix-select-content-height); }
+  to { height: 0; }
+}
+
+/* Select Component Styles */
+.select-content {
+  animation: fade-in 0.2s ease-out;
+}
+
+.select-content[data-state='closed'] {
+  animation: fade-out 0.2s ease-in;
+}
+
+.select-viewport {
+  animation: slide-down 0.2s ease-out;
+}
+
+.select-viewport[data-state='closed'] {
+  animation: slide-up 0.2s ease-in;
 }
 
 /* Print-Specific Styles */
@@ -111,7 +189,9 @@
   /* Hide interactive elements */
   button,
   .button-primary,
-  .button-secondary {
+  .button-secondary,
+  .select-trigger,
+  .select-content {
     display: none;
   }
 

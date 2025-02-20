@@ -118,8 +118,18 @@ export const TYPE_SECTIONS: TypeSection[] = [
     id: 'related-types',
     title: 'Related Types',
     subsections: [
-      { id: 'wings', title: SECTION_NAMES.wingTypes, key: 'wingTypes' },
-      { id: 'lines', title: SECTION_NAMES.lineTypes, key: 'lineTypes' }
+      {
+        id: 'explorer',
+        title: 'Symbol Explorer'
+      },
+      {
+        id: 'wings',
+        title: 'Wing Types'
+      },
+      {
+        id: 'lines',
+        title: 'Line Types'
+      }
     ]
   },
   {
