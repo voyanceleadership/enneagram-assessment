@@ -7,7 +7,7 @@ import Navbar from '@/components/navigation/Navbar';
 import TypeSidebar from './components/TypeSidebar';
 import SectionHeader from './components/SectionHeader';
 import { TYPE_SECTIONS } from '@/lib/types/constants';
-import InteractiveEnneagramDiagram from '../symbol/InteractiveEnneagramDiagram';
+import InteractiveEnneagramDiagram from '../symbol/legacy/InteractiveEnneagramDiagram';
 
 // Import all section components
 import TypeHeader from './sections/TypeHeader';

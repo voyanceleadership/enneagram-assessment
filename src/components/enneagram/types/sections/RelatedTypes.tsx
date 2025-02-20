@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { theme, styleUtils } from '@/styles/theme';
-import InteractiveEnneagramDiagram from '../../symbol/InteractiveEnneagramDiagram';
+import InteractiveEnneagramDiagram from '../../symbol/legacy/InteractiveEnneagramDiagram';
 import SubSectionTabs from '../components/SubSectionTabs';
 import { useSubSectionTabs } from '@/hooks/useSubSectionTabs';
 import { TypeData } from '@/lib/types/types';

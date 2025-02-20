@@ -1,6 +1,6 @@
 import React from 'react';
 import { theme, styleUtils } from '@/styles/theme';
-import InteractiveEnneagramDiagram from '../../symbol/InteractiveEnneagramDiagram';
+import InteractiveEnneagramDiagram from '../../symbol/legacy/InteractiveEnneagramDiagram';
 
 interface TypeHeaderProps {
   typeNumber: string;
