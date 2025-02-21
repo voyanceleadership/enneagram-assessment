@@ -5,7 +5,7 @@ import { theme, styleUtils } from '@/styles/theme';
 import BulletList from '../components/BulletList';
 import SubSectionTabs from '../components/SubSectionTabs';
 import { useSubSectionTabs } from '@/hooks/useSubSectionTabs';
-import { TypeData } from '@/lib/types/types';
+import { TypeData } from '@/lib/enneagram/content/types';
 
 interface TypeIdentificationProps {
   typeData: TypeData;

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Edit2, Share2, ChevronRight, AlertCircle } from 'lucide-react';
 import { theme, styleUtils } from '@/styles/theme';
-import { TypeData } from '@/lib/types/types';
+import { TypeData } from '@/lib/enneagram/content/types';
 
 interface TypeSelectionData {
   id: string;

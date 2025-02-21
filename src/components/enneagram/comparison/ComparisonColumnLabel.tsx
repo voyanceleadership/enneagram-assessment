@@ -4,7 +4,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { theme, styleUtils } from '@/styles/theme';
 import TypeIcon from '@/components/enneagram/TypeIcons';
-import { TypeData } from '@/lib/types';
+import { TypeData } from '@/lib/enneagram/content';
 
 interface ComparisonColumnLabelProps {
   type: string;

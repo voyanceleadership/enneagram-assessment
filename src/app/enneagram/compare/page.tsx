@@ -3,7 +3,7 @@
 
 import { Suspense } from 'react';
 import ComparePageLayout from './ComparePageLayout';
-import { getAllTypesData } from '@/lib/types';
+import { getAllTypesData } from '@/lib/enneagram/content';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface ComparePageProps {

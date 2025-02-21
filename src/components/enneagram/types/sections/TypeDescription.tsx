@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { theme, styleUtils } from '@/styles/theme';
-import { TypeData } from '@/lib/types/types';
+import { TypeData } from '@/lib/enneagram/content/types';
 
 interface TypeDescriptionProps {
   typeData: TypeData;

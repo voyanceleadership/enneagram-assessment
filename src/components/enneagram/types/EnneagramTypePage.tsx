@@ -35,12 +35,12 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { TypeData } from '@/lib/types/types';
+import { TypeData } from '@/lib/enneagram/content/types';
 import { theme } from '@/styles/theme';
 import Navbar from '@/components/navigation/Navbar';
 import TypeSidebar from './components/TypeSidebar';
 import SectionHeader from './components/SectionHeader';
-import { TYPE_SECTIONS } from '@/lib/types/constants';
+import { TYPE_SECTIONS } from '@/lib/enneagram/constants/sections';
 import DynamicEnneagramSymbol from '../symbol/DynamicEnneagramSymbol';
 
 // Import all section components

@@ -1,6 +1,6 @@
 // src/components/enneagram/types/sections/TypeSnapshot.tsx
 import React from 'react';
-import { TypeData } from '@/lib/types/types';
+import { TypeData } from '@/lib/enneagram/content/types';
 import SnapshotCard from '../components/SnapshotCard';
 import ExpandableContent from '../components/ExpandableContent';
 import SubSectionTabs from '../components/SubSectionTabs';

@@ -1,7 +1,7 @@
 // src/components/assessment/ExpandableTypeCard.tsx
 import React from 'react';
 import Link from 'next/link';
-import { TypeData } from '@/lib/types/types';
+import { TypeData } from '@/lib/enneagram/content/types';
 import { ChevronDown } from 'lucide-react';
 
 interface ExpandableTypeCardProps {

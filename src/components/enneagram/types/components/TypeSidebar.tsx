@@ -40,7 +40,7 @@ import { theme } from '@/styles/theme';
 import { ChevronRight, Menu, ChevronUp, ChevronDown } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { useWindowSize } from '@/hooks/useWindowSize';
-import { TypeSection } from '@/lib/types';
+import { TypeSection } from '@/lib/enneagram/content';
 
 interface TypeSidebarProps {
   /** Array of all sections and their subsections */

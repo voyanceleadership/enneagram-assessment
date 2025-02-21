@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 import matter from 'gray-matter';
-import { TypeData, TypeDataSchema, TypeDataError } from '@/lib/types/types';
-import { SectionParser } from '@/lib/types/parsers';
+import { TypeData, TypeDataSchema, TypeDataError } from '@/lib/enneagram/content/types';
+import { SectionParser } from '@/lib/enneagram/content/parsers';
 
 async function loadTypeData(typeNumber: string): Promise<TypeData> {
   try {

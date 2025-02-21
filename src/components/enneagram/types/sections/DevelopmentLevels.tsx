@@ -5,7 +5,7 @@ import { theme } from '@/styles/theme';
 import ExpandableContent from '../components/ExpandableContent';
 import SubSectionTabs from '../components/SubSectionTabs';
 import { useSubSectionTabs } from '@/hooks/useSubSectionTabs';
-import type { TypeData } from '@/lib/types/types';
+import type { TypeData } from '@/lib/enneagram/content/types';
 
 interface DevelopmentLevelsProps {
   typeData: TypeData;

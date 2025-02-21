@@ -5,8 +5,8 @@ import { theme, styleUtils } from '@/styles/theme';
 import DynamicEnneagramSymbol from '../../symbol/DynamicEnneagramSymbol';
 import SubSectionTabs from '../components/SubSectionTabs';
 import { useSubSectionTabs } from '@/hooks/useSubSectionTabs';
-import { TypeData } from '@/lib/types/types';
-import { TYPE_NAMES } from '@/lib/types/constants';
+import { TypeData } from '@/lib/enneagram/content/types';
+import { TYPE_NAMES } from '@/lib/enneagram/constants/sections';
 
 // Valid symbol variations
 type SymbolVariation = 'type-only' | 'left-wing' | 'right-wing' | 'stress-line' | 'growth-line' | 'related-types' | 'both-wings';

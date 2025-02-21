@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { theme, styleUtils } from '@/styles/theme';
-import { TypeData } from '@/lib/types';
+import { TypeData } from '@/lib/enneagram/content';
 import ComparisonRowLabel from './ComparisonRowLabel';
 import ComparisonColumnLabel from './ComparisonColumnLabel';
 import { useRouter } from 'next/navigation';
