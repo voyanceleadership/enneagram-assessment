@@ -1,3 +1,14 @@
+/**
+ * @file queries.ts
+ * @description Functions for loading and processing Enneagram type data
+ * 
+ * This file contains the core functionality for:
+ * - Loading markdown content from the file system
+ * - Parsing structured data from markdown files
+ * - Validating content against the expected schema
+ * - Handling errors that may occur during content loading
+ */
+
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -5,58 +16,60 @@ import { cache } from 'react';
 import { TypeData, TypeDataMap, TypeDataSchema, TypeDataError, ValidationError } from './types';
 import { SectionParser } from './parsers';
 import { SECTION_NAMES } from './constants';
+import { getTypeFilePath, contentFileExists } from '../content-paths';
 
-function extractSections(content: string): string[][] {
+/**
+ * Extract sections from the raw markdown content
+ * 
+ * @param content Raw markdown content
+ * @returns A record of section name to array of lines in that section
+ */
+function extractSections(content: string): Record<string, string[]> {
   const sections: Record<string, string[]> = {};
   let currentSection = '';
   const lines = content.split('\n');
-  const sectionContent: string[][] = [];
-  let currentLines: string[] = [];
+
+  console.log(`\nStarting section extraction`);
+  console.log('Raw content length:', content.length);
+  console.log('Number of lines:', lines.length);
+  console.log('Found sections:');
 
   for (const line of lines) {
-    if (line.startsWith('[') && line.endsWith(']')) {
-      if (currentLines.length > 0) {
-        sectionContent.push(currentLines);
-      }
-      currentLines = [];
-      continue;
+    const trimmedLine = line.trim();
+    if (trimmedLine.match(/^\[.*\]$/)) {
+      currentSection = trimmedLine.slice(1, -1);
+      console.log(`  Found section: "${currentSection}"`);
+      sections[currentSection] = [];
+    } else if (currentSection && trimmedLine) {
+      sections[currentSection].push(trimmedLine);
     }
-    currentLines.push(line);
   }
 
-  if (currentLines.length > 0) {
-    sectionContent.push(currentLines);
-  }
+  // Debug log the content of each section
+  Object.entries(sections).forEach(([name, content]) => {
+    console.log(`\nSection "${name}" has ${content.length} lines`);
+    if (content.length > 0) {
+      console.log('First few lines:', content.slice(0, 2));
+    }
+  });
 
-  return sectionContent;
+  return sections;
 }
 
+/**
+ * Parse a TypeData object from markdown content
+ * 
+ * @param typeDigit The enneagram type number (1-9)
+ * @param content The raw markdown content
+ * @returns A parsed TypeData object
+ */
 async function parseTypeContent(typeDigit: string, content: string): Promise<Partial<TypeData['sections']>> {
   const parser = new SectionParser(typeDigit);
-  const { data: frontmatter, content: markdownContent } = matter(content);
   
   try {
-    const sections = parser.extractSections(markdownContent);
-
-    // Get the section content safely
-    const getSection = (name: string) => sections[name] || [];
-    
-    return {
-      typeSummary: parser.parseTextSection(getSection(SECTION_NAMES.summary), SECTION_NAMES.summary),
-      longDescription: parser.parseTextSection(getSection(SECTION_NAMES.longDescription), SECTION_NAMES.longDescription),
-      mightBeType: parser.parseListSection(getSection(SECTION_NAMES.mightBeType), SECTION_NAMES.mightBeType),
-      probablyNotType: parser.parseListSection(getSection(SECTION_NAMES.probablyNotType), SECTION_NAMES.probablyNotType),
-      healthyLevel: parser.parseLevelTraits(getSection(SECTION_NAMES.healthyLevel)),
-      averageLevel: parser.parseLevelTraits(getSection(SECTION_NAMES.averageLevel)),
-      unhealthyLevel: parser.parseLevelTraits(getSection(SECTION_NAMES.unhealthyLevel)),
-      misconceptions: parser.parseListSection(getSection(SECTION_NAMES.misconceptions), SECTION_NAMES.misconceptions),
-      typesMisidentifyingAsThis: parser.parseMisidentificationSection(getSection(SECTION_NAMES.typesMisidentifyingAsThis), SECTION_NAMES.typesMisidentifyingAsThis),
-      thisTypeMayMisidentifyAs: parser.parseMisidentificationSection(getSection(SECTION_NAMES.thisTypeMayMisidentifyAs), SECTION_NAMES.thisTypeMayMisidentifyAs),
-      wingTypes: parser.parseWingTypes(getSection(SECTION_NAMES.wingTypes)),
-      lineTypes: parser.parseLineTypes(getSection(SECTION_NAMES.lineTypes)),
-      growthPractices: parser.parseListSection(getSection(SECTION_NAMES.growthPractices), SECTION_NAMES.growthPractices),
-      famousExamples: parser.parseListSection(getSection(SECTION_NAMES.famousExamples), SECTION_NAMES.famousExamples)
-    };
+    // Parse the content using the SectionParser
+    const parsedData = await parser.parseContent(content);
+    return parsedData.sections;
   } catch (error) {
     if (error instanceof TypeDataError) {
       throw error;
@@ -70,15 +83,35 @@ async function parseTypeContent(typeDigit: string, content: string): Promise<Par
   }
 }
 
+/**
+ * Load and parse data for a specific Enneagram type
+ * 
+ * @param digit The enneagram type number (1-9) as a string
+ * @returns A fully parsed and validated TypeData object
+ */
 export const getTypeData = cache(async (digit: string): Promise<TypeData> => {
-  const fullPath = path.join(process.cwd(), 'data', 'types', `type${digit}.md`);
+  // Get the full path to the type's markdown file using the helper
+  const fullPath = getTypeFilePath(digit);
   
   try {
     // Add debug logging
     console.log(`Attempting to read file: type${digit}.md`);
+    console.log(`Full path: ${fullPath}`);
+    
+    // Check if the file exists
+    if (!contentFileExists(fullPath)) {
+      console.error(`File does not exist: ${fullPath}`);
+      throw new TypeDataError(
+        `Failed to load type ${digit}: File does not exist at ${fullPath}`,
+        digit
+      );
+    }
+    
+    // Read the file contents
     const fileContents = await fs.promises.readFile(fullPath, 'utf8');
     console.log(`File contents for type${digit}.md:`, fileContents.substring(0, 200)); // Log first 200 chars
 
+    // Parse frontmatter and get content
     const { data: frontmatter, content } = matter(fileContents);
     console.log(`Frontmatter for type${digit}.md:`, frontmatter); // Log frontmatter
 
@@ -108,18 +141,17 @@ export const getTypeData = cache(async (digit: string): Promise<TypeData> => {
       }
     }
 
-    const parsedContent = await parseTypeContent(digit, content);
-    const typeData = {
-      ...frontmatter,
-      sections: parsedContent
-    };
-
-    const validationResult = TypeDataSchema.safeParse(typeData);
+    // Create a parser instance and parse the content
+    const parser = new SectionParser(digit);
+    const parsedData = await parser.parseContent(fileContents);
+    
+    // Validate the parsed data against the schema
+    const validationResult = TypeDataSchema.safeParse(parsedData);
     if (!validationResult.success) {
       throw new ValidationError(digit, validationResult.error);
     }
 
-    return typeData as TypeData;
+    return parsedData as TypeData;
   } catch (error) {
     if (error instanceof TypeDataError || error instanceof ValidationError) {
       throw error;
@@ -130,15 +162,21 @@ export const getTypeData = cache(async (digit: string): Promise<TypeData> => {
       `Failed to load type ${digit} from ${fullPath}`,
       digit,
       undefined,
-      error
+      error instanceof Error ? error : new Error('Unknown error')
     );
   }
 });
 
+/**
+ * Load and parse data for all nine Enneagram types
+ * 
+ * @returns A map of all types' data, keyed by type number
+ */
 export const getAllTypesData = cache(async (): Promise<TypeDataMap> => {
   const typeData: TypeDataMap = {};
   const errors: TypeDataError[] = [];
   
+  // Load all types in parallel
   await Promise.all(
     Array.from({ length: 9 }, async (_, i) => {
       const typeDigit = (i + 1).toString();
@@ -153,17 +191,48 @@ export const getAllTypesData = cache(async (): Promise<TypeDataMap> => {
             'Unknown error loading type',
             typeDigit,
             undefined,
-            error
+            error instanceof Error ? error : new Error('Unknown error')
           ));
         }
       }
     })
   );
 
+  // If any errors occurred, log them and throw
   if (errors.length > 0) {
     console.error('Errors loading type data:', errors);
     throw new Error('Failed to load all type data. Check console for details.');
   }
 
   return typeData;
+});
+
+/**
+ * Load and parse any generic content file from the content directory
+ * 
+ * @param category The content category (e.g., 'insights')
+ * @param fileName The file name including extension
+ * @returns The parsed frontmatter and content
+ */
+export const getContentFile = cache(async (
+  category: keyof typeof import('../content-paths').CONTENT_PATHS, 
+  fileName: string
+): Promise<{ data: any; content: string }> => {
+  // Import dynamically to avoid circular dependencies
+  const { getContentFilePath } = await import('../content-paths');
+  const fullPath = getContentFilePath(category, fileName);
+  
+  try {
+    console.log(`Attempting to read content file: ${fileName} from ${category}`);
+    
+    if (!contentFileExists(fullPath)) {
+      throw new Error(`File does not exist: ${fullPath}`);
+    }
+    
+    const fileContents = await fs.promises.readFile(fullPath, 'utf8');
+    return matter(fileContents);
+  } catch (error) {
+    console.error(`Error loading content from ${fullPath}:`, error);
+    throw error;
+  }
 });
