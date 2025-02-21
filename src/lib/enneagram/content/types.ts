@@ -1,6 +1,6 @@
-// types.ts
 import { z } from 'zod';
 
+// Basic schemas for common structures
 const SummaryExplanationSchema = z.object({
   summary: z.string(),
   explanation: z.string()
@@ -11,34 +11,37 @@ const LevelTraitSchema = z.object({
   explanation: z.string()
 });
 
-export interface MisidentificationType {
-  type: string;
-  sharedTraits: string[];
-  differences: {
-    coreMotivation: string;
-    behavioral: string;
-    stress: string;
-  };
-}
-
-export interface TypeSection {
-  id: string;
-  title: string | ((typeNumber: string) => string);
-  subsections?: TypeSubsection[];
-}
-
-export interface TypeSubsection {
-  id: string;
-  title: string | ((typeNumber: string) => string);
-  key?: keyof TypeData['sections'] | keyof TypeData;
-}
-
-// Define the schema for wing data
-const WingDataSchema = z.object({
+// Enhanced schemas for wing and line type relationships
+const WingTypeSchema = z.object({
   description: z.string(),
-  alias: z.string()
+  alias: z.string(),
+  combination: z.object({
+    personality: z.string(),
+    strengths: z.array(z.string()),
+    challenges: z.array(z.string())
+  })
 });
 
+const LineTypeSchema = z.object({
+  description: z.string(),
+  dynamics: z.object({
+    healthy: z.string(),
+    average: z.string(),
+    unhealthy: z.string()
+  })
+});
+
+const MisidentificationSchema = z.object({
+  type: z.string(),
+  sharedTraits: z.array(z.string()),
+  differences: z.object({
+    coreMotivation: z.string(),
+    behavioral: z.string(),
+    stress: z.string()
+  })
+});
+
+// Main TypeData schema
 export const TypeDataSchema = z.object({
   typeDigit: z.string(),
   typeNumber: z.string(),
@@ -65,32 +68,16 @@ export const TypeDataSchema = z.object({
     averageLevel: z.array(LevelTraitSchema),
     unhealthyLevel: z.array(LevelTraitSchema),
     misconceptions: z.array(z.string()),
-    typesMisidentifyingAsThis: z.array(z.object({
-      type: z.string(),
-      sharedTraits: z.array(z.string()),
-      differences: z.object({
-        coreMotivation: z.string(),
-        behavioral: z.string(),
-        stress: z.string()
-      })
-    })),
-    thisTypeMayMisidentifyAs: z.array(z.object({
-      type: z.string(),
-      sharedTraits: z.array(z.string()),
-      differences: z.object({
-        coreMotivation: z.string(),
-        behavioral: z.string(),
-        stress: z.string()
-      })
-    })),
-    wingTypes: z.record(WingDataSchema),
-    lineTypes: z.record(z.string()),
+    typesMisidentifyingAsThis: z.array(MisidentificationSchema),
+    thisTypeMayMisidentifyAs: z.array(MisidentificationSchema),
+    wingTypes: z.record(WingTypeSchema),
+    lineTypes: z.record(LineTypeSchema),
     growthPractices: z.array(z.string()),
     famousExamples: z.array(z.string())
   })
 });
 
-// Update TypeData interface to match schema
+// TypeData interface matching the schema
 export interface TypeData {
   typeDigit: string;
   typeNumber: string;
@@ -165,13 +152,56 @@ export interface TypeData {
       explanation: string;
     }>;
     misconceptions: string[];
-    typesMisidentifyingAsThis: MisidentificationType[];
-    thisTypeMayMisidentifyAs: MisidentificationType[];
-    wingTypes: Record<string, { description: string; alias: string }>;
-    lineTypes: Record<string, string>;
+    typesMisidentifyingAsThis: Array<{
+      type: string;
+      sharedTraits: string[];
+      differences: {
+        coreMotivation: string;
+        behavioral: string;
+        stress: string;
+      };
+    }>;
+    thisTypeMayMisidentifyAs: Array<{
+      type: string;
+      sharedTraits: string[];
+      differences: {
+        coreMotivation: string;
+        behavioral: string;
+        stress: string;
+      };
+    }>;
+    wingTypes: Record<string, {
+      description: string;
+      alias: string;
+      combination: {
+        personality: string;
+        strengths: string[];
+        challenges: string[];
+      };
+    }>;
+    lineTypes: Record<string, {
+      description: string;
+      dynamics: {
+        healthy: string;
+        average: string;
+        unhealthy: string;
+      };
+    }>;
     growthPractices: string[];
     famousExamples: string[];
   };
+}
+
+export interface TypeSection {
+  id: string;
+  title: string | ((typeNumber: string) => string);
+  subsections?: TypeSubsection[];
+}
+
+export interface TypeSubsection {
+  id: string;
+  title: string | ((typeNumber: string) => string);
+  key?: keyof TypeData['sections'] | keyof TypeData;
 }
 
 export type TypeDataMap = Record<string, TypeData>;
@@ -198,6 +228,7 @@ export class ValidationError extends Error {
   }
 }
 
+// Utility functions
 export function getDisplayTypeName(type: TypeData): string {
   return `Type ${type.typeDigit}: ${type.typeName}`;
 }

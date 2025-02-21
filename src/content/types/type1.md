@@ -176,12 +176,38 @@ Ones are principled, purposeful, self-controlled, and perfectionistic. They stri
     • Stress Behavior: Ones become overly critical, Eights assert control to avoid vulnerability
 
 [Wing Types]
-Type 9: The Peacemaker Wing (1w9, aka "The Idealist"): More withdrawn, objective, and focused on principles.  
-Type 2: The Helper Wing (1w2, aka "The Advocate"): More interpersonal, empathetic, and inclined to help others.  
+Type 9: The Peacemaker Wing (1w9, aka "The Idealist"): More withdrawn, objective, and focused on principles.
+Personality: The One with a Nine wing tends to be more introverted and reflective. They often process their moral convictions internally before acting on them.
+Strengths:
+• More patient and composed when addressing problems
+• Better able to see multiple perspectives while maintaining principles
+• Natural ability to remain calm under pressure
+Challenges:
+• May struggle with assertiveness when action is needed
+• Can become too detached from emotions
+• Risk of passive-aggressive behavior when frustrated
 
-[Line Types]  
-Type 4: The Individualist: Access to creativity and emotional depth.  
+Type 2: The Helper Wing (1w2, aka "The Advocate"): More interpersonal, empathetic, and inclined to help others.
+Personality: The One with a Two wing is more people-oriented and expressive. They often channel their desire for improvement into helping and teaching others.
+Strengths:
+• Strong ability to connect principles with human impact
+• Natural teaching and mentoring abilities
+• Warm and engaging while maintaining standards
+Challenges:
+• May take on too much responsibility for others' growth
+• Can become overly invested in others' choices
+• Risk of emotional burnout from helping
+
+[Line Types]
+Type 4: The Individualist: Access to creativity and emotional depth.
+Healthy: At their best, Ones accessing their Four connection gain emotional awareness and creative expression while maintaining their principles. They become more accepting of imperfection and can see beauty in the process of growth.
+Average: When moderately stressed, they may become more self-conscious about their flaws and struggle with feelings of not measuring up to their ideals. Their self-criticism takes on a more personal, emotional tone.
+Unhealthy: Under significant stress, they may become melancholic and withdraw into self-absorption, feeling deeply flawed and unable to reach their ideals.
+
 Type 7: The Enthusiast: Access to playfulness and optimism.
+Healthy: In growth, Ones connecting to Seven energy become more spontaneous and joyful, maintaining their principles while finding pleasure in the present moment. They develop a more positive, optimistic approach to improvement.
+Average: When moderately stressed, they may oscillate between rigid control and impulsive escape from their standards, seeking distraction from their inner critic.
+Unhealthy: Under significant stress, they may become scattered and unfocused, using activity and pleasure-seeking to avoid their intense self-criticism and sense of failure.
 
 [Growth Practices]
 1. Practice self-compassion by accepting your imperfections as part of being human.
