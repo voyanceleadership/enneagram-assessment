@@ -1,9 +1,9 @@
-// src/components/enneagram/types/components/ExplorerPanel.tsx
+// src/components/enneagram/types/sections/RelatedTypes/ExplorerPanel.tsx
 
 import React from 'react';
 import { WingTypeDetails } from './WingTypeDetails';
 import { LineTypeDetails } from './LineTypeDetails';
-import { ExplorerContent } from '../types/explorer';
+import { ExplorerContent } from './explorer';
 import { X } from 'lucide-react';
 
 interface ExplorerPanelProps {
@@ -55,3 +55,5 @@ export function ExplorerPanel({ content, onClose }: ExplorerPanelProps) {
     </div>
   );
 }
+
+export default ExplorerPanel;

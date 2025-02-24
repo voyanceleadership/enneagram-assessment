@@ -1,16 +1,16 @@
-// src/components/enneagram/types/components/ExplanationPanel.tsx
+// src/components/enneagram/types/sections/RelatedTypes/ExplanationPanel.tsx
 
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { TypeData } from '@/lib/enneagram/content/types';
-import { TYPE_NAMES } from '@/lib/enneagram/constants/sections';
 import { theme } from '@/styles/theme';
-
-type SymbolVariation = 'type-only' | 'left-wing' | 'right-wing' | 'stress-line' | 'growth-line' | 'related-types' | 'both-wings' | 'both-lines';
+import { SymbolVariation } from './explorer';
 
 interface ExplanationPanelProps {
   selectedVariation: SymbolVariation;
-  typeData: TypeData;
+  typeData: {
+    typeDigit: string;
+    typeName: string;
+  };
   wingTypes: {
     left: {
       number: string;
@@ -37,7 +37,7 @@ interface ExplanationPanelProps {
       dynamics: any;
     };
   };
-  onScrollToSection: (sectionId: string) => void;
+  onScrollToSection: (sectionId: string, subsectionId?: string) => void;
 }
 
 export function ExplanationPanel({ 
@@ -75,7 +75,7 @@ export function ExplanationPanel({
             These connections form a unique pattern that influences how {coreTypeName} manifests and evolves.
           </p>
           <button 
-            onClick={() => onScrollToSection('category-intro')} 
+            onClick={() => onScrollToSection('related-types', 'explorer')} 
             className="inline-flex items-center hover:underline mt-2"
             style={buttonStyle}
           >
@@ -103,7 +103,7 @@ export function ExplanationPanel({
             While most people have one dominant wing type, it's also possible to relate to both wing types - or neither. Having influence from both wings creates a more nuanced personality blend.
           </p>
           <button 
-            onClick={() => onScrollToSection('wings-section')} 
+            onClick={() => onScrollToSection('related-types', 'wings')} 
             className="inline-flex items-center hover:underline mt-2"
             style={buttonStyle}
           >
@@ -128,7 +128,7 @@ export function ExplanationPanel({
             This wing type brings Type {typeData.typeDigit}s qualities of {wingTypes.left.data?.combination.strengths[0].toLowerCase()}.
           </p>
           <button 
-            onClick={() => onScrollToSection('left-wing')} 
+            onClick={() => onScrollToSection('related-types', 'left-wing')} 
             className="inline-flex items-center hover:underline mt-2"
             style={buttonStyle}
           >
@@ -153,7 +153,7 @@ export function ExplanationPanel({
             This wing type brings Type {typeData.typeDigit}s qualities of {wingTypes.right.data?.combination.strengths[0].toLowerCase()}.
           </p>
           <button 
-            onClick={() => onScrollToSection('right-wing')} 
+            onClick={() => onScrollToSection('related-types', 'right-wing')} 
             className="inline-flex items-center hover:underline mt-2"
             style={buttonStyle}
           >
@@ -181,7 +181,7 @@ export function ExplanationPanel({
             These connections reveal how your personality adapts at your best and under pressure.
           </p>
           <button 
-            onClick={() => onScrollToSection('lines-section')} 
+            onClick={() => onScrollToSection('related-types', 'lines')} 
             className="inline-flex items-center hover:underline mt-2"
             style={buttonStyle}
           >
@@ -202,7 +202,7 @@ export function ExplanationPanel({
             Under stress, Type {typeData.typeDigit}s may display characteristics of Type {lineTypes.stress.number}.
           </p>
           <button 
-            onClick={() => onScrollToSection('stress-line')} 
+            onClick={() => onScrollToSection('related-types', 'stress-line')} 
             className="inline-flex items-center hover:underline mt-2"
             style={buttonStyle}
           >
@@ -223,7 +223,7 @@ export function ExplanationPanel({
             At their best, Type {typeData.typeDigit}s may integrate positive aspects of Type {lineTypes.growth.number}.
           </p>
           <button 
-            onClick={() => onScrollToSection('growth-line')} 
+            onClick={() => onScrollToSection('related-types', 'growth-line')} 
             className="inline-flex items-center hover:underline mt-2"
             style={buttonStyle}
           >

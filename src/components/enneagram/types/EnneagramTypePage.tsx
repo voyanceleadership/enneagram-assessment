@@ -51,7 +51,7 @@ import TypeDescription from './sections/TypeDescription';
 import TypeIdentification from './sections/TypeIdentification';
 import DevelopmentLevels from './sections/DevelopmentLevels';
 import Misconceptions from './sections/Misconceptions';
-import RelatedTypes from './sections/RelatedTypes';
+import RelatedTypes from './sections/RelatedTypes/RelatedTypesMain';
 import GrowthPractices from './sections/GrowthPractices';
 import FamousExamples from './sections/FamousExamples';
 import Misidentifications from './sections/Misidentifications';
