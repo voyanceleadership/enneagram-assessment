@@ -1,10 +1,37 @@
-// src/components/enneagram/types/sections/TypeSnapshot.tsx
+/**
+ * TypeSnapshot Component
+ * 
+ * A comprehensive overview section that displays key characteristics and attributes
+ * of an Enneagram type. This component serves as a quick-reference guide,
+ * presenting information in distinct, collapsible sections.
+ * 
+ * Key Features:
+ * - Displays multiple aspects of type information in card format
+ * - Supports both single and array-based content
+ * - Provides expandable/collapsible sections for complex content
+ * - Integrates with sidebar navigation for direct section access
+ * 
+ * Dependencies:
+ * - TypeSidebar: Uses matching IDs for scroll-to-section functionality
+ * - SnapshotCard: Handles individual section display
+ * - ExpandableContent: Manages expandable content sections
+ * 
+ * Data Flow:
+ * - Receives type data from parent component
+ * - Maps data to corresponding sections
+ * - Handles content rendering based on data type
+ * - Manages section refs for scroll positioning
+ * 
+ * Usage:
+ * ```tsx
+ * <TypeSnapshot typeData={typeData} />
+ * ```
+ */
+
 import React from 'react';
 import { TypeData } from '@/lib/enneagram/content/types';
 import SnapshotCard from '../components/SnapshotCard';
 import ExpandableContent from '../components/ExpandableContent';
-import SubSectionTabs from '../components/SubSectionTabs';
-import { useSubSectionTabs } from '@/hooks/useSubSectionTabs';
 import {
   FileText, Target, ListChecks, AlertTriangle, ShieldAlert,
   Star, CloudRain, Bell, Brain, Ban, MessageSquareX, TrendingUp
@@ -14,7 +41,15 @@ interface TypeSnapshotProps {
   typeData: TypeData;
 }
 
-// Configuration for snapshot sections with their icons and descriptions
+/**
+ * Configuration for all snapshot sections
+ * Each section defines:
+ * - id: Unique identifier matching sidebar navigation
+ * - title: Display name for the section
+ * - icon: Lucide icon component to represent the section
+ * - description: Tooltip/helper text explaining the section
+ * - key: Reference to the corresponding data in TypeData
+ */
 const SNAPSHOT_SECTIONS = [
   {
     id: 'brief-description',
@@ -102,23 +137,26 @@ const SNAPSHOT_SECTIONS = [
   }
 ] as const;
 
-// Component for displaying the type snapshot section with expandable content
 export default function TypeSnapshot({ typeData }: TypeSnapshotProps) {
-  const { activeTab, handleTabChange, contentRefs, tabsContainerRef } = useSubSectionTabs({
-    sections: SNAPSHOT_SECTIONS,
-    sectionId: 'snapshot'
-  });
-
+  /**
+   * Renders the content for a specific section based on its data type
+   * Handles both array-based content (like secondary desires/fears)
+   * and single-item content (like brief description)
+   * 
+   * @param key - The key to access the relevant data in typeData
+   * @returns JSX for the rendered content
+   */
   const renderContent = (key: typeof SNAPSHOT_SECTIONS[number]['key']) => {
     const data = typeData[key];
     
-    // Handle arrays (secondary desires and fears)
+    // Handle array data (secondary desires and fears)
     if (Array.isArray(data)) {
       return (
         <div className="space-y-4">
           {data.map((item, idx) => (
             <div key={idx}>
               {key === 'secondaryDesires' || key === 'secondaryFears' ? (
+                // Use expandable content for secondary desires and fears
                 <ExpandableContent 
                   summary={item.summary} 
                   explanation={item.explanation}
@@ -140,7 +178,7 @@ export default function TypeSnapshot({ typeData }: TypeSnapshotProps) {
       );
     }
     
-    // Handle single items
+    // Handle single item data (objects with summary and explanation)
     if (data && typeof data === 'object' && 'summary' in data && 'explanation' in data) {
       return (
         <div className="border rounded-lg overflow-hidden">
@@ -159,12 +197,12 @@ export default function TypeSnapshot({ typeData }: TypeSnapshotProps) {
 
   return (
     <div className="space-y-6">
-      {SNAPSHOT_SECTIONS.map((section, idx) => (
+      {SNAPSHOT_SECTIONS.map((section) => (
         <div
           key={section.id}
-          ref={el => contentRefs.current[idx] = el}
-          data-subsection-id={section.id}
+          // Set both ID attributes for compatibility with sidebar navigation
           id={`section-${section.id}`}
+          data-subsection-id={section.id}
         >
           <SnapshotCard
             icon={section.icon}

@@ -11,7 +11,7 @@ export default function SubsectionHeader({ title }: SubsectionHeaderProps) {
     <div 
       className="sticky w-full bg-white shadow-sm"
       style={{ 
-        top: '147px', // Adjusted to match exactly where the main header ends
+        top: '80px', // Adjusted to match exactly where the main header ends
         borderLeft: `3px solid ${theme.colors.accent3}`,
         zIndex: 4
       }}

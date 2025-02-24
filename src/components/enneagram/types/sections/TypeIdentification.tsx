@@ -1,4 +1,4 @@
-// src/components/enneagram/types/sections/TypeIdentification.tsx
+// TypeIdentification.tsx
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { theme, styleUtils } from '@/styles/theme';
@@ -14,13 +14,13 @@ interface TypeIdentificationProps {
 export default function TypeIdentification({ typeData }: TypeIdentificationProps) {
   const sections = [
     {
-      id: 'might-be',  // Match the ID used in EnneagramTypePage
+      id: 'might-be',
       title: `You Might Be a ${typeData.typeNumber} If...`,
       color: theme.colors.text,
       content: typeData.sections.mightBeType
     },
     {
-      id: 'probably-not',  // Match the ID used in EnneagramTypePage
+      id: 'probably-not',
       title: `You're Probably Not a ${typeData.typeNumber} If...`,
       color: theme.colors.text,
       content: typeData.sections.probablyNotType
@@ -37,7 +37,7 @@ export default function TypeIdentification({ typeData }: TypeIdentificationProps
       {/* Tabs */}
       <div 
         ref={tabsContainerRef}
-        className="sticky top-[168px] bg-white z-10"
+        className="sticky top-[116px] bg-white z-10" // Adjusted from 168px to 104px
         data-tabs-container
       >
         <SubSectionTabs
@@ -48,17 +48,14 @@ export default function TypeIdentification({ typeData }: TypeIdentificationProps
         />
       </div>
 
-      {/* Add space-y-6 equivalent spacing */}
-      <div className="h-6" />
-
       {/* Content sections */}
-      <div className="space-y-6">
+      <div className="space-y-6 mt-6">
         {sections.map((section, idx) => (
           <div 
             key={idx}
             ref={el => contentRefs.current[idx] = el}
             data-subsection-id={section.id}
-            id={`section-${section.id}`}  // Add ID for scroll targeting
+            id={`section-${section.id}`}
           >
             <Card className="bg-white shadow-md border-0">
               <div className="p-6">

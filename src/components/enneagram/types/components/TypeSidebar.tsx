@@ -1,38 +1,40 @@
-// src/components/enneagram/types/components/TypeSidebar.tsx
-
 /**
  * TypeSidebar Component
  * 
- * A navigation component that provides hierarchical section navigation for Enneagram type pages.
- * This component handles both the display of the navigation structure and the scroll positioning
- * when users navigate between sections and subsections.
+ * A navigation component providing hierarchical section navigation for Enneagram type pages.
+ * This component manages both the display of navigation items and the scroll positioning
+ * logic when users navigate between sections and subsections.
  * 
  * Key Features:
- * - Hierarchical navigation with expandable sections
- * - Dynamic scroll positioning that adapts to content height
- * - Sticky positioning with proper header offset handling
+ * - Hierarchical navigation structure with expandable sections
+ * - Dynamic scroll positioning that adapts to page layout
  * - Collapsible sidebar for space efficiency
  * - Visual feedback for active and hover states
+ * - Automatic expansion of parent sections when subsections are active
  * 
- * Component Structure:
- * - Main navigation container with collapsible state
- * - Section buttons that can expand to reveal subsections
- * - Subsection buttons for nested navigation
+ * Component Integration:
+ * - Used by: EnneagramTypePage
+ * - Coordinates with: TypeSnapshot, RelatedTypes, and other content sections
+ * - Element Requirements: Content sections must have matching IDs and data attributes
+ *   - Section elements need: id="section-{sectionId}"
+ *   - Subsections need: data-subsection-id="{subsectionId}"
  * 
- * Related Components:
- * - Parent: EnneagramTypePage (uses this component for navigation)
- * - Siblings: SectionHeader (coordinates with for scroll positioning)
- * - Children: SubSectionTabs (works with for subsection display)
- * 
- * Dynamic Scroll Calculation:
- * The component calculates scroll positions based on current element positions and heights:
+ * Scroll Position Calculation:
+ * Takes into account:
  * - Main navbar height (fixed at 64px)
- * - Section header heights (dynamically measured)
- * - Tab container heights (dynamically measured)
- * - Current viewport position
+ * - Section header heights (measured dynamically)
+ * - Subsection header heights where applicable
+ * - Additional padding and spacing
  * 
- * This ensures accurate scrolling even as content heights change or when dynamic content
- * like the Symbol Explorer is present.
+ * Usage:
+ * ```tsx
+ * <TypeSidebar
+ *   sections={sections}
+ *   activeSection={activeSection}
+ *   onSectionClick={handleSectionClick}
+ *   typeNumber="1"
+ * />
+ * ```
  */
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -69,18 +71,23 @@ export default function TypeSidebar({
   /**
    * Resolves section titles that might be either static strings or
    * functions that generate titles based on the type number
+   * @param title - Either a string or a function that returns a string
+   * @returns The resolved title string
    */
   const resolveTitle = (title: string | ((typeNumber: string) => string)) => {
     return typeof title === 'function' ? title(typeNumber) : title;
   };
   
   /**
-   * Main section click handler
-   * Manages both section expansion and scroll positioning
+   * Handles clicking on main section buttons
+   * Either expands/collapses the section if it has subsections,
+   * or scrolls to the section content if it doesn't
+   * 
    * @param sectionId - ID of the clicked section
    */
   const handleSectionClick = (sectionId: string) => {
     const section = sections.find(s => s.id === sectionId);
+    
     if (section?.subsections) {
       // Toggle expansion for sections with subsections
       setExpandedSections(prev => {
@@ -93,22 +100,19 @@ export default function TypeSidebar({
         return next;
       });
     } else {
-      // Find target section and calculate scroll position
+      // Calculate scroll position for sections without subsections
       const element = document.getElementById(`section-${sectionId}`);
       if (!element) return;
 
-      // Get sticky header elements and dimensions
       const navbarHeight = 64;
       const sectionHeader = element.querySelector('[data-section-header]');
       if (!sectionHeader) return;
 
-      // Calculate dynamic scroll position
       const elementPosition = element.getBoundingClientRect().top;
       const headerHeight = sectionHeader.getBoundingClientRect().height;
       const scrollOffset = navbarHeight + headerHeight;
       const offsetPosition = elementPosition + window.pageYOffset - scrollOffset;
 
-      // Perform smooth scroll
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth'
@@ -118,38 +122,38 @@ export default function TypeSidebar({
   };
 
   /**
-   * Subsection click handler
-   * Manages scroll positioning for subsections, accounting for all sticky elements
+   * Handles clicking on subsection buttons
+   * Calculates correct scroll position considering all sticky elements
+   * 
    * @param e - Click event
    * @param sectionId - Parent section ID
-   * @param subsectionId - Target subsection ID
+   * @param subsectionId - Clicked subsection ID
    */
   const handleSubsectionClick = (e: React.MouseEvent, sectionId: string, subsectionId: string) => {
     e.stopPropagation();
     
-    // Find target elements
-    const subsectionContent = document.querySelector(`[data-subsection-id="${subsectionId}"]`);
-    if (!subsectionContent) return;
-    
+    // Find subsection element
+    const subsectionElement = document.querySelector(`[data-subsection-id="${subsectionId}"]`);
+    if (!subsectionElement) return;
+
+    // Get parent section and its header
     const sectionElement = document.getElementById(`section-${sectionId}`);
     if (!sectionElement) return;
     
     const sectionHeader = sectionElement.querySelector('[data-section-header]');
-    const tabsContainer = sectionElement.querySelector('[data-tabs-container]');
-    
-    if (!sectionHeader || !tabsContainer) return;
+    if (!sectionHeader) return;
 
-    // Get dynamic heights
+    // Calculate offsets
     const navbarHeight = 64;
     const headerHeight = sectionHeader.getBoundingClientRect().height;
-    const tabsHeight = tabsContainer.getBoundingClientRect().height;
+    const padding = 24;
     
-    // Calculate position and offset
-    const elementPosition = subsectionContent.getBoundingClientRect().top;
-    const totalOffset = navbarHeight + headerHeight + tabsHeight;
+    // Calculate final scroll position
+    const elementPosition = subsectionElement.getBoundingClientRect().top;
+    const totalOffset = navbarHeight + headerHeight + padding;
     const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
 
-    // Perform smooth scroll
+    // Perform scroll
     window.scrollTo({
       top: offsetPosition,
       behavior: 'smooth'
@@ -176,7 +180,6 @@ export default function TypeSidebar({
   };
 
   /**
-   * Window resize effect
    * Adjusts sidebar height based on window size
    */
   useEffect(() => {
@@ -184,14 +187,13 @@ export default function TypeSidebar({
       const headerHeight = 64;
       const topSpacing = 96;
       const bottomSpacing = 96;
-      const sidebarHeaderHeight = 56;
       const availableHeight = windowHeight - headerHeight - topSpacing - bottomSpacing;
       navRef.current.style.maxHeight = `${availableHeight}px`;
     }
   }, [windowHeight]);
 
   /**
-   * Active section tracking effect
+   * Manages active section tracking and auto-expansion
    * Ensures parent sections are expanded when their subsections are active
    */
   useEffect(() => {
@@ -270,7 +272,7 @@ export default function TypeSidebar({
       >
         <div className="space-y-1 pb-8">
           {sections.map(section => {
-            // Compute section states
+            // Compute section states for rendering
             const isActive = section.id === activeSection;
             const hasSubsections = section.subsections && section.subsections.length > 0;
             const isExpanded = expandedSections.has(section.id);
@@ -303,7 +305,7 @@ export default function TypeSidebar({
                   )}
                 </button>
 
-                {/* Subsections container */}
+                {/* Subsections container with animation */}
                 <div 
                   className={`overflow-hidden transition-all duration-300 ease-in-out
                     ${isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}

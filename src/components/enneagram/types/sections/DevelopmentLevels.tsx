@@ -43,7 +43,7 @@ export default function DevelopmentLevels({ typeData }: DevelopmentLevelsProps) 
       {/* Tabs */}
       <div 
         ref={tabsContainerRef}
-        className="sticky top-[168px] bg-white z-10"
+        className="sticky top-[116px] bg-white z-10"
         data-tabs-container
       >
         <SubSectionTabs

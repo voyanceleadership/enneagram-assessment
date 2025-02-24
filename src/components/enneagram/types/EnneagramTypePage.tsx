@@ -211,12 +211,11 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
         <div className="space-y-12">
           {/* Each section is wrapped in a div with a unique ID for navigation */}
           <div id="section-snapshot">
-            <SectionHeader 
-              sectionNumber="01"
-              title="Type Snapshot"
-              topOffset={64}
-              containerId="section-snapshot"
-            />
+          <SectionHeader 
+            title="Type Snapshot"
+            topOffset={64}
+            containerId="section-snapshot"
+          />
             <div className="pt-6">
               <TypeSnapshot typeData={typeData} />
             </div>
