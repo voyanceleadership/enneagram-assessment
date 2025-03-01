@@ -164,13 +164,39 @@ Sevens are natural optimists and adventurers, constantly seeking out new opportu
     • Behavioral Differences: Nines avoid conflict to maintain inner peace, while Sevens avoid discomfort to maintain happiness
     • Stress Behavior: Nines disengage and become passive, while Sevens become scattered and impulsive
 
-[Wing Types]  
-Type 6: The Loyalist Wing (7w6, aka "The Entertainer"): More loyal, collaborative, and cautious, balancing spontaneity with careful planning.  
-Type 8: The Challenger Wing (7w8, aka "The Realist"): More assertive, driven, and grounded, combining adventurousness with boldness.  
+[Wing Types]
+Type 6: The Loyalist Wing (7w6, aka "The Entertainer"): More grounded, loyal, and relationship-oriented.
+Personality: The Seven with a Six wing tends to be more people-oriented and conscious of commitments. They often balance their need for stimulation with a desire for secure relationships and group belonging.
+Strengths:
+• More reliable and consistent in relationships
+• Better awareness of risks and practical concerns
+• Natural ability to build community through shared experiences
+Challenges:
+• May experience more noticeable anxiety when constrained
+• Can struggle with commitment vs. freedom dilemmas
+• Risk of using groups to escape from deeper fears
 
-[Line Types]  
-Type 1: The Reformer: Access to discipline, structure, and a focus on improvement.  
-Type 5: The Investigator: Access to intellectual depth, curiosity, and a love for learning.  
+Type 8: The Challenger Wing (7w8, aka "The Realist"): More assertive, practical, and power-conscious.
+Personality: The Seven with an Eight wing is more action-oriented and willing to confront obstacles. They often channel their enthusiasm into ambitious projects and aren't afraid to take control to ensure freedom and satisfaction.
+Strengths:
+• More focused and determined in pursuing goals
+• Natural ability to overcome obstacles to their plans
+• Better at turning ideas into concrete reality
+Challenges:
+• May bulldoze others' concerns to maintain their freedom
+• Can become excessively self-centered in pursuits
+• Risk of impulsive aggression when thwarted
+
+[Line Types]
+Type 1: The Reformer: Access to discipline and purpose.
+Healthy: At their best, Sevens accessing their One connection develop greater focus and self-discipline. They channel their enthusiasm into meaningful pursuits guided by clear values and principles.
+Average: When moderately stressed, they may become more critical and perfectionistic about their experiences, feeling that nothing quite meets their standards.
+Unhealthy: Under significant stress, they become rigidly idealistic, bitter about limitations, and harshly critical of anything that restrains them.
+
+Type 5: The Investigator: Access to depth and focused expertise.
+Healthy: In growth, Sevens connecting to Five energy develop greater depth and focus. They move beyond scattered interests to develop real expertise and find satisfaction in deep understanding.
+Average: When moderately stressed, they may retreat into their minds, overthinking options rather than engaging directly with experience.
+Unhealthy: Under significant stress, they may withdraw emotionally and intellectually, becoming cynical and depleted as they disconnect from their natural enthusiasm.
 
 [Growth Practices]
 1. Practice staying present in the moment, even when it feels uncomfortable or mundane.  

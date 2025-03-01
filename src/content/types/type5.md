@@ -168,13 +168,39 @@ Fives are defined by their desire to understand the world and gain mastery over 
     • Behavioral Differences: Nines disengage to avoid conflict, while Fives withdraw to focus on intellectual mastery
     • Stress Behavior: Nines become complacent, while Fives become overly private and detached
 
-[Wing Types]  
-Type 4: The Individualist Wing (5w4, aka "The Iconoclast"): More introspective, creative, and emotionally attuned, blending intellectual curiosity with a desire for self-expression.  
-Type 6: The Loyalist Wing (5w6, aka "The Problem Solver"): More focused on security, logical analysis, and planning, blending intellectual depth with practicality.  
+[Wing Types]
+Type 4: The Individualist Wing (5w4, aka "The Iconoclast"): More creative, emotional, and expressive.
+Personality: The Five with a Four wing tends to be more aesthetically oriented and emotionally aware. They often combine intellectual rigor with creative expression and personal perspective.
+Strengths:
+• More in touch with emotions and subjective experience
+• Natural ability to think outside conventional frameworks
+• Creative application of their specialized knowledge
+Challenges:
+• May become too subjective in their analysis
+• Can struggle with emotional intensity and melancholy
+• Risk of withdrawing further during emotional distress
 
-[Line Types]  
-Type 7: The Enthusiast: Adds spontaneity and enthusiasm, encouraging exploration beyond intellectual boundaries.  
-Type 8: The Challenger: Adds assertiveness and decisiveness, enabling Fives to take action on their ideas.  
+Type 6: The Loyalist Wing (5w6, aka "The Problem-Solver"): More practical, systematic, and security-conscious.
+Personality: The Five with a Six wing is more focused on practical applications of knowledge and potential threats. They often use their analytical abilities to create systems that provide security and solve real-world problems.
+Strengths:
+• Better at applying knowledge to practical problems
+• More aware of potential risks and contingencies
+• Natural ability to work within established systems
+Challenges:
+• May become anxious about worst-case scenarios
+• Can develop paranoia about others' intentions
+• Risk of getting caught in analysis paralysis
+
+[Line Types]
+Type 7: The Enthusiast: Access to engagement and versatility.
+Healthy: At their best, Fives accessing their Seven connection become more engaged with the world and willing to experience life directly. They apply their knowledge adventurously and connect with others through shared enthusiasm.
+Average: When moderately stressed, they may become scattered in their focus, jumping between interests without depth.
+Unhealthy: Under significant stress, they become impulsively distractible, using trivia and superficial knowledge to avoid deeper engagement.
+
+Type 8: The Challenger: Access to confidence and decisive action.
+Healthy: In growth, Fives connecting to Eight energy become more confident and decisive. They move from observation to action, using their knowledge to make a tangible impact on their environment.
+Average: When moderately stressed, they may alternate between withdrawal and confrontational outbursts when their boundaries are threatened.
+Unhealthy: Under significant stress, they may become combative and controlling, using knowledge as a weapon to maintain distance and power.  
 
 [Growth Practices]
 1. Balance intellectual pursuits with emotional connection by investing time in meaningful relationships.  

@@ -162,13 +162,39 @@ Nines are driven by a desire to maintain peace and harmony, both internally and 
     • Behavioral Differences: Sevens pursue excitement and variety, while Nines prioritize steadiness and comfort
     • Stress Behavior: Sevens become scattered and avoidant, while Nines become disengaged and procrastinate
 
-[Wing Types]  
-Type 8: The Challenger Wing (9w8, aka "The Referee"): More assertive, grounded, and focused on justice.  
-Type 1: The Reformer Wing (9w1, aka "The Dreamer"): More idealistic, principled, and focused on doing what is right.  
+[Wing Types]
+Type 8: The Challenger Wing (9w8, aka "The Referee"): More assertive, grounded, and independently minded.
+Personality: The Nine with an Eight wing tends to be more physically present and willing to assert themselves. They often express their peace-making through creating fair systems and standing up for those who can't speak for themselves.
+Strengths:
+• More able to assert boundaries and preferences
+• Natural physical presence and groundedness
+• Better at taking decisive action when necessary
+Challenges:
+• May swing between passivity and unexpected aggression
+• Can struggle with suppressed anger that emerges explosively
+• Risk of becoming stubborn and immovable when pushed
 
-[Line Types]  
-Type 3: The Achiever: Access to ambition and focus.  
-Type 6: The Loyalist: Access to vigilance and collaboration.  
+Type 1: The Reformer Wing (9w1, aka "The Dreamer"): More principled, organized, and improvement-oriented.
+Personality: The Nine with a One wing is more structured and idealistic. They often channel their desire for harmony through creating more perfect systems and gently encouraging improvements.
+Strengths:
+• More organized and attentive to details
+• Natural sense of order and proper procedure
+• Clear moral compass that guides decision-making
+Challenges:
+• May become critical when harmony is disturbed
+• Can get caught in rigid routines
+• Risk of passive-aggressive behavior when standards aren't met
+
+[Line Types]
+Type 3: The Achiever: Access to motivation and goal-orientation.
+Healthy: At their best, Nines accessing their Three connection become more focused and productive. They channel their vision of harmony into achievable goals and find satisfaction in meaningful accomplishment.
+Average: When moderately stressed, they may become more image-conscious and adopt personas based on what others expect, further losing touch with their authentic desires.
+Unhealthy: Under significant stress, they may become mechanically productive to avoid inner emptiness, going through motions without genuine engagement.
+
+Type 6: The Loyalist: Access to engagement and commitment.
+Healthy: In growth, Nines connecting to Six energy become more engaged and committed to their values and relationships. They develop greater awareness of problems that need addressing rather than avoiding conflict.
+Average: When moderately stressed, they may become more anxious and doubtful, seeking reassurance and guidance from external authorities.
+Unhealthy: Under significant stress, they become reactive and fearful, projecting their denied anger onto external threats and becoming defensive against imagined attacks.
 
 [Growth Practices]  
 1. Practice expressing your thoughts and preferences directly, even in small situations.  

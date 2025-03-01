@@ -1,37 +1,11 @@
 'use client';
 
 /**
- * EnneagramTypePage Component
+ * EnneagramTypePage Component - Phase 1 Improvements
  * 
- * A comprehensive page component for displaying detailed information about a specific Enneagram type.
- * This component serves as the main container for all type-specific content and manages the layout,
- * navigation, and scroll behavior for the various sections of type information.
- * 
- * Key Responsibilities:
- * - Manages the overall layout and structure of type pages
- * - Handles scroll-based navigation and section highlighting
- * - Coordinates between the sidebar navigation and main content
- * - Manages the interactive Enneagram symbol display
- * 
- * Dependencies:
- * - Navbar: Global navigation component
- * - TypeSidebar: Section navigation component
- * - SectionHeader: Section title component
- * - DynamicEnneagramSymbol: Interactive Enneagram diagram
- * - Various section components (TypeSnapshot, TypeSummary, etc.)
- * 
- * Data Flow:
- * - Receives typeData and typeNumber as props
- * - Passes relevant data to child components
- * - Manages active section state based on scroll position
- * 
- * Usage:
- * ```tsx
- * <EnneagramTypePage 
- *   typeData={typeData} 
- *   typeNumber="1"
- * />
- * ```
+ * Changes:
+ * - Increased container width for better content display
+ * - Added visual type identifier at the top
  */
 
 import React, { useState, useEffect } from 'react';
@@ -46,15 +20,11 @@ import DynamicEnneagramSymbol from '../symbol/DynamicEnneagramSymbol';
 // Import all section components
 import TypeHeader from './sections/TypeHeader';
 import TypeSnapshot from './sections/TypeSnapshot';
-import TypeSummary from './sections/TypeSummary';
 import TypeDescription from './sections/TypeDescription';
-import TypeIdentification from './sections/TypeIdentification';
 import DevelopmentLevels from './sections/DevelopmentLevels';
-import Misconceptions from './sections/Misconceptions';
 import RelatedTypes from './sections/RelatedTypes/RelatedTypesMain';
 import GrowthPractices from './sections/GrowthPractices';
 import FamousExamples from './sections/FamousExamples';
-import Misidentifications from './sections/Misidentifications';
 
 interface EnneagramTypePageProps {
   typeData: TypeData;
@@ -196,8 +166,8 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
         typeNumber={typeNumber}
       />
 
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 pt-6">
+      {/* Main Content - Increased max width */}
+      <div className="max-w-7xl mx-auto px-4 pt-6">
         {/* Enneagram Diagram */}
         <div className="w-2/3 mx-auto">
           <DynamicEnneagramSymbol 
@@ -207,35 +177,23 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
           />
         </div>
 
-        {/* Content Sections */}
+        {/* Content Sections - With updated max width */}
         <div className="space-y-12">
-          {/* Each section is wrapped in a div with a unique ID for navigation */}
+          {/* 1. Type Snapshot */}
           <div id="section-snapshot">
-          <SectionHeader 
-            title="Type Snapshot"
-            topOffset={64}
-            containerId="section-snapshot"
-          />
+            <SectionHeader 
+              title="Type Snapshot"
+              topOffset={64}
+              containerId="section-snapshot"
+            />
             <div className="pt-6">
               <TypeSnapshot typeData={typeData} />
             </div>
           </div>
 
-          <div id="section-summary">
-            <SectionHeader 
-              sectionNumber="02"
-              title="Type Summary"
-              topOffset={64}
-              containerId="section-summary"
-            />
-            <div className="pt-6">
-              <TypeSummary typeData={typeData} />
-            </div>
-          </div>
-
+          {/* 2. Type Description */}
           <div id="section-description">
             <SectionHeader 
-              sectionNumber="03"
               title="Type Description"
               topOffset={64}
               containerId="section-description"
@@ -245,33 +203,9 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
             </div>
           </div>
 
-          <div id="section-identification">
-            <SectionHeader 
-              sectionNumber="04"
-              title="Type Identification"
-              topOffset={64}
-              containerId="section-identification"
-            />
-            <div className="pt-6">
-              <TypeIdentification typeData={typeData} />
-            </div>
-          </div>
-
-          <div id="section-misidentifications">
-            <SectionHeader 
-              sectionNumber="05"
-              title="Misidentifications"
-              topOffset={64}
-              containerId="section-misidentifications"
-            />
-            <div className="pt-6">
-              <Misidentifications typeData={typeData} />
-            </div>
-          </div>
-
+          {/* 3. Levels of Development */}
           <div id="section-levels">
             <SectionHeader 
-              sectionNumber="06"
               title="Levels of Development"
               topOffset={64}
               containerId="section-levels"
@@ -281,21 +215,9 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
             </div>
           </div>
 
-          <div id="section-misconceptions">
-            <SectionHeader 
-              sectionNumber="07"
-              title="Common Misconceptions"
-              topOffset={64}
-              containerId="section-misconceptions"
-            />
-            <div className="pt-6">
-              <Misconceptions typeData={typeData} />
-            </div>
-          </div>
-
+          {/* 4. Related Types */}
           <div id="section-related-types">
             <SectionHeader 
-              sectionNumber="08"
               title="Related Types"
               topOffset={64}
               containerId="section-related-types"
@@ -305,9 +227,9 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
             </div>
           </div>
 
+          {/* 5. Growth Practices */}
           <div id="section-growth">
             <SectionHeader 
-              sectionNumber="09"
               title="Growth Practices"
               topOffset={64}
               containerId="section-growth"
@@ -317,9 +239,9 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
             </div>
           </div>
 
+          {/* 6. Famous Examples */}
           <div id="section-examples">
             <SectionHeader 
-              sectionNumber="10"
               title="Famous Examples"
               topOffset={64}
               containerId="section-examples"

@@ -152,13 +152,39 @@ Sixes thrive on creating security and stability in their lives, often relying on
     • Behavioral Differences: Threes focus on their image and external achievements, while Sixes are more team-oriented and grounded in building trust
     • Stress Behavior: Threes may become overly image-conscious and self-promoting, while Sixes may become anxious and reliant on others for reassurance 
 
-[Wing Types]  
-Type 5: The Investigator Wing (6w5, aka "The Defender"): More analytical, reserved, and focused on independence.  
-Type 7: The Enthusiast Wing (6w7, aka "The Buddy"): More sociable, optimistic, and focused on forming connections.  
+[Wing Types]
+Type 5: The Investigator Wing (6w5, aka "The Guardian"): More analytical, detached, and intellectually focused.
+Personality: The Six with a Five wing tends to be more thoughtful and reserved. They often process their anxieties through logical analysis and systematic investigation of potential problems.
+Strengths:
+• More objective when assessing risks and threats
+• Natural ability to thoroughly research before making decisions
+• Calmer and more measured approach to challenges
+Challenges:
+• May become too detached from emotions and relationships
+• Can get lost in endless research and theorizing
+• Risk of intellectual isolation when anxious
 
-[Line Types]  
-Type 3: The Achiever: Access to ambition and efficiency.  
-Type 9: The Peacemaker: Access to calmness and reassurance.  
+Type 7: The Enthusiast Wing (6w7, aka "The Buddy"): More optimistic, adventurous, and sociable.
+Personality: The Six with a Seven wing is more outgoing and positive-minded. They often cope with anxiety through activity, humor, and maintaining multiple options and relationships.
+Strengths:
+• More naturally optimistic and resilient
+• Better ability to use humor to defuse tension
+• More adventurous in trying new approaches to problems
+Challenges:
+• May use distraction to avoid addressing core fears
+• Can become scattered when anxious
+• Risk of impulsive decisions when seeking relief from anxiety
+
+[Line Types]
+Type 3: The Achiever: Access to confidence and goal-orientation.
+Healthy: At their best, Sixes accessing their Three connection become more confident and success-oriented. They transform anxiety into productive action, focusing on achievable goals rather than potential threats.
+Average: When moderately stressed, they may become more image-conscious and people-pleasing, seeking external validation for security.
+Unhealthy: Under significant stress, they may become deceptive about their capabilities and achievements to maintain security.
+
+Type 9: The Peacemaker: Access to calm and inner guidance.
+Healthy: In growth, Sixes connecting to Nine energy find inner peace and trust in themselves. They develop faith in natural processes and their own internal guidance, reducing anxious vigilance.
+Average: When moderately stressed, they may become more passive and indecisive, going along with others to avoid conflict.
+Unhealthy: Under significant stress, they may numb themselves to anxiety through dissociation and denial, becoming stubbornly unresponsive to real threats.
 
 [Growth Practices]  
 1. Build trust in yourself by recognizing your ability to handle uncertainty without excessive reassurance.  

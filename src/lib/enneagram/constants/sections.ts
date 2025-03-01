@@ -43,6 +43,7 @@ export const TYPE_NUMBERS = {
 } as const;
 
 export const TYPE_SECTIONS: TypeSection[] = [
+  // 1. Type Snapshot - Quick digestible overview
   {
     id: 'snapshot',
     title: 'Type Snapshot',
@@ -61,46 +62,14 @@ export const TYPE_SECTIONS: TypeSection[] = [
       { id: 'key-to-growth', title: 'Key to Growth', key: 'keyToGrowth' }
     ]
   },
-  {
-    id: 'summary',
-    title: SECTION_NAMES.summary
-  },
+  
+  // 2. Type Description - Narrative explanation
   {
     id: 'description',
     title: 'Type Description'
   },
-  {
-    id: 'identification',
-    title: 'Type Identification',
-    subsections: [
-      { 
-        id: 'might-be',
-        title: (typeNumber) => `You Might Be a ${TYPE_NUMBERS[typeNumber]} If...`,
-        key: 'mightBeType'
-      },
-      {
-        id: 'probably-not',
-        title: (typeNumber) => `You're Probably Not a ${TYPE_NUMBERS[typeNumber]} If...`,
-        key: 'probablyNotType'
-      }
-    ]
-  },
-  {
-    id: 'misidentifications',
-    title: 'Misidentifications',
-    subsections: [
-      { 
-        id: 'others-as-type', 
-        title: (typeNumber) => `Types That May Misidentify as ${TYPE_NUMBERS[typeNumber]}s`, 
-        key: 'typesMisidentifyingAsThis'
-      },
-      { 
-        id: 'type-as-others', 
-        title: (typeNumber) => `${TYPE_NUMBERS[typeNumber]}s May Misidentify As...`,
-        key: 'thisTypeMayMisidentifyAs'
-      }
-    ]
-  },
+  
+  // 3. Levels of Development - Health spectrum
   {
     id: 'levels',
     title: 'Levels of Development',
@@ -110,32 +79,25 @@ export const TYPE_SECTIONS: TypeSection[] = [
       { id: 'unhealthy', title: 'Unhealthy Level', key: 'unhealthyLevel' }
     ]
   },
-  {
-    id: 'misconceptions',
-    title: SECTION_NAMES.misconceptions
-  },
+  
+  // 4. Related Types - Connections and relationships
   {
     id: 'related-types',
     title: 'Related Types',
     subsections: [
-      {
-        id: 'explorer',
-        title: 'Symbol Explorer'
-      },
-      {
-        id: 'wings',
-        title: 'Wing Types'
-      },
-      {
-        id: 'lines',
-        title: 'Line Types'
-      }
+      { id: 'explorer', title: 'Symbol Explorer' },
+      { id: 'wing-intro', title: 'Wing Types' },
+      { id: 'line-intro', title: 'Line Types' }
     ]
   },
+  
+  // 5. Growth Practices - Development strategies
   {
     id: 'growth',
     title: SECTION_NAMES.growthPractices
   },
+  
+  // 6. Famous Examples - Real-world illustrations
   {
     id: 'examples',
     title: SECTION_NAMES.famousExamples

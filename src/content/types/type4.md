@@ -139,13 +139,39 @@ Fours are defined by their deep introspection and desire to connect with their i
     • Behavioral Differences: Fours actively pursue meaning and emotional authenticity, while Nines avoid conflict and prioritize harmony
     • Stress Behavior: Fours retreat into emotional intensity, while Nines disengage and detach
 
-[Wing Types]  
-Type 3: The Achiever Wing (4w3, aka "The Aristocrat"): More image-conscious and driven to achieve recognition for their creativity.  
-Type 5: The Investigator (4w5, aka "The Bohemian"): More introspective and intellectual, blending creativity with deep analysis.  
+[Wing Types]
+Type 3: The Achiever Wing (4w3, aka "The Aristocrat"): More success-oriented, adaptable, and socially aware.
+Personality: The Four with a Three wing is more image-conscious and achievement-oriented. They often channel their creative expression into forms that receive recognition and validation from others.
+Strengths:
+• Better able to translate their unique vision into practical success
+• Natural ability to promote their creative work
+• More adaptable in professional and social settings
+Challenges:
+• May compromise authenticity for external validation
+• Can become overly competitive and envious of others' success
+• Risk of identity confusion when pursuing external achievements
 
-[Line Types]  
-Type 1: The Reformer: Brings discipline and a desire for improvement.  
-Type 2: The Helper: Adds warmth and a focus on connection.  
+Type 5: The Investigator Wing (4w5, aka "The Bohemian"): More analytical, reserved, and conceptually deep.
+Personality: The Four with a Five wing tends to be more introspective and intellectually oriented. They often express their uniqueness through specialized knowledge and unconventional thinking.
+Strengths:
+• Deeper conceptual understanding of their emotional landscape
+• Natural ability to analyze and articulate complex feelings
+• More objective perspective on their subjective experiences
+Challenges:
+• May become too isolated in their emotional world
+• Can overthink emotions rather than processing them
+• Risk of detachment from practical realities
+
+[Line Types]
+Type 1: The Reformer: Access to discipline and moral clarity.
+Healthy: At their best, Fours accessing their One connection develop greater self-discipline and purpose. They channel their creativity into meaningful work with positive impact, guided by clear values.
+Average: When moderately stressed, they may become more critical and judgmental, both of themselves and others, focusing on flaws and imperfections.
+Unhealthy: Under significant stress, they become harshly self-critical and rigid, trying to perfect themselves according to impossible standards.
+
+Type 2: The Helper: Access to emotional connection and interpersonal warmth.
+Healthy: In growth, Fours connecting to Two energy become more genuinely connected to others. They move beyond self-absorption to empathic understanding, finding fulfillment in meaningful relationships.
+Average: When moderately stressed, they may become needier and more demanding in relationships, seeking validation for their feelings.
+Unhealthy: Under significant stress, they may manipulate others emotionally to get attention and validation, while remaining dissatisfied with the connection.
 
 [Growth Practices]  
 1. Practice self-compassion and learn to value yourself as you are, not for what makes you unique.  

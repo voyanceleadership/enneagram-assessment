@@ -168,13 +168,39 @@ Eights are decisive, action-oriented, and protective individuals who stand up fo
     • Behavioral Differences: Eights assert their own agenda, while Threes adapt to meet others’ expectations
     • Stress Behavior: Eights become confrontational, while Threes become overly focused on their image
 
-[Wing Types]  
-Type 7: The Enthusiast Wing (8w7, aka "The Maverick"): More adventurous, energetic, and focused on experiencing life.  
-Type 9: The Peacemaker Wing (8w9, aka "The Bear"): More patient, grounded, and focused on maintaining harmony.  
+[Wing Types]
+Type 7: The Enthusiast Wing (8w7, aka "The Maverick"): More adventurous, versatile, and pleasure-seeking.
+Personality: The Eight with a Seven wing tends to be more expansive and experience-oriented. They often express their power through creating exciting opportunities and pushing boundaries for themselves and others.
+Strengths:
+• More optimistic and inspiring to others
+• Natural ability to envision new possibilities
+• More playful and lighthearted in using power
+Challenges:
+• May avoid deeper emotional vulnerabilities through distraction
+• Can be excessive in pursuit of stimulation and experiences
+• Risk of impulsive decisions that harm long-term interests
 
-[Line Types]  
-Type 2: The Helper: Access to compassion and a focus on supporting others.  
-Type 5: The Investigator: Access to depth, intellectual focus, and strategic thinking.  
+Type 9: The Peacemaker Wing (8w9, aka "The Bear"): More patient, receptive, and emotionally grounded.
+Personality: The Eight with a Nine wing is more measured and calm in their approach to power. They often express their strength through steady persistence and a grounded presence that creates space for others.
+Strengths:
+• More patient and less reactive when challenged
+• Natural ability to use power in more inclusive ways
+• Better at listening and considering multiple perspectives
+Challenges:
+• May alternate between assertiveness and withdrawal
+• Can be stubborn and immovable when opposed
+• Risk of passive-aggressive behavior rather than direct confrontation
+
+[Line Types]
+Type 2: The Helper: Access to emotional connection and interpersonal awareness.
+Healthy: At their best, Eights accessing their Two connection become more compassionate and relationally aware. They use their strength to genuinely nurture others, balancing power with tenderness.
+Average: When moderately stressed, they may become more manipulative in relationships, using charm and generosity to maintain control.
+Unhealthy: Under significant stress, they become emotionally demanding and entitled, expecting others to meet their unacknowledged emotional needs.
+
+Type 5: The Investigator: Access to objectivity and strategic thinking.
+Healthy: In growth, Eights connecting to Five energy develop greater objectivity and thoughtfulness. They learn to step back from intense reactions to strategize effectively and gain deeper understanding.
+Average: When moderately stressed, they may withdraw to analyze threats, becoming more secretive and suspicious about others' intentions.
+Unhealthy: Under significant stress, they become isolated and paranoid, seeing betrayal everywhere and withdrawing to protect themselves from perceived vulnerabilities.
 
 [Growth Practices]  
 1. Embrace vulnerability by sharing your thoughts and feelings with trusted loved ones.  

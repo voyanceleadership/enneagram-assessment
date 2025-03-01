@@ -144,13 +144,39 @@ Twos are warm, empathetic, and highly relational individuals who thrive on meani
     • Behavioral Differences: Twos actively anticipate needs, while Nines go along with others’ preferences
     • Stress Behavior: Twos may become clingy, while Nines become disengaged
 
-[Wing Types]  
-Type 1: The Reformer Wing (2w1, aka "The Servant"): Focused on helping with a sense of duty and responsibility.  
-Type 3: The Achiever Wing (2w3, aka "The Host/Hostess"): More image-conscious and focused on charm and presentation.  
+[Wing Types]
+Type 1: The Reformer Wing (2w1, aka "The Servant"): More principled, structured, and duty-oriented.
+Personality: The Two with a One wing tends to be more organized and principled in their approach to helping others. They often have a strong sense of what is "right" and channel their helpfulness through structured systems and moral frameworks.
+Strengths:
+• More objective about when and how to help others
+• Better boundaries and self-discipline
+• Natural ability to create systems for supporting others effectively
+Challenges:
+• May become judgmental when others don't meet their standards
+• Can struggle with rigidity in their helping approach
+• Risk of moral superiority when their help isn't appreciated
 
-[Line Types]  
-Type 4: The Individualist: Access to emotional depth and creativity.  
-Type 8: The Challenger: Access to assertiveness and strength.  
+Type 3: The Achiever Wing (2w3, aka "The Host/Hostess"): More image-conscious, ambitious, and success-oriented.
+Personality: The Two with a Three wing is more outgoing and achievement-oriented. They often express their desire to help through visible accomplishments and social recognition.
+Strengths:
+• Highly effective at creating positive social impressions
+• Natural ability to network and connect people
+• Energetic and enthusiastic in their support of others
+Challenges:
+• May help primarily for recognition rather than from genuine empathy
+• Can become overly concerned with how their helping is perceived
+• Risk of burnout from maintaining their helpful image
+
+[Line Types]
+Type 4: The Individualist: Access to emotional authenticity and self-awareness.
+Healthy: At their best, Twos accessing their Four connection develop greater emotional honesty and self-awareness. They acknowledge their own needs and desires without shame, leading to more authentic relationships.
+Average: When moderately stressed, they may become more emotionally volatile and preoccupied with their unmet needs, feeling underappreciated despite their efforts.
+Unhealthy: Under significant stress, they may become dramatically emotional and envious, focusing on what they lack and feeling entitled to more appreciation.
+
+Type 8: The Challenger: Access to assertiveness and self-empowerment.
+Healthy: In growth, Twos connecting to Eight energy become more direct and assertive, able to stand up for themselves while still caring for others. They develop healthy self-advocacy without losing their empathy.
+Average: When moderately stressed, they may fluctuate between excessive people-pleasing and confrontational demands for appreciation.
+Unhealthy: Under significant stress, they may become domineering and manipulative, using their relationships as leverage to get their needs met.
 
 [Growth Practices]
 1. Practice self-care and learn to prioritize your own needs.

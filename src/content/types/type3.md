@@ -164,13 +164,39 @@ Threes are ambitious, adaptable, and results-driven individuals who are often se
     • Behavioral Differences: Threes aim for structured accomplishments, while Sevens explore spontaneity and adventure
     • Stress Behavior: Threes fixate on their public image, while Sevens scatter their focus to avoid negative emotions
 
-[Wing Types]  
-Type 2: The Helper Wing (3w2, aka "The Charmer"): More relational and people-oriented, focusing on charm and connection.  
-Type 4: The Individualist Wing (3w4, aka "The Professional"): More introspective and creative, focusing on unique self-expression.  
+[Wing Types]
+Type 2: The Helper Wing (3w2, aka "The Charmer"): More people-oriented, empathetic, and relationally focused.
+Personality: The Three with a Two wing is more attuned to relationships and emotional connections. They often achieve success through their interpersonal skills and ability to understand what others want and need.
+Strengths:
+• More authentic emotional connections with others
+• Natural ability to inspire and motivate teams
+• Genuine concern for the impact of their success on others
+Challenges:
+• May neglect personal goals to maintain relationships
+• Can become too dependent on others' approval
+• Risk of manipulating emotions to achieve goals
 
-[Line Types]  
-Type 6: The Loyalist: Access to loyalty and collaboration.  
-Type 9: The Peacemaker: Access to calmness and groundedness.  
+Type 4: The Individualist Wing (3w4, aka "The Professional"): More introspective, creative, and distinctive.
+Personality: The Three with a Four wing tends to be more individualistic and focused on authentic self-expression. They often pursue success in creative or unique fields where they can distinguish themselves.
+Strengths:
+• More in touch with personal values and authentic desires
+• Natural creativity and originality in their work
+• Ability to stand out with a unique personal brand
+Challenges:
+• May struggle with periods of self-doubt and identity questioning
+• Can become too focused on what makes them special
+• Risk of competitive envy toward more successful peers
+
+[Line Types]
+Type 6: The Loyalist: Access to commitment and collaboration.
+Healthy: At their best, Threes accessing their Six connection become more loyal and team-oriented. They value genuine relationships over status and find meaning in contributing to something larger than themselves.
+Average: When moderately stressed, they may become more anxious about failure and seek reassurance about their value and competence.
+Unhealthy: Under significant stress, they become suspicious of others' intentions and may project blame for their failures onto external factors.
+
+Type 9: The Peacemaker: Access to groundedness and authentic presence.
+Healthy: In growth, Threes connecting to Nine energy become more present, grounded, and authentic. They learn to value themselves beyond achievements and find peace in simply being rather than constantly doing.
+Average: When moderately stressed, they may disconnect from their emotions and become more mechanical in their pursuit of success.
+Unhealthy: Under significant stress, they may become disengaged and apathetic about their goals, numbing themselves to avoid feelings of failure. 
 
 [Growth Practices]
 1. Reflect on your motivations and reconnect with your authentic self.
