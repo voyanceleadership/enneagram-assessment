@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * @file TypeNames.tsx
  * @description SVG Text elements for rendering the Enneagram type names

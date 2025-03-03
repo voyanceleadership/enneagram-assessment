@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * @file index.ts
  * @description Barrel file for SVG element components

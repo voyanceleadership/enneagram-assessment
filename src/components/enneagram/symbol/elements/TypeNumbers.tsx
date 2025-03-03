@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * @file TypeNumbers.tsx
  * @description SVG Text elements for the Enneagram type numbers

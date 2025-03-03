@@ -1,21 +1,11 @@
+'use client';
+
 /**
  * @file Connections.tsx
  * @description SVG Path elements for the Enneagram connection lines
  * 
- * This component handles rendering all connecting lines between Enneagram types:
- * - Wing connections (outer circle connections between adjacent types)
- * - Stress/Growth lines (inner lines connecting related types)
- * 
- * Lines are rendered in two layers:
- * 1. Background layer for non-highlighted lines
- * 2. Foreground layer for highlighted lines
- * This ensures proper visual layering when lines intersect.
- * 
- * Related files:
- * - DynamicEnneagramSymbol.tsx (parent component)
- * - Arrowheads.tsx (renders arrowheads on these lines)
- * - ../../../lib/enneagram/constants (connection paths)
- * - ../../../lib/enneagram/styles (styling utilities)
+ * This final version preserves the original stroke weight while
+ * attempting to improve line crispness.
  */
 
 import React from 'react';
@@ -25,7 +15,7 @@ import { CONNECTIONS, TYPE_COORDINATES } from '@/lib/enneagram';
 interface ConnectionsProps extends StyledElementProps {}
 
 /**
- * Renders all connection lines in the Enneagram symbol
+ * Renders all connection lines in the Enneagram symbol with original stroke weight
  */
 export const Connections: React.FC<ConnectionsProps> = ({ selectedType, variation, styleUtils }) => {
   /**
@@ -74,6 +64,8 @@ export const Connections: React.FC<ConnectionsProps> = ({ selectedType, variatio
       // Only render if highlighted status matches what we want for this layer
       if (isHighlighted !== highlighted) return null;
 
+      // For better precision, draw the lines directly with line elements
+      // while preserving the original style
       return (
         <line
           key={`${from}-${to}`}
@@ -82,6 +74,7 @@ export const Connections: React.FC<ConnectionsProps> = ({ selectedType, variatio
           x2={TYPE_COORDINATES[to].x}
           y2={TYPE_COORDINATES[to].y}
           style={styleUtils.getLineStyle(from, to)}
+          shapeRendering="geometricPrecision"
         />
       );
     });

@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * @file Circles.tsx
  * @description SVG Circle elements for the Enneagram type points

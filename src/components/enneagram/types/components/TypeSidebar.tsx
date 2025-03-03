@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * TypeSidebar Component
  * 
@@ -10,6 +12,7 @@
  * - Consistent styling for subsection lists
  * - Repositioned navigation toggle button
  * - Automatic scrolling to sections when clicked (even with subsections)
+ * - FIXED: Added proper hydration safety to prevent client/server mismatches
  */
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -19,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { TypeSection } from '@/lib/enneagram/content';
 import { motion, AnimatePresence } from 'framer-motion';
+import DynamicEnneagramSymbol from '../../symbol/DynamicEnneagramSymbol'; // Adjust the path as needed
 
 interface TypeSidebarProps {
   /** Array of all sections and their subsections */
@@ -44,26 +48,12 @@ export default function TypeSidebar({
   onSectionClick,
   typeNumber
 }: TypeSidebarProps) {
+  // Client-side hydration safety
+  const [isMounted, setIsMounted] = useState(false);
+
   // Local state with persistence
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(() => {
-    // Try to restore expanded sections from localStorage
-    try {
-      const saved = localStorage.getItem('enneagram-sidebar-expanded');
-      return saved ? new Set(JSON.parse(saved)) : new Set();
-    } catch (e) {
-      return new Set();
-    }
-  });
-  
-  const [isCollapsed, setIsCollapsed] = useState(() => {
-    // Load sidebar collapsed state from localStorage or defaults to false
-    try {
-      return localStorage.getItem('enneagram-sidebar-collapsed') === 'true';
-    } catch (e) {
-      return false;
-    }
-  });
-  
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+  const [isCollapsed, setIsCollapsed] = useState(true); // Default to collapsed for SSR
   const [activeSubsections, setActiveSubsections] = useState<Set<string>>(new Set());
   const [isMobileView, setIsMobileView] = useState(false);
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
@@ -73,8 +63,35 @@ export default function TypeSidebar({
   // Used to track the order of sections for wave animation
   const [sectionIndices, setSectionIndices] = useState<Record<string, number>>({});
 
+  // Handle hydration - this must run before any other effects
+  useEffect(() => {
+    setIsMounted(true);
+    
+    // Now that we're on the client, we can safely initialize from localStorage
+    try {
+      // Load expanded sections from localStorage
+      const saved = localStorage.getItem('enneagram-sidebar-expanded');
+      if (saved) {
+        setExpandedSections(new Set(JSON.parse(saved)));
+      }
+      
+      // Load sidebar collapsed state
+      const collapsedState = localStorage.getItem('enneagram-sidebar-collapsed');
+      if (collapsedState !== null) {
+        setIsCollapsed(collapsedState === 'true');
+      } else {
+        // Default to collapsed on mobile, expanded on desktop
+        setIsCollapsed(window.innerWidth < 768);
+      }
+    } catch (e) {
+      console.error('Failed to load sidebar state', e);
+    }
+  }, []);
+
   // Set up section indices for consistent animation ordering
   useEffect(() => {
+    if (!isMounted) return;
+    
     const indices: Record<string, number> = {};
     let globalIndex = 0;
     
@@ -92,41 +109,49 @@ export default function TypeSidebar({
     });
     
     setSectionIndices(indices);
-  }, [sections]);
+  }, [sections, isMounted]);
 
   // Detect mobile view
   useEffect(() => {
+    if (!isMounted) return;
+    
     setIsMobileView(windowWidth < 768);
     // Auto-collapse sidebar on mobile
     if (windowWidth < 768 && !isCollapsed) {
       setIsCollapsed(true);
     }
-  }, [windowWidth, isCollapsed]);
+  }, [windowWidth, isCollapsed, isMounted]);
 
   // Persist expanded sections to localStorage
   useEffect(() => {
+    if (!isMounted) return;
+    
     try {
       localStorage.setItem('enneagram-sidebar-expanded', 
         JSON.stringify(Array.from(expandedSections)));
     } catch (e) {
       console.error('Failed to save sidebar state', e);
     }
-  }, [expandedSections]);
+  }, [expandedSections, isMounted]);
 
   // Persist sidebar collapsed state
   useEffect(() => {
+    if (!isMounted) return;
+    
     try {
       localStorage.setItem('enneagram-sidebar-collapsed', 
         isCollapsed.toString());
     } catch (e) {
       console.error('Failed to save sidebar collapsed state', e);
     }
-  }, [isCollapsed]);
+  }, [isCollapsed, isMounted]);
 
   /**
    * Track which subsections are in view for highlighting
    */
   useEffect(() => {
+    if (!isMounted) return;
+    
     const handleScroll = () => {
       const offset = 150; // Adjust the offset as needed
       const newActiveSubsections = new Set<string>();
@@ -158,7 +183,7 @@ export default function TypeSidebar({
     handleScroll(); // Check initial state
     
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [sections, activeSubsections]);
+  }, [sections, activeSubsections, isMounted]);
 
   /**
    * Resolves section titles that might be either static strings or
@@ -174,6 +199,8 @@ export default function TypeSidebar({
    * regardless of whether it has subsections
    */
   const handleSectionClick = (sectionId: string) => {
+    if (!isMounted) return;
+    
     const section = sections.find(s => s.id === sectionId);
     
     // Always scroll to the section header first
@@ -205,6 +232,8 @@ export default function TypeSidebar({
    * Handles clicking on subsection buttons
    */
   const handleSubsectionClick = (e: React.MouseEvent, sectionId: string, subsectionId: string) => {
+    if (!isMounted) return;
+    
     e.stopPropagation();
     
     // Special handling for related-types subsections
@@ -245,6 +274,8 @@ export default function TypeSidebar({
    * This is now separated from the main section click handler
    */
   const toggleSectionExpansion = (e: React.MouseEvent, sectionId: string) => {
+    if (!isMounted) return;
+    
     e.stopPropagation(); // Don't trigger the section click
     
     setExpandedSections(prev => {
@@ -263,6 +294,8 @@ export default function TypeSidebar({
    * This is the key function that ensures clicking a section scrolls to it
    */
   const scrollToSection = (sectionId: string) => {
+    if (!isMounted) return;
+    
     // Find the section element by its ID
     const element = document.getElementById(`section-${sectionId}`);
     if (!element) {
@@ -298,39 +331,47 @@ export default function TypeSidebar({
   
   /**
    * Helper function to scroll to an element with proper offsets
+   * FIXED: Simplified scroll calculation with fixed offset
    */
   const scrollToElement = (sectionId: string, element: Element) => {
+    if (!isMounted) return;
+    
+    // Get the section element for reference
     const sectionElement = document.getElementById(`section-${sectionId}`);
     if (!sectionElement) return;
     
-    const sectionHeader = sectionElement.querySelector('[data-section-header]');
-    if (!sectionHeader) return;
-
-    // Calculate offsets
+    // Fixed navbar height
     const navbarHeight = 64;
-    const headerHeight = sectionHeader.getBoundingClientRect().height;
     
-    // For related-types, account for the tabs container
+    // Check if this is a tabbed section that needs extra offset
     const tabsContainer = sectionElement.querySelector('[data-tabs-container]');
     const tabsHeight = tabsContainer ? tabsContainer.getBoundingClientRect().height : 0;
     
-    const padding = 24;
+    // Use a large fixed buffer to ensure clear separation
+    const fixedBuffer = 100;
     
-    // Calculate final scroll position
+    // Simple position calculation
     const elementPosition = element.getBoundingClientRect().top;
-    const totalOffset = navbarHeight + headerHeight + tabsHeight + padding;
-    const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
+    const offsetPosition = elementPosition + window.pageYOffset - navbarHeight - tabsHeight - fixedBuffer;
 
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth'
-    });
-  };
+    // Log for debugging (can remove in production)
+    console.log(`Scrolling to element in section ${sectionId} at position ${offsetPosition}`);
+
+    // Perform scroll with a slight delay to ensure DOM has updated
+    setTimeout(() => {
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }, 10);
+  }
 
   /**
    * Expands all sections that have subsections
    */
   const handleExpandAll = () => {
+    if (!isMounted) return;
+    
     const sectionsWithSubsections = sections
       .filter(section => section.subsections?.length)
       .map(section => section.id);
@@ -341,6 +382,8 @@ export default function TypeSidebar({
    * Collapses all expanded sections
    */
   const handleCollapseAll = () => {
+    if (!isMounted) return;
+    
     setExpandedSections(new Set());
   };
 
@@ -348,19 +391,21 @@ export default function TypeSidebar({
    * Adjusts sidebar height based on window size
    */
   useEffect(() => {
-    if (navRef.current) {
-      const headerHeight = 64;
-      const topSpacing = 96;
-      const bottomSpacing = 32;
-      const availableHeight = windowHeight - headerHeight - topSpacing - bottomSpacing;
-      navRef.current.style.maxHeight = `${availableHeight}px`;
-    }
-  }, [windowHeight]);
+    if (!isMounted || !navRef.current) return;
+    
+    const headerHeight = 64;
+    const topSpacing = 96;
+    const bottomSpacing = 32;
+    const availableHeight = windowHeight - headerHeight - topSpacing - bottomSpacing;
+    navRef.current.style.maxHeight = `${availableHeight}px`;
+  }, [windowHeight, isMounted]);
 
   /**
    * Manages active section tracking and auto-expansion
    */
   useEffect(() => {
+    if (!isMounted) return;
+    
     const activeParentSection = sections.find(section => 
       section.id === activeSection || 
       section.subsections?.some(sub => sub.id === activeSection)
@@ -369,7 +414,7 @@ export default function TypeSidebar({
     if (activeParentSection) {
       setExpandedSections(prev => new Set([...prev, activeParentSection.id]));
     }
-  }, [activeSection, sections]);
+  }, [activeSection, sections, isMounted]);
 
   /**
    * Keyboard event handler for accessibility
@@ -379,6 +424,8 @@ export default function TypeSidebar({
     sectionId: string, 
     subsectionId?: string
   ) => {
+    if (!isMounted) return;
+    
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       if (subsectionId) {
@@ -397,6 +444,8 @@ export default function TypeSidebar({
    * This runs once on component mount
    */
   useEffect(() => {
+    if (!isMounted) return;
+    
     // Direct DOM event handler as a fallback
     const handleDirectSectionClick = (e: Event) => {
       const button = e.target as HTMLElement;
@@ -419,9 +468,26 @@ export default function TypeSidebar({
     return () => {
       document.removeEventListener('click', handleDirectSectionClick);
     };
-  }, []);
+  }, [isMounted]);
 
-  // Use AnimatePresence with mode="wait" for smoother transitions
+  // SSR safe rendering - render a minimal structure for server rendering
+  if (!isMounted) {
+    return (
+      <div className="fixed left-8 top-24 z-40">
+        <Button
+          variant="secondary"
+          size="default"
+          className="rounded-md shadow-md flex items-center gap-2 pr-3 pl-2.5 py-2"
+          aria-label="Open navigation"
+        >
+          <Menu className="h-4 w-4" />
+          <span className="text-sm font-medium hidden md:inline">Navigation</span>
+        </Button>
+      </div>
+    );
+  }
+
+  // Client-side rendering with full interactivity
   return (
     <AnimatePresence mode="wait">
       {!isCollapsed ? (

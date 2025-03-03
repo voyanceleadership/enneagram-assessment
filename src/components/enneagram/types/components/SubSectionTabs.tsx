@@ -51,9 +51,9 @@ export default function SubSectionTabs({
           {/* Content */}
           <span className="relative z-10">{section.title}</span>
           
-          {/* Active indicator */}
+          {/* Active indicator - FIXED: Made slightly thicker for better visibility */}
           <div
-            className="absolute inset-x-0 bottom-0 h-0.5 transform transition-transform duration-300 ease-in-out z-20"
+            className="absolute inset-x-0 bottom-0 h-1 transform transition-transform duration-300 ease-in-out z-20"
             style={{
               backgroundColor: getActiveColor(idx),
               transform: `scaleX(${activeTab === idx ? 1 : 0})`
@@ -71,10 +71,12 @@ export default function SubSectionTabs({
         </button>
       ))}
 
-      {/* Bottom shadow for visual separation */}
+      {/* Bottom shadow for visual separation - FIXED: Enhanced shadow */}
       <div 
         className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200"
-        style={{ boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)' }}
+        style={{ 
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)' // Enhanced shadow
+        }}
       />
     </div>
   );

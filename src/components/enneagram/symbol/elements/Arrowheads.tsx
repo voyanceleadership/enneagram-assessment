@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * @file Arrowheads.tsx
  * @description SVG Polygon elements for stress and growth line arrowheads

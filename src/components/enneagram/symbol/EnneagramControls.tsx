@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * @file EnneagramControls.tsx
  * @description Control panel for the Enneagram symbol

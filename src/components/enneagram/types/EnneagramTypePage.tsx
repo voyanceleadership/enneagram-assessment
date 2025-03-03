@@ -6,6 +6,7 @@
  * Changes:
  * - Increased container width for better content display
  * - Added visual type identifier at the top
+ * - FIXED: Added proper hydration handling for the Enneagram symbol
  */
 
 import React, { useState, useEffect } from 'react';
@@ -47,15 +48,21 @@ const TypeTitle = ({ typeNumber, typeName }: { typeNumber: string; typeName: str
 export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTypePageProps) {
   // Track the currently active section for navigation highlighting
   const [activeSection, setActiveSection] = useState(TYPE_SECTIONS[0].id);
-
-  // Configuration for the Enneagram diagram
-  const initialVariation = 'type-only';
+  
+  // Add hydration safety for client-side rendering
+  const [isMounted, setIsMounted] = useState(false);
+  
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   /**
    * Handles clicking on a section in the sidebar navigation
    * Manages smooth scrolling to the target section and subsection handling
    */
   const handleSectionClick = (sectionId: string, subsectionId?: string) => {
+    if (!isMounted) return;
+    
     if (subsectionId) {
       // Find the parent section element
       const sectionElement = document.getElementById(`section-${sectionId}`);
@@ -115,6 +122,8 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
    * Updates the active section state as the user scrolls through the page
    */
   useEffect(() => {
+    if (!isMounted) return;
+    
     const handleScroll = () => {
       const offset = 100;
       
@@ -144,7 +153,7 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
     handleScroll(); // Initial check
     
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [activeSection]);
+  }, [activeSection, isMounted]);
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: theme.colors.background }}>
@@ -158,13 +167,15 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
         }
       />
 
-      {/* Sidebar Navigation */}
-      <TypeSidebar 
-        sections={TYPE_SECTIONS}
-        activeSection={activeSection}
-        onSectionClick={handleSectionClick}
-        typeNumber={typeNumber}
-      />
+      {/* Sidebar Navigation - Only render on client */}
+      {isMounted && (
+        <TypeSidebar 
+          sections={TYPE_SECTIONS}
+          activeSection={activeSection}
+          onSectionClick={handleSectionClick}
+          typeNumber={typeNumber}
+        />
+      )}
 
       {/* Main Content - Increased max width */}
       <div className="max-w-7xl mx-auto px-4 pt-6">

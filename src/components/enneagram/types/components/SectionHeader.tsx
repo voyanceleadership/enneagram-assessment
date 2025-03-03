@@ -6,6 +6,7 @@
  * - Added "Back to Top" button
  * - Improved visual design with larger text and better spacing
  * - Added subtle hover effect on the header
+ * - FIXED: Enhanced visual separation with shadow
  */
 
 import React from 'react';
@@ -28,7 +29,9 @@ export default function SectionHeader({
       className="w-full z-10 shadow-sm sticky bg-white transition-all duration-300 hover:bg-gray-50"
       style={{ 
         borderLeft: `4px solid ${theme.colors.accent1}`,
-        top: `${topOffset}px`
+        top: `${topOffset}px`,
+        // FIXED: Added enhanced box-shadow for better visual separation when scrolling
+        boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
       }}
       data-section-header
     >

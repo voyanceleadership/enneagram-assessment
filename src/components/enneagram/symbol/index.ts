@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * @file index.ts
  * @description Barrel file for the Enneagram symbol components

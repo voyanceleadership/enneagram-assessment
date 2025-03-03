@@ -125,17 +125,49 @@
   ring: 2px solid var(--primary);
 }
 
-/* Enneagram Diagram Animations */
+/* Enneagram Diagram Styles and Animations */
+.enneagram-diagram {
+  /* Better SVG rendering - for crisp, clear diagram */
+  shape-rendering: geometricPrecision;
+  text-rendering: optimizeLegibility;
+  
+  /* Prevent blurry edges */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
+}
+
 .enneagram-diagram path,
 .enneagram-diagram line,
 .enneagram-diagram circle,
 .enneagram-diagram text {
+  /* Keep existing transitions */
   transition: fill 0.3s ease-in-out,
               stroke 0.3s ease-in-out,
               stroke-width 0.3s ease-in-out,
               r 0.3s ease-in-out,
               font-size 0.3s ease-in-out,
               font-weight 0.3s ease-in-out;
+              
+  /* Element-specific optimizations */
+  shape-rendering: geometricPrecision;
+}
+
+/* Specific element optimizations */
+.enneagram-diagram text {
+  text-rendering: optimizeLegibility;
+  font-smooth: always;
+}
+
+/* Fix for Safari */
+@media not all and (min-resolution: 0.001dpcm) {
+  @supports (-webkit-appearance: none) {
+    .enneagram-diagram {
+      -webkit-transform: translateZ(0);
+      -webkit-perspective: 1000;
+      -webkit-backface-visibility: hidden;
+    }
+  }
 }
 
 /* Select Component Animations */

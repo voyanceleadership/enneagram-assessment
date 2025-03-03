@@ -40,10 +40,11 @@ export default function DevelopmentLevels({ typeData }: DevelopmentLevelsProps) 
 
   return (
     <div className="mb-12">
-      {/* Tabs */}
+      {/* Tabs container with improved positioning */}
       <div 
         ref={tabsContainerRef}
-        className="sticky top-[116px] bg-white z-10"
+        className="sticky bg-white z-20"
+        style={{ top: '122px' }}
         data-tabs-container
       >
         <SubSectionTabs
@@ -54,8 +55,8 @@ export default function DevelopmentLevels({ typeData }: DevelopmentLevelsProps) 
         />
       </div>
 
-      {/* Add space-y-6 equivalent spacing */}
-      <div className="h-6" />
+      {/* Original spacing between tabs and content */}
+      <div className="h-8"></div>
 
       {/* Content sections */}
       <div className="space-y-6">
@@ -63,6 +64,8 @@ export default function DevelopmentLevels({ typeData }: DevelopmentLevelsProps) 
           <div 
             key={idx}
             ref={el => contentRefs.current[idx] = el}
+            // Both ID formats for proper sidebar integration
+            id={`section-levels-${section.id}`}
             data-subsection-id={section.id}
           >
             <Card className="bg-white shadow-md border-0">
