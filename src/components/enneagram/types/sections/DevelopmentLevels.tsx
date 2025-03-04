@@ -1,4 +1,6 @@
 // src/components/enneagram/types/sections/DevelopmentLevels.tsx
+'use client';
+
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { theme } from '@/styles/theme';
@@ -11,6 +13,12 @@ interface DevelopmentLevelsProps {
   typeData: TypeData;
 }
 
+/**
+ * DevelopmentLevels Component - Updated for proper tab highlighting
+ * 
+ * Displays the three levels of development (Healthy, Average, Unhealthy)
+ * for an Enneagram type using a tabbed interface.
+ */
 export default function DevelopmentLevels({ typeData }: DevelopmentLevelsProps) {
   const sections = [
     {
@@ -33,18 +41,62 @@ export default function DevelopmentLevels({ typeData }: DevelopmentLevelsProps) 
     }
   ];
 
-  const { activeTab, handleTabChange, contentRefs, tabsContainerRef } = useSubSectionTabs({
+  // Initialize with activeTabId instead of index for better identification
+  const { activeTab, handleTabChange, contentRefs, tabsContainerRef, setActiveTabById } = useSubSectionTabs({
     sections,
     sectionId: 'levels'
   });
 
+  // This useEffect will run when the component mounts and when the URL fragment changes
+  React.useEffect(() => {
+    // Check if there's a hash in the URL that matches one of our subsections
+    const hash = window.location.hash;
+    if (hash) {
+      const subsectionId = hash.replace('#', '');
+      
+      // Find the section index that matches this ID
+      const sectionIndex = sections.findIndex(section => 
+        `anchor-levels-${section.id}` === subsectionId);
+      
+      if (sectionIndex !== -1) {
+        // Set the active tab to this section
+        handleTabChange(sectionIndex);
+      }
+    }
+    
+    // Set up listener for sidebar navigation
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const subsectionId = hash.replace('#', '');
+        
+        // Check if this is one of our subsections
+        sections.forEach((section, index) => {
+          if (`anchor-levels-${section.id}` === subsectionId) {
+            handleTabChange(index);
+          }
+        });
+      }
+    };
+    
+    window.addEventListener('hashchange', handleHashChange);
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, [sections, handleTabChange]);
+
   return (
     <div className="mb-12">
-      {/* Tabs container with improved positioning */}
+      {/* Section anchors for direct navigation */}
+      <div id="anchor-levels-healthy"></div>
+      <div id="anchor-levels-average"></div>
+      <div id="anchor-levels-unhealthy"></div>
+      
+      {/* Tabs container with correct sticky positioning - should be under the main header */}
       <div 
         ref={tabsContainerRef}
         className="sticky bg-white z-20"
-        style={{ top: '122px' }}
+        style={{ top: '64px' }}
         data-tabs-container
       >
         <SubSectionTabs
@@ -52,6 +104,7 @@ export default function DevelopmentLevels({ typeData }: DevelopmentLevelsProps) 
           activeTab={activeTab}
           onTabChange={handleTabChange}
           equalWidth={true}
+          parentSectionId="levels"
         />
       </div>
 
@@ -64,11 +117,14 @@ export default function DevelopmentLevels({ typeData }: DevelopmentLevelsProps) 
           <div 
             key={idx}
             ref={el => contentRefs.current[idx] = el}
-            // Both ID formats for proper sidebar integration
-            id={`section-levels-${section.id}`}
-            data-subsection-id={section.id}
+            data-section-id={section.id}
           >
-            <Card className="bg-white shadow-md border-0">
+            {/* Each section has its own anchor for direct navigation */}
+            <Card 
+              className="bg-white shadow-md border-0"
+              id={`section-levels-${section.id}`}
+              data-subsection-id={section.id}
+            >
               <div className="p-6">
                 <h3 
                   className="text-xl mb-4"

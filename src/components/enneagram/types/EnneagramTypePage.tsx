@@ -1,12 +1,12 @@
 'use client';
 
 /**
- * EnneagramTypePage Component - Phase 1 Improvements
+ * EnneagramTypePage Component - Improved for correct tab highlighting
  * 
  * Changes:
- * - Increased container width for better content display
- * - Added visual type identifier at the top
- * - FIXED: Added proper hydration handling for the Enneagram symbol
+ * - Added hash-based navigation to support direct links to subsections
+ * - Fixed stacking of header and subheader components
+ * - Unified scrolling approach using anchor-based navigation
  */
 
 import React, { useState, useEffect } from 'react';
@@ -54,106 +54,106 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
   
   useEffect(() => {
     setIsMounted(true);
+    
+    // Set root element id for "back to top" functionality
+    const rootElement = document.getElementById('__next') || document.documentElement;
+    rootElement.id = 'root';
+    
+    // Check for hash in URL on initial load
+    if (window.location.hash) {
+      const hash = window.location.hash.substring(1); // remove the #
+      const parts = hash.split('-');
+      
+      // Check if this is an anchor hash with format anchor-sectionId-subsectionId
+      if (parts.length >= 2 && parts[0] === 'anchor') {
+        const sectionId = parts[1];
+        const subsectionId = parts.length >= 3 ? parts[2] : null;
+        
+        // Update active section state
+        setActiveSection(subsectionId || sectionId);
+      }
+    }
   }, []);
 
   /**
    * Handles clicking on a section in the sidebar navigation
-   * Manages smooth scrolling to the target section and subsection handling
+   * Updates hash for direct linking and browser history
    */
   const handleSectionClick = (sectionId: string, subsectionId?: string) => {
     if (!isMounted) return;
     
+    // Update active section in state
+    setActiveSection(subsectionId || sectionId);
+    
+    // Create appropriate hash for the URL
+    let hash: string;
     if (subsectionId) {
-      // Find the parent section element
-      const sectionElement = document.getElementById(`section-${sectionId}`);
-      if (!sectionElement) return;
-  
-      // Find the section header height (for both main section and subsection)
-      const mainSectionHeader = sectionElement.querySelector('[data-section-header]');
-      const mainHeaderHeight = mainSectionHeader?.getBoundingClientRect().height || 0;
-  
-      // Find the tabs container
-      const tabsContainer = sectionElement.querySelector('[data-tabs-container]');
-      const tabsHeight = tabsContainer?.getBoundingClientRect().height || 0;
-  
-      // Find the subsection content
-      const subsectionContent = sectionElement.querySelector(`[data-subsection-id="${subsectionId}"]`);
-      if (!subsectionContent) return;
-  
-      // Calculate total offset including main section header
-      const navbarHeight = 64; // Height of main navigation
-      const padding = 24; // Additional padding
-      const totalOffset = navbarHeight + mainHeaderHeight + tabsHeight + padding;
-  
-      // First switch to the correct tab
-      const tabElement = sectionElement.querySelector(`[data-tab-id="${subsectionId}"]`);
-      if (tabElement instanceof HTMLElement) {
-        tabElement.click();
-      }
-  
-      // Then scroll after a small delay to allow for tab switch animation
-      setTimeout(() => {
-        const elementPosition = subsectionContent.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
-  
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
-      }, 100);
+      hash = `#anchor-${sectionId}-${subsectionId}`;
     } else {
-      // Handle regular section clicks
-      const element = document.getElementById(`section-${sectionId}`);
-      if (element) {
-        const offset = 80;
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
+      hash = `#anchor-${sectionId}`;
+    }
+    
+    // Update the URL hash without reloading the page
+    if (window.history.pushState) {
+      window.history.pushState(null, '', hash);
+    } else {
+      // Fallback for older browsers
+      window.location.hash = hash;
+    }
+    
+    // Find and scroll to the element
+    const element = document.getElementById(hash.substring(1));
+    if (element) {
+      // Calculate proper offset for scrolling
+      const navbarHeight = 64; // Height of the fixed navbar
+      
+      // Check if this is a subsection that needs more offset (for tabs)
+      let additionalOffset = 0;
+      if (subsectionId && (sectionId === 'levels' || sectionId === 'related-types')) {
+        // Get the tab container height
+        const tabsContainer = document.querySelector(`#section-${sectionId} [data-tabs-container]`);
+        if (tabsContainer) {
+          additionalOffset = tabsContainer.getBoundingClientRect().height;
+        }
       }
+      
+      // Scroll with appropriate offset
+      const offset = navbarHeight + additionalOffset + 16; // Some extra padding
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
   };
 
   /**
-   * Track active section based on scroll position
-   * Updates the active section state as the user scrolls through the page
+   * Track active section based on URL hash changes
    */
   useEffect(() => {
     if (!isMounted) return;
     
-    const handleScroll = () => {
-      const offset = 100;
-      
-      // Find all section elements including subsections
-      const sectionElements = TYPE_SECTIONS.flatMap(section => {
-        const mainElement = document.getElementById(`section-${section.id}`);
-        const subElements = section.subsections?.map(sub => 
-          document.getElementById(`section-${sub.id}`)
-        ) || [];
-        return [mainElement, ...subElements].filter(Boolean) as HTMLElement[];
-      });
-
-      // Find the current section in view
-      for (const element of sectionElements) {
-        const rect = element.getBoundingClientRect();
-        if (rect.top <= offset && rect.bottom > offset) {
-          const sectionId = element.id.replace('section-', '');
-          if (sectionId !== activeSection) {
-            setActiveSection(sectionId);
-          }
-          break;
+    const handleHashChange = () => {
+      if (window.location.hash) {
+        const hash = window.location.hash.substring(1);
+        const parts = hash.split('-');
+        
+        if (parts.length >= 2 && parts[0] === 'anchor') {
+          const sectionId = parts[1];
+          const subsectionId = parts.length >= 3 ? parts[2] : null;
+          
+          setActiveSection(subsectionId || sectionId);
         }
       }
     };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial check
     
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [activeSection, isMounted]);
+    window.addEventListener('hashchange', handleHashChange);
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, [isMounted]);
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: theme.colors.background }}>
@@ -179,6 +179,9 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
 
       {/* Main Content - Increased max width */}
       <div className="max-w-7xl mx-auto px-4 pt-6">
+        {/* Create a root anchor for the page */}
+        <div id="root"></div>
+        
         {/* Enneagram Diagram */}
         <div className="w-2/3 mx-auto">
           <DynamicEnneagramSymbol 
@@ -192,6 +195,7 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
         <div className="space-y-12">
           {/* 1. Type Snapshot */}
           <div id="section-snapshot">
+            <div id="anchor-snapshot"></div>
             <SectionHeader 
               title="Type Snapshot"
               topOffset={64}
@@ -204,6 +208,7 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
 
           {/* 2. Type Description */}
           <div id="section-description">
+            <div id="anchor-description"></div>
             <SectionHeader 
               title="Type Description"
               topOffset={64}
@@ -216,6 +221,7 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
 
           {/* 3. Levels of Development */}
           <div id="section-levels">
+            <div id="anchor-levels"></div>
             <SectionHeader 
               title="Levels of Development"
               topOffset={64}
@@ -228,6 +234,7 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
 
           {/* 4. Related Types */}
           <div id="section-related-types">
+            <div id="anchor-related-types"></div>
             <SectionHeader 
               title="Related Types"
               topOffset={64}
@@ -240,6 +247,7 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
 
           {/* 5. Growth Practices */}
           <div id="section-growth">
+            <div id="anchor-growth"></div>
             <SectionHeader 
               title="Growth Practices"
               topOffset={64}
@@ -252,6 +260,7 @@ export default function EnneagramTypePage({ typeData, typeNumber }: EnneagramTyp
 
           {/* 6. Famous Examples */}
           <div id="section-examples">
+            <div id="anchor-examples"></div>
             <SectionHeader 
               title="Famous Examples"
               topOffset={64}

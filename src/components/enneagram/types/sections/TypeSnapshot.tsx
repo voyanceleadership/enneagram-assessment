@@ -1,31 +1,9 @@
 /**
- * TypeSnapshot Component
+ * TypeSnapshot Component - With simplified anchor handling
  * 
  * A comprehensive overview section that displays key characteristics and attributes
  * of an Enneagram type. This component serves as a quick-reference guide,
  * presenting information in distinct, collapsible sections.
- * 
- * Key Features:
- * - Displays multiple aspects of type information in card format
- * - Supports both single and array-based content
- * - Provides expandable/collapsible sections for complex content
- * - Integrates with sidebar navigation for direct section access
- * 
- * Dependencies:
- * - TypeSidebar: Uses matching IDs for scroll-to-section functionality
- * - SnapshotCard: Handles individual section display
- * - ExpandableContent: Manages expandable content sections
- * 
- * Data Flow:
- * - Receives type data from parent component
- * - Maps data to corresponding sections
- * - Handles content rendering based on data type
- * - Manages section refs for scroll positioning
- * 
- * Usage:
- * ```tsx
- * <TypeSnapshot typeData={typeData} />
- * ```
  */
 
 import React from 'react';
@@ -200,10 +178,9 @@ export default function TypeSnapshot({ typeData }: TypeSnapshotProps) {
       {SNAPSHOT_SECTIONS.map((section) => (
         <div
           key={section.id}
-          // Set both ID attributes for compatibility with sidebar navigation
           id={`section-${section.id}`}
-          data-subsection-id={section.id}
         >
+          <div id={`anchor-snapshot-${section.id}`}></div>
           <SnapshotCard
             icon={section.icon}
             label={section.title}

@@ -1,5 +1,7 @@
 // src/hooks/useSubSectionTabs.ts
-import { useState, useEffect, useRef } from 'react';
+'use client';
+
+import { useState, useEffect, useRef, useCallback } from 'react';
 import type { SubSection } from '@/components/enneagram/types/components/SubSectionTabs';
 
 interface UseSubSectionTabsOptions {
@@ -7,6 +9,12 @@ interface UseSubSectionTabsOptions {
   sectionId: string;
 }
 
+/**
+ * useSubSectionTabs Hook - Improved for sidebar navigation
+ * 
+ * A custom hook that manages tabbed navigation within sections,
+ * ensuring correct tab highlighting when navigating from sidebar.
+ */
 export function useSubSectionTabs({ 
   sections, 
   sectionId,
@@ -15,107 +23,109 @@ export function useSubSectionTabs({
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const tabsContainerRef = useRef<HTMLDivElement | null>(null);
   const isScrolling = useRef(false);
-
-  // Completely revised scroll position calculation with consistent approach
-  const getDesiredPosition = (element: HTMLDivElement, tabsRect: DOMRect) => {
-    // Fixed navbar height
-    const navbarHeight = 64;
-    
-    // Get tabs height
-    const tabsHeight = tabsRect.height;
-    
-    // Apply consistent, larger offset for all tabs
-    const extraPadding = 75; // Increased for both sections
-    
-    // Get the element's position
-    const elementTop = element.getBoundingClientRect().top;
-    
-    // Calculate position with improved offsets
-    return window.pageYOffset + elementTop - navbarHeight - tabsHeight - extraPadding;
-  };
-
-  // Improved scroll tracking
+  
+  // Create mapping from section ID to index for quicker lookups
+  const sectionIdToIndex = useRef<Record<string, number>>({});
+  
   useEffect(() => {
+    // Build the section ID to index mapping
+    const mapping: Record<string, number> = {};
+    sections.forEach((section, index) => {
+      mapping[section.id] = index;
+    });
+    sectionIdToIndex.current = mapping;
+  }, [sections]);
+  
+  // Function to set active tab by ID instead of index
+  const setActiveTabById = useCallback((id: string) => {
+    const index = sectionIdToIndex.current[id];
+    if (index !== undefined) {
+      setActiveTab(index);
+    }
+  }, []);
+  
+  // Track active tab based on scroll position
+  useEffect(() => {
+    // Skip if we're in the middle of a programmatic scroll
+    if (isScrolling.current) return;
+    
     const handleScroll = () => {
-      // Skip if we're currently scrolling programmatically
+      // Only check scroll position if we aren't currently scrolling programmatically
       if (isScrolling.current) return;
       
+      // Check if we have content refs
+      if (!contentRefs.current.length) return;
+      
+      // Get tabs container position if it exists
       const tabsContainer = tabsContainerRef.current;
-      if (!tabsContainer) return;
-
-      const tabsRect = tabsContainer.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
+      const tabsHeight = tabsContainer ? tabsContainer.getBoundingClientRect().height : 0;
+      const offset = 64 + tabsHeight + 20; // Navbar + tabs + padding
       
-      // Figure out which section is most visible in the viewport
-      let bestTab = activeTab;
-      let maxVisibleArea = 0;
-      
-      contentRefs.current.forEach((ref, index) => {
-        if (!ref) return;
+      // Find which section is most visible
+      for (let i = 0; i < contentRefs.current.length; i++) {
+        const ref = contentRefs.current[i];
+        if (!ref) continue;
         
         const rect = ref.getBoundingClientRect();
         
-        // Calculate how much of the section is visible in viewport
-        const visibleTop = Math.max(rect.top, 0);
-        const visibleBottom = Math.min(rect.bottom, viewportHeight);
-        const visibleArea = Math.max(0, visibleBottom - visibleTop);
-        
-        // If this section has more visible area, it becomes the active tab
-        if (visibleArea > maxVisibleArea) {
-          maxVisibleArea = visibleArea;
-          bestTab = index;
+        // If the element is sufficiently visible
+        if (rect.top <= offset && rect.bottom > offset) {
+          if (i !== activeTab) {
+            setActiveTab(i);
+          }
+          break;
         }
-      });
-      
-      // Update active tab if needed
-      if (bestTab !== activeTab) {
-        setActiveTab(bestTab);
       }
     };
-
+    
     window.addEventListener('scroll', handleScroll);
-    // Initial check
-    setTimeout(handleScroll, 100);
-
+    
+    // Check on mount
+    setTimeout(handleScroll, 200);
+    
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [activeTab, sections]);
+  }, [activeTab]);
 
-  // Improved tab change handler
-  const handleTabChange = (index: number) => {
+  // Handle tab change from UI
+  const handleTabChange = useCallback((index: number) => {
     // Set active tab immediately for responsive UI
     setActiveTab(index);
     
-    const element = contentRefs.current[index];
-    const tabsContainer = tabsContainerRef.current;
+    // Get the content element we want to scroll to
+    const ref = contentRefs.current[index];
+    if (!ref) return;
     
-    if (element && tabsContainer) {
-      const tabsRect = tabsContainer.getBoundingClientRect();
-      
-      // Get the appropriate scroll position
-      const scrollToPosition = getDesiredPosition(element, tabsRect);
-      
-      // Set flag to prevent scroll tracking during programmatic scroll
-      isScrolling.current = true;
-      
-      // Perform scroll
-      window.scrollTo({
-        top: scrollToPosition,
-        behavior: 'smooth'
-      });
-      
-      // Reset flag after scroll animation completes
-      setTimeout(() => {
-        isScrolling.current = false;
-      }, 500); // Typical scroll animation duration
-    }
-  };
+    // Mark that we're about to scroll programmatically
+    isScrolling.current = true;
+    
+    // Get tabs container position if it exists
+    const tabsContainer = tabsContainerRef.current;
+    const tabsHeight = tabsContainer ? tabsContainer.getBoundingClientRect().height : 0;
+    const offset = 64 + tabsHeight + 16; // Navbar + tabs + padding
+    
+    // Calculate scroll position
+    const rect = ref.getBoundingClientRect();
+    const scrollPosition = window.pageYOffset + rect.top - offset;
+    
+    // Perform scroll
+    window.scrollTo({
+      top: scrollPosition,
+      behavior: 'smooth'
+    });
+    
+    // Clear the scrolling flag after scroll animation is likely finished
+    setTimeout(() => {
+      isScrolling.current = false;
+    }, 500);
+  }, []);
 
   return {
     activeTab,
     handleTabChange,
     contentRefs,
-    tabsContainerRef
+    tabsContainerRef,
+    setActiveTabById
   };
 }

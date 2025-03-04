@@ -1,18 +1,13 @@
 'use client';
 
 /**
- * TypeSidebar Component
+ * TypeSidebar Component - Improved for better subsection navigation
  * 
  * An enhanced navigation sidebar for Enneagram type pages with:
+ * - Proper tab highlight coordination with subsection navigation
  * - Smooth animations with spring physics
  * - Top-to-bottom wave animation for all subsections
- * - Auto-highlighting of subsections during scroll
  * - Modern expand/collapse controls
- * - Better visual presentation of subsections
- * - Consistent styling for subsection lists
- * - Repositioned navigation toggle button
- * - Automatic scrolling to sections when clicked (even with subsections)
- * - FIXED: Added proper hydration safety to prevent client/server mismatches
  */
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -22,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { TypeSection } from '@/lib/enneagram/content';
 import { motion, AnimatePresence } from 'framer-motion';
-import DynamicEnneagramSymbol from '../../symbol/DynamicEnneagramSymbol'; // Adjust the path as needed
 
 interface TypeSidebarProps {
   /** Array of all sections and their subsections */
@@ -147,43 +141,43 @@ export default function TypeSidebar({
   }, [isCollapsed, isMounted]);
 
   /**
-   * Track which subsections are in view for highlighting
+   * Track active sections based on the current URL hash
    */
   useEffect(() => {
     if (!isMounted) return;
     
-    const handleScroll = () => {
-      const offset = 150; // Adjust the offset as needed
-      const newActiveSubsections = new Set<string>();
-      
-      // Find all subsection elements
-      sections.forEach(section => {
-        if (!section.subsections) return;
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const hashValue = hash.replace('#', '');
+        const parts = hashValue.split('-');
         
-        section.subsections.forEach(subsection => {
-          // For each subsection, check if it's in view
-          const subsectionElement = document.querySelector(`[data-subsection-id="${subsection.id}"]`);
-          if (!subsectionElement) return;
+        // If this is an anchor hash with at least 2 parts (anchor-sectionId)
+        if (parts.length >= 2 && parts[0] === 'anchor') {
+          const sectionId = parts[1];
+          const subsectionId = parts.length >= 3 ? parts[2] : null;
           
-          const rect = subsectionElement.getBoundingClientRect();
-          if (rect.top <= offset && rect.bottom > offset) {
-            newActiveSubsections.add(subsection.id);
+          // Add current subsection to active subsections set
+          if (subsectionId) {
+            setActiveSubsections(prev => {
+              const newSet = new Set(prev);
+              newSet.add(subsectionId);
+              return newSet;
+            });
           }
-        });
-      });
-      
-      // Update state only if the active subsections have changed
-      if (JSON.stringify(Array.from(newActiveSubsections)) !== 
-          JSON.stringify(Array.from(activeSubsections))) {
-        setActiveSubsections(newActiveSubsections);
+        }
       }
     };
     
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Check initial state
+    // Check on mount
+    handleHashChange();
     
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [sections, activeSubsections, isMounted]);
+    // And listen for changes
+    window.addEventListener('hashchange', handleHashChange);
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, [isMounted]);
 
   /**
    * Resolves section titles that might be either static strings or
@@ -195,22 +189,20 @@ export default function TypeSidebar({
   
   /**
    * Handles clicking on main section buttons
-   * Always scrolls to the section header when clicked, 
-   * regardless of whether it has subsections
+   * Updates the URL hash to support direct navigation to sections
    */
   const handleSectionClick = (sectionId: string) => {
     if (!isMounted) return;
     
     const section = sections.find(s => s.id === sectionId);
     
-    // Always scroll to the section header first
-    scrollToSection(sectionId);
+    // Set the URL hash for the section
+    window.location.hash = `anchor-${sectionId}`;
     
     // Update active section in parent component
     onSectionClick(sectionId);
     
     // Toggle expansion state only if it has subsections
-    // This is separated from the scrolling behavior
     if (section?.subsections?.length) {
       setExpandedSections(prev => {
         const next = new Set(prev);
@@ -230,40 +222,20 @@ export default function TypeSidebar({
 
   /**
    * Handles clicking on subsection buttons
+   * Updates the URL hash and ensures the correct tab is activated
    */
   const handleSubsectionClick = (e: React.MouseEvent, sectionId: string, subsectionId: string) => {
     if (!isMounted) return;
     
     e.stopPropagation();
     
-    // Special handling for related-types subsections
-    if (sectionId === 'related-types') {
-      if (subsectionId === 'wings') {
-        const introElement = document.getElementById('wing-intro');
-        if (introElement) {
-          scrollToElement(sectionId, introElement);
-          onSectionClick(sectionId, subsectionId);
-          return;
-        }
-      } else if (subsectionId === 'lines') {
-        const introElement = document.getElementById('line-intro');
-        if (introElement) {
-          scrollToElement(sectionId, introElement);
-          onSectionClick(sectionId, subsectionId);
-          return;
-        }
-      }
-    }
+    // Update hash to include both section and subsection for proper tab highlight
+    window.location.hash = `anchor-${sectionId}-${subsectionId}`;
     
-    // Default behavior for other subsections
-    const subsectionElement = document.querySelector(`[data-subsection-id="${subsectionId}"]`);
-    if (subsectionElement) {
-      scrollToElement(sectionId, subsectionElement);
-    }
-    
+    // Call the parent handler
     onSectionClick(sectionId, subsectionId);
     
-    // Auto-collapse on mobile after selection
+    // Auto-collapse sidebar on mobile after selection
     if (isMobileView) {
       setIsCollapsed(true);
     }
@@ -288,83 +260,6 @@ export default function TypeSidebar({
       return next;
     });
   };
-  
-  /**
-   * Scrolls to a main section
-   * This is the key function that ensures clicking a section scrolls to it
-   */
-  const scrollToSection = (sectionId: string) => {
-    if (!isMounted) return;
-    
-    // Find the section element by its ID
-    const element = document.getElementById(`section-${sectionId}`);
-    if (!element) {
-      console.warn(`Section element with ID section-${sectionId} not found`);
-      return;
-    }
-
-    // Calculate necessary offsets
-    const navbarHeight = 64; // Height of the fixed navbar
-    const sectionHeader = element.querySelector('[data-section-header]');
-    if (!sectionHeader) {
-      console.warn(`Section header not found in section-${sectionId}`);
-      return;
-    }
-
-    // Calculate position for scrolling
-    const elementPosition = element.getBoundingClientRect().top;
-    const headerHeight = sectionHeader.getBoundingClientRect().height;
-    const scrollOffset = navbarHeight + 16; // Adding some padding
-    const offsetPosition = elementPosition + window.pageYOffset - scrollOffset;
-
-    // Force scrolling to the section
-    console.log(`Scrolling to section ${sectionId} at position ${offsetPosition}`);
-    
-    // Use setTimeout to ensure this happens after React rendering
-    setTimeout(() => {
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }, 10);
-  };
-  
-  /**
-   * Helper function to scroll to an element with proper offsets
-   * FIXED: Simplified scroll calculation with fixed offset
-   */
-  const scrollToElement = (sectionId: string, element: Element) => {
-    if (!isMounted) return;
-    
-    // Get the section element for reference
-    const sectionElement = document.getElementById(`section-${sectionId}`);
-    if (!sectionElement) return;
-    
-    // Fixed navbar height
-    const navbarHeight = 64;
-    
-    // Check if this is a tabbed section that needs extra offset
-    const tabsContainer = sectionElement.querySelector('[data-tabs-container]');
-    const tabsHeight = tabsContainer ? tabsContainer.getBoundingClientRect().height : 0;
-    
-    // Use a large fixed buffer to ensure clear separation
-    const fixedBuffer = 100;
-    
-    // Simple position calculation
-    const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.pageYOffset - navbarHeight - tabsHeight - fixedBuffer;
-
-    // Log for debugging (can remove in production)
-    console.log(`Scrolling to element in section ${sectionId} at position ${offsetPosition}`);
-
-    // Perform scroll with a slight delay to ensure DOM has updated
-    setTimeout(() => {
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }, 10);
-  }
 
   /**
    * Expands all sections that have subsections
@@ -431,44 +326,10 @@ export default function TypeSidebar({
       if (subsectionId) {
         handleSubsectionClick(e as unknown as React.MouseEvent, sectionId, subsectionId);
       } else {
-        // Force scroll to section on keyboard navigation
-        scrollToSection(sectionId);
-        // Then call the normal handler
         handleSectionClick(sectionId);
       }
     }
   };
-  
-  /**
-   * Event hook to ensure sections scroll into view when clicked
-   * This runs once on component mount
-   */
-  useEffect(() => {
-    if (!isMounted) return;
-    
-    // Direct DOM event handler as a fallback
-    const handleDirectSectionClick = (e: Event) => {
-      const button = e.target as HTMLElement;
-      const sectionButton = button.closest('[data-section-button]');
-      
-      if (sectionButton) {
-        const sectionId = sectionButton.getAttribute('data-section-button');
-        if (sectionId) {
-          // Force scroll to the section
-          setTimeout(() => {
-            scrollToSection(sectionId);
-          }, 50);
-        }
-      }
-    };
-    
-    // Add a global click handler as backup
-    document.addEventListener('click', handleDirectSectionClick);
-    
-    return () => {
-      document.removeEventListener('click', handleDirectSectionClick);
-    };
-  }, [isMounted]);
 
   // SSR safe rendering - render a minimal structure for server rendering
   if (!isMounted) {

@@ -1,22 +1,14 @@
 // src/components/enneagram/types/sections/RelatedTypes/RelatedTypesMain.tsx
+'use client';
+
 /**
- * RelatedTypesMain Component
+ * RelatedTypesMain Component - Improved for correct tab highlighting
  * 
  * This component serves as the main container for all related types content in the Enneagram type page.
- * It organizes the information about wing types and line connections into a tabbed interface,
- * allowing users to explore different aspects of type relationships in the Enneagram system.
- * 
- * Key Features:
- * - Tabbed navigation between different sections (Explorer, Wings, Lines)
- * - Expandable information cards with detailed explanations
- * - Interactive elements for exploring type relationships
- * - Consistent styling and visual hierarchy
- * 
- * The component handles the logic for extracting and formatting type relationship data,
- * managing section navigation, and orchestrating the overall user experience.
+ * Updated to properly handle tab activation from sidebar navigation.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { theme } from '@/styles/theme';
 import SubSectionTabs from '../../components/SubSectionTabs';
@@ -31,15 +23,9 @@ import { SymbolVariation } from './explorer';
 import { 
   ChevronDown, 
   Info, 
-  ChevronFirst,
-  ChevronLast,
   Component,
   ChevronsRightLeft,
-  Share2,
-  MoveDownRight,
-  MoveUpRight,
-  ArrowRight,
-  ArrowLeft 
+  Share2
 } from 'lucide-react';
 
 // Props for the component
@@ -73,7 +59,6 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
   
   /**
    * Helper function to format type names with "The" prefix
-   * Ensures consistent type name formatting throughout the component
    */
   const formatTypeNameWithThe = (name: string): string => {
     // Check if the name already starts with "The"
@@ -85,7 +70,6 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
   
   /**
    * Determine wing numbers based on the core type
-   * Wing types are adjacent to the core type on the Enneagram circle
    */
   const getWingNumbers = () => {
     const coreType = parseInt(typeData.typeDigit);
@@ -99,7 +83,6 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
 
   /**
    * Extract wing type data from the typeData object
-   * Includes type number, name, and detail information
    */
   const wingTypes = {
     left: {
@@ -118,7 +101,6 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
 
   /**
    * Determine line connection numbers based on the core type
-   * Uses the ENNEAGRAM_RELATIONSHIPS constant to look up connections
    */
   const getLineNumbers = () => {
     const coreType = parseInt(typeData.typeDigit);
@@ -132,7 +114,6 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
 
   /**
    * Extract line type data from the typeData object
-   * Includes type number, name, description, and dynamics information
    */
   const lineTypes = {
     stress: {
@@ -155,7 +136,6 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
 
   /**
    * Create variation options for the symbol explorer dropdown
-   * Each option represents a different view of the Enneagram symbol
    */
   const getVariationOptions = (): VariationOption[] => {
     return [
@@ -201,7 +181,6 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
   
   /**
    * Define section tabs for the component
-   * Each section has an id, title, color, and associated content
    */
   const sections: SubSection[] = [
     {
@@ -211,13 +190,13 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
       content: {}
     },
     {
-      id: 'wing-intro',  // Changed from 'wings' to 'wing-intro'
+      id: 'wings',
       title: 'Wing Types',
       color: sectionColor,
       content: typeData.sections.wingTypes
     },
     {
-      id: 'line-intro',  // Changed from 'lines' to 'line-intro'
+      id: 'lines',
       title: 'Line Types',
       color: sectionColor,
       content: typeData.sections.lineTypes
@@ -226,190 +205,84 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
 
   /**
    * Use the SubSectionTabs hook to manage tab state and references
-   * Handles tab selection, scroll behavior, and content display
    */
-  const { activeTab, handleTabChange, contentRefs, tabsContainerRef } = useSubSectionTabs({
+  const { activeTab, handleTabChange, contentRefs, tabsContainerRef, setActiveTabById } = useSubSectionTabs({
     sections,
     sectionId: 'related-types'
   });
-
+  
   /**
-   * Handle scrolling to sections and subsections
-   * Provides smooth navigation between different parts of the content
+   * Check URL hash on mount and when it changes to update active tab
+   */
+  useEffect(() => {
+    const checkUrlHash = () => {
+      // Get the current hash
+      const hash = window.location.hash;
+      if (!hash) return;
+      
+      // Check if this hash targets one of our tabs
+      const segments = hash.substring(1).split('-');
+      if (segments.length >= 3 && segments[0] === 'anchor' && segments[1] === 'related-types') {
+        const targetId = segments[2];
+        
+        // Find the tab index for this target
+        const tabIndex = sections.findIndex(section => section.id === targetId);
+        if (tabIndex !== -1 && tabIndex !== activeTab) {
+          handleTabChange(tabIndex);
+        }
+      }
+    };
+    
+    // Check on mount
+    checkUrlHash();
+    
+    // Listen for hash changes
+    window.addEventListener('hashchange', checkUrlHash);
+    return () => {
+      window.removeEventListener('hashchange', checkUrlHash);
+    };
+  }, [sections, activeTab, handleTabChange]);
+  
+  /**
+   * Simple scroll handler for section links
    */
   const handleScrollToSection = (sectionId: string, subsectionId?: string) => {
-    if (subsectionId) {
-      // For specific subsections within wing types or line types
-      if (sectionId === 'wings') {
-        // First switch to the Wings tab
-        handleTabChange(1);
-        
-        // After a short delay to let the tab change take effect
-        setTimeout(() => {
-          // Find subsection element
-          const subsectionElement = document.querySelector(`[data-subsection-id="${subsectionId}"]`);
-          if (!subsectionElement) return;
-          
-          // Find the section-related-types element to act as the parent section
-          const sectionElement = document.getElementById('section-related-types');
-          if (!sectionElement) return;
-          
-          // Find section header
-          const sectionHeader = sectionElement.querySelector('[data-section-header]');
-          if (!sectionHeader) return;
-          
-          // Find the tabs container
-          const tabsContainer = tabsContainerRef.current;
-          if (!tabsContainer) return;
-          
-          // Calculate offsets exactly as done in TypeSidebar
-          const navbarHeight = 64; // Main navigation bar height
-          const headerHeight = sectionHeader.getBoundingClientRect().height;
-          const tabsHeight = tabsContainer.getBoundingClientRect().height;
-          const padding = 24; // Additional padding for visual comfort
-          
-          // Calculate final scroll position
-          const elementPosition = subsectionElement.getBoundingClientRect().top;
-          const totalOffset = navbarHeight + headerHeight + tabsHeight + padding;
-          const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
-          
-          // Perform the scroll
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-          });
-        }, 100);
-      } else if (sectionId === 'lines') {
-        // First switch to the Lines tab
-        handleTabChange(2);
-        
-        // Same scrolling logic as for wings
-        setTimeout(() => {
-          const subsectionElement = document.querySelector(`[data-subsection-id="${subsectionId}"]`);
-          if (!subsectionElement) return;
-          
-          const sectionElement = document.getElementById('section-related-types');
-          if (!sectionElement) return;
-          
-          const sectionHeader = sectionElement.querySelector('[data-section-header]');
-          if (!sectionHeader) return;
-          
-          const tabsContainer = tabsContainerRef.current;
-          if (!tabsContainer) return;
-          
-          const navbarHeight = 64;
-          const headerHeight = sectionHeader.getBoundingClientRect().height;
-          const tabsHeight = tabsContainer.getBoundingClientRect().height;
-          const padding = 24;
-          
-          const elementPosition = subsectionElement.getBoundingClientRect().top;
-          const totalOffset = navbarHeight + headerHeight + tabsHeight + padding;
-          const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
-          
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-          });
-        }, 100);
-      }
-    } else if (sectionId === 'category-intro') {
-      // Scroll to the category intro section
-      const introElement = document.getElementById('category-intro');
-      if (!introElement) return;
-      
-      const sectionElement = document.getElementById('section-related-types');
-      if (!sectionElement) return;
-      
-      const sectionHeader = sectionElement.querySelector('[data-section-header]');
-      if (!sectionHeader) return;
-      
-      const tabsContainer = tabsContainerRef.current;
-      if (!tabsContainer) return;
-      
-      const navbarHeight = 64;
-      const headerHeight = sectionHeader.getBoundingClientRect().height;
-      const tabsHeight = tabsContainer.getBoundingClientRect().height;
-      const padding = 24;
-      
-      const elementPosition = introElement.getBoundingClientRect().top;
-      const totalOffset = navbarHeight + headerHeight + tabsHeight + padding;
-      const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
-      
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    } else if (sectionId === 'wing-intro') {
-      // Switch to Wing Types tab and scroll to it
+    let hash: string;
+    
+    if (sectionId === 'wings') {
+      // Switch to Wings tab
       handleTabChange(1);
-      
-      setTimeout(() => {
-        const introElement = document.getElementById('wing-intro');
-        if (!introElement) return;
-        
-        const sectionElement = document.getElementById('section-related-types');
-        if (!sectionElement) return;
-        
-        const sectionHeader = sectionElement.querySelector('[data-section-header]');
-        if (!sectionHeader) return;
-        
-        const tabsContainer = tabsContainerRef.current;
-        if (!tabsContainer) return;
-        
-        const navbarHeight = 64;
-        const headerHeight = sectionHeader.getBoundingClientRect().height;
-        const tabsHeight = tabsContainer.getBoundingClientRect().height;
-        const padding = 24;
-        
-        const elementPosition = introElement.getBoundingClientRect().top;
-        const totalOffset = navbarHeight + headerHeight + tabsHeight + padding;
-        const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
-        
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
-      }, 100);
-    } else if (sectionId === 'line-intro') {
-      // Switch to Line Types tab and scroll to it
+      hash = `#anchor-related-types-wings`;
+    } else if (sectionId === 'lines') {
+      // Switch to Lines tab
       handleTabChange(2);
-      
-      setTimeout(() => {
-        const introElement = document.getElementById('line-intro');
-        if (!introElement) return;
-        
-        const sectionElement = document.getElementById('section-related-types');
-        if (!sectionElement) return;
-        
-        const sectionHeader = sectionElement.querySelector('[data-section-header]');
-        if (!sectionHeader) return;
-        
-        const tabsContainer = tabsContainerRef.current;
-        if (!tabsContainer) return;
-        
-        const navbarHeight = 64;
-        const headerHeight = sectionHeader.getBoundingClientRect().height;
-        const tabsHeight = tabsContainer.getBoundingClientRect().height;
-        const padding = 24;
-        
-        const elementPosition = introElement.getBoundingClientRect().top;
-        const totalOffset = navbarHeight + headerHeight + tabsHeight + padding;
-        const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
-        
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
-      }, 100);
+      hash = `#anchor-related-types-lines`;
+    } else if (subsectionId) {
+      hash = `#anchor-related-types-${sectionId}-${subsectionId}`;
+    } else {
+      hash = `#anchor-related-types-${sectionId}`;
+    }
+    
+    // Update URL hash
+    if (window.history.pushState) {
+      window.history.pushState(null, '', hash);
+    } else {
+      window.location.hash = hash;
     }
   };
 
   return (
     <div className="space-y-6">
+      {/* Set up anchors for each section and subsection */}
+      <div id="anchor-related-types-explorer"></div>
+      <div id="anchor-related-types-wings"></div>
+      <div id="anchor-related-types-lines"></div>
+      
       {/* Tabs Navigation - Sticky positioned for easier access */}
       <div 
         ref={tabsContainerRef}
-        className="sticky top-[116px] bg-white z-10"
+        className="sticky top-[64px] bg-white z-10"
+        style={{ top: '64px' }}
         data-tabs-container
       >
         <SubSectionTabs
@@ -417,11 +290,13 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
           activeTab={activeTab}
           onTabChange={handleTabChange}
           equalWidth={true}
+          parentSectionId="related-types"
         />
       </div>
 
       {/* Introduction Card - Expandable for more detailed information */}
       <Card className="bg-white shadow-md border-0 overflow-hidden">
+        <div id="anchor-related-types-intro"></div>
         <div 
           className="p-6 flex items-start justify-between cursor-pointer"
           onClick={() => setIntroExpanded(!introExpanded)}
@@ -465,10 +340,7 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
       {/* Content Sections */}
       <div className="space-y-6">
         {/* Symbol Explorer Section - For interactive exploration */}
-        <div 
-          ref={el => contentRefs.current[0] = el}
-          data-subsection-id="explorer"
-        >
+        <div ref={el => contentRefs.current[0] = el}>
           <SymbolExplorer 
             typeDigit={typeData.typeDigit}
             typeName={typeData.typeName}
@@ -481,6 +353,7 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
 
         {/* Categories Introduction - Overview of related types categories */}
         <Card className="bg-white shadow-md border-0">
+          <div id="anchor-related-types-category-intro"></div>
           <div 
             id="category-intro" 
             className="p-6"
@@ -502,9 +375,9 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
 
         {/* Wing Types Introduction - Expandable explanation of wing types */}
         <Card className="bg-white shadow-md border-0 overflow-hidden">
+          <div id="anchor-related-types-wings-intro"></div>
           <div 
             id="wing-intro"
-            data-subsection-id="wing-intro"
             ref={el => contentRefs.current[1] = el} // Associate tab with this element
             className="p-6 flex items-start justify-between cursor-pointer"
             onClick={() => setWingIntroExpanded(!wingIntroExpanded)}
@@ -545,7 +418,8 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
         </Card>
 
         {/* Wing Types Section - Tab content for wing types */}
-        <div data-subsection-id="wings">
+        <div>
+          <div id="anchor-related-types-wings-content"></div>
           <WingTypesSection
             typeDigit={typeData.typeDigit}
             sectionColor={sectionColor}
@@ -555,9 +429,9 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
 
         {/* Line Types Introduction - Expandable explanation of line types */}
         <Card className="bg-white shadow-md border-0 overflow-hidden">
+          <div id="anchor-related-types-lines-intro"></div>
           <div 
             id="line-intro"
-            data-subsection-id="line-intro"
             ref={el => contentRefs.current[2] = el} // Associate tab with this element
             className="p-6 flex items-start justify-between cursor-pointer"
             onClick={() => setLineIntroExpanded(!lineIntroExpanded)}
@@ -600,7 +474,8 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
         </Card>
 
         {/* Line Types Section - Tab content for line types */}
-        <div data-subsection-id="lines">
+        <div>
+          <div id="anchor-related-types-lines-content"></div>
           <LineTypesSection 
             typeDigit={typeData.typeDigit}
             sectionColor={sectionColor}
@@ -610,6 +485,7 @@ export default function RelatedTypesMain({ typeData }: RelatedTypesProps) {
 
         {/* Summary Card - Closing thoughts on related types */}
         <Card className="bg-white shadow-md border-0">
+          <div id="anchor-related-types-summary"></div>
           <div className="p-6 prose prose-gray max-w-none">
             <p>
               The concept of related types is advanced and complex; the first step is simply to understand your

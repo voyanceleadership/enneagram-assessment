@@ -1,4 +1,6 @@
 // src/components/enneagram/types/sections/TypeDescription.tsx
+'use client';
+
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { theme, styleUtils } from '@/styles/theme';
@@ -8,18 +10,25 @@ interface TypeDescriptionProps {
   typeData: TypeData;
 }
 
-// Component for displaying the detailed type description
+/**
+ * TypeDescription Component - With simplified anchor handling
+ * 
+ * Displays the detailed description of an Enneagram type with consistent
+ * anchor-based scrolling behavior.
+ */
 export default function TypeDescription({ typeData }: TypeDescriptionProps) {
   return (
-    <Card className="bg-white shadow-md border-0">
-      <div className="p-6">
-        <div 
-          className="prose max-w-none"
-          style={{ color: theme.colors.text }}
-        >
-          {typeData.sections.longDescription}
+    <div>
+      <Card className="bg-white shadow-md border-0">
+        <div className="p-6">
+          <div 
+            className="prose max-w-none"
+            style={{ color: theme.colors.text }}
+          >
+            {typeData.sections.longDescription}
+          </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </div>
   );
 }

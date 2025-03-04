@@ -1,12 +1,9 @@
 // src/components/enneagram/types/components/SectionHeader.tsx
 /**
- * Enhanced SectionHeader Component
+ * Simplified SectionHeader Component
  * 
- * Changes:
- * - Added "Back to Top" button
- * - Improved visual design with larger text and better spacing
- * - Added subtle hover effect on the header
- * - FIXED: Enhanced visual separation with shadow
+ * A header component for sections that sticks to the top of the viewport
+ * when scrolling and includes a "Back to Top" button.
  */
 
 import React from 'react';
@@ -21,16 +18,22 @@ interface SectionHeaderProps {
 
 export default function SectionHeader({ 
   title, 
-  topOffset = 0,
+  topOffset = 64, // Default to navbar height
   containerId
 }: SectionHeaderProps) {
+  const handleScrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+  
   return (
     <div 
       className="w-full z-10 shadow-sm sticky bg-white transition-all duration-300 hover:bg-gray-50"
       style={{ 
         borderLeft: `4px solid ${theme.colors.accent1}`,
         top: `${topOffset}px`,
-        // FIXED: Added enhanced box-shadow for better visual separation when scrolling
         boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
       }}
       data-section-header
@@ -46,7 +49,7 @@ export default function SectionHeader({
           
           <div className="ml-auto">
             <button 
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              onClick={handleScrollToTop}
               className="text-gray-500 hover:text-gray-800 text-sm flex items-center transition-colors px-3 py-1 rounded-full hover:bg-gray-100"
               aria-label="Back to top"
             >
